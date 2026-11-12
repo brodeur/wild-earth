@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { trunkAt } from './animals.js';
 import { animalMaterial, animalDepthMaterial, hasAnim2, antlerState, driveClips, makeClipState, DEER_DRIVE, turnFollow, bendOf, PART_TURN } from './animalModels.js';
+import { heroPlayer } from './hero.js';
 import { addCaster } from './shadows.js';
 import { HerdMarks } from './herdMarks.js';
 import { HerdSilhouette } from './herdSilhouette.js';
@@ -347,7 +348,10 @@ export class GroundControl {
         mesh.customDepthMaterial = animalDepthMaterial(model, { snakePath: snPath });
         mesh.visible = false; this.scene.add(mesh);
         addCaster(mesh, { cascades: [0], simple: false });   // follows the mesh's visibility
-        return { mesh, model, rig, legs, snPath };
+        const out = { mesh, model, rig, legs, snPath, hero: null };
+        // the hero tier (hero.js): hero lod0, its full maps and the fur's shells, swapped in when loaded
+        heroPlayer(model.extras?.species || name, mesh, model, { atmosphere: this.atmosphere, head: this.flight.headYaw }).then(h => { out.hero = h; });
+        return out;
       }).catch(e => { console.warn(`groundControl: no player model for ${name}`, e); return null; });
       this.meshes.set(name, p);
     }

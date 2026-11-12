@@ -1,0 +1,71 @@
+{
+  "species": "canis_latrans",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1cf01-38ce-754f-bcd0-ee77b5a4b9f8",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1cefd-8e66-720a-8c02-79440a2c6384",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural coat colours and markings of a wild adult coyote (Canis latrans) as seen in El Dorado County, California, United States. Coloured as the adult is described: body light gray, red, black, white; back black tip with black stripes; belly and underparts whitish; head reddish brown; neck whitish; legs reddish brown; tail black tip. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural coat colours and markings of a wild adult coyote (Canis latrans) as seen in El Dorado County, California, United States. Coloured as the adult is described: body light gray, red, black, white; back black tip with black stripes; belly and underparts whitish; head reddish brown; neck whitish; legs reddish brown; tail black tip. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/canis_latrans/01a1cefd-8e66-720a-8c02-79440a2c6384",
+  "estimated_credits": 10,
+  "balance_before": 657,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-12T09:05:25+00:00",
+    "created_at": "2026-11-12T09:05:28+00:00",
+    "started_at": "2026-11-12T09:05:28+00:00",
+    "finished_at": "2026-11-12T09:06:15+00:00",
+    "downloaded": "2026-11-12T09:06:37+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1cf01-38ce-754f-bcd0-ee77b5a4b9f8",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1794474328022,
+    "started_at": 1794474328131,
+    "finished_at": 1794474375434,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 7153588,
+      "sha256": "774ffc385ba5fb05c045fd6031b5de08ef27e104f0cc060e8ac3d500111b44ab",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1cf01-38ce-754f-bcd0-ee77b5a4b9f8/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 7563067,
+      "sha256": "25ee3a3e7c35fa58a38023752747727d9bf5b30ca19d66c43b00dffa38b31df7",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1cf01-38ce-754f-bcd0-ee77b5a4b9f8/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 88894,
+      "sha256": "50c702b21574ef304e46ae9b2f7a15834bb29104fbf9274524e107b5ae56b461",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1cf01-38ce-754f-bcd0-ee77b5a4b9f8/output/preview.png"
+    }
+  ],
+  "balance_after": 647
+}

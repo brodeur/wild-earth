@@ -347,6 +347,32 @@ page loads, 17 leg pools build, a coyote body enters on the engine, no errors.
   foothold by eye; a juvenile (foals change from trot to gallop at a lower Froude number than adults: Grossi & Canals
   2010; the engine keeps the adult's).
 
+## The idle layer and the stance's bound (2026-11-12)
+
+Aaron, 2026-11-11: "how do we design a pipeline that produces a beautiful model, and species-appropriate idle
+behaviors". The whole account, with the model pipeline, is [avatar-realism.md](avatar-realism.md); what changed in how
+a body moves:
+
+- **A standing, feeding or bedded body keeps doing what its kind does** (`client/src/idle.js`, applied in `gait.js`;
+  the tree's `idle` blocks by rank, each number with its source or "by eye" in the note; `tests/test_locomotion_idle.py`
+  holds the client's default equal to Mammalia's). Always on: breathing by Stahl's rule with a debt after running, the
+  weight drifting over a hind leg, the gaze in quick turns and holds (`inp.look` overrides it), the ears leading the
+  gaze and flicking, the tail by family, bedded ruminants chewing. Acts by a director drawn from the seed and a clock
+  (`inp.t`): shake, scratch, stretch, sit (`inp.sit`), sniff, stamp, groom, the hares' face wash; `inp.act` plays one.
+  An act a skeleton cannot do by the engine's own reach is left out of that body's repertoire (`capsOf`).
+- **Ears on a quadruped**: two joints after the usual twenty (the hero models carry them: wolf, grizzly), read by
+  `skeletonOf` as the hares' are; a species' clip set is then 22 joints wide (`tools/bake_gait.mjs` bakes from the hero
+  GLB).
+- **The stance's bound**: the leg's line from the hip or shoulder to the toe stays within an angle each side of the
+  vertical (Mammalia `vary`, by eye), on the ground and in the air; the duty factor at speed follows (a coyote's gallop
+  0.33, an elk's 0.19 to 0.29) and the long, low gallop is gone. `tools/gait_measure.mjs` now prints each gait's duty
+  factor and leg angles and checks a walk keeps over 0.5. The big ungulates walk with shorter, quicker strides until
+  the rig's legs are the right length; the giraffe's walk fails the check.
+- Measures: `tools/idle_measure.mjs` (rates against the tree, shares, feet, determinism, cost), `tools/idle_strip.mjs`
+  (a posed skeleton as a strip of frames), the lineup's `motion=idle|graze|rest|sit`, `&act=`, `&t0=`.
+- Left: the mirror's idle clock (its own page's), a neck of more than one joint and a jaw (groom, the cats' and the
+  deer's scratch, the yawn, real chewing), attention (nothing calls `inp.look` yet), group size and vigilance.
+
 ## The pipeline
 
 1. **The record** (`library/animals/<code>.json`): `taxonomy` (kingdom to genus), `mass_kg`, `size` (length, shoulder

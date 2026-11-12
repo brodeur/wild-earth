@@ -9575,3 +9575,107 @@ whole account; the decisions:
   z-index 5 (`client/index.html`).
 - **Not checked**: the jay's and raven's speeds, the stoop's catch and the streaks' cost are the lane's own figures;
   a real screen's frame rate and the mirror's tuck through two pages were not run.
+
+## 2026-11-12: Avatar realism: a hero model tier that keeps the generated source, and an idle layer read from the tree (docs/avatar-realism.md; tools/hero_model.py; client/src/hero.js, idle.js, gait.js; branch claude/avatar-realism; not merged)
+
+Aaron, 2026-11-11: "How do we achieve a deeper level of realism with the animal avatars - how do we design a pipeline
+that produces a beautiful model, and species-appropriate idle behaviors", then "Feel free to go until morning trying to
+figure it out." docs/avatar-realism.md is the answer and the account; the decisions:
+
+- **The realism was being lost in our own reduction, so the pipeline keeps the source.** The Meshy refine of the wolf
+  is a 31,000-triangle mesh with a 2K painted coat; the build cut it to 5,000 triangles with one flat colour a face
+  from a ten-colour palette. `tools/hero_model.py` (Blender, headless) now makes a hero tier from the same source: a
+  clean 20,000-triangle mesh, new UVs, colour, normal and occlusion maps baked from the dense source, two more LODs,
+  2.2 to 2.6 MB a species. It ran unchanged on the wolf, the bison and the grizzly. No credits were spent.
+- **The hero's weights are computed on the hero mesh, not copied.** Copying the game's low-poly weights dragged a sheet
+  of skin between the fore legs; bone heat from the game's skeleton wins on every species over eight pose tests (wolf:
+  942 inverted faces against 1,339; grizzly 1,041 against 4,265). It loses more trunk volume in a sit (15 to 21 %
+  against 9 to 12 %). The tool also places a tail chain where the game rig has a stub (4 of 19 fauna models: the
+  build's tail finder) and adds two ear joints after the usual twenty where it can find the ears (not the bison's).
+- **On screen without a new sampler budget.** An animal draw used 5 to 7 texture units, not sixteen: the hero tiers
+  take 8 units and 14 attribute slots. The shared pool draws hero lod1 and lod2 with the old mesh as the far tier; the
+  player's body draws hero lod0 with 8 fur shells in one instanced draw (about 2 ms of GPU with the body filling a
+  third of the screen; 16 shells looked no better). 35 MB of texture memory a hero species, which will not hold for a
+  tile of twenty: compressed textures are next. `?hero=0` turns the tier off.
+- **Idle behaviour is a layer of the gait engine, read from the tree.** `idle` blocks by rank; breathing by Stahl's
+  rule; gaze, ears, tail and weight always on; acts by a director drawn from the seed and a clock. Most of the rates a
+  naturalist would want were not found in the literature in the time and are marked by eye in the tree's notes; read:
+  Stahl 1967 (through Calder and Worthington et al.), Li 2013, Eckstein & Hart 2000, Hudson & Kuzyk 2007, Tolkamp &
+  Kyriazakis 1999, Dickerson et al. 2012. The sources were gathered by a search agent and not checked again by me.
+- **An act a skeleton cannot do is left out, by a reach test, not faked and not listed by species.** Groom is off for
+  every species (it needs a neck of two joints); the scratch stays for the coyote, the wolf, the hare and the grizzly.
+- **The leg's swing is bounded by an angle** (Mammalia `vary`; by eye), which gives realistic duty factors at speed and
+  ends the long, low gallop that the reach rule of 2026-11-11 allowed; the far tier's 30 clip sets were baked again.
+  It makes the big ungulates walk with shorter, quicker strides than the allometry gives, and the giraffe's walk fails
+  the new check that a walk keeps a foot down more than half the time: the rig's legs are too short for those bodies.
+- **Checked:** `tools/gait_measure.mjs` (coyote, elk, cougar, hare: all in band, slide 0.0 mm) and
+  `tools/idle_measure.mjs` (all in band; its cost band failed once under load); the hero wolf and grizzly in the world
+  on Lamar before the last round, and in the lineup after it (walk, trot, gallop, idle, sit). Tests: 422 of 423; the
+  one error (tests.test_model_acceptance, the pronghorn) needs the git-ignored
+  library/animals/jobs/antilocapra_americana/01a1b18c-1540-70c3-9fd1-f535a7626d97/reference.json and passes with it.
+- **Left, in order:** new sources for the ten home species (about 300 credits; Meshy deletes output after three days,
+  so their old previews cannot be refined), a neck chain and a jaw, volume in the sit, compressed textures, the tail
+  and ear finders, limb proportions from measured bone lengths, eyes, the idle clock across pages, attention.
+  Quaternius no longer offers its models as CC0: the coyote's record should show what applied when it was downloaded.
+
+## 2026-11-12: Two home species through the whole pipeline: the mountain lion and the coyote from a new source to a hero on the home tile (pipeline/fauna_models.py's route, tools/hero_model.py, client/src/animalModels.js pipelineOr; branch claude/avatar-realism; not merged)
+
+The step docs/avatar-realism.md lists first: the home species had no source to build a hero from. Two were taken from
+nothing to the screen by the pipeline, unchanged except for rules it turned out to need.
+
+- **Spent: 80 Meshy credits** (balance 727 -> 647): the lion one preview and one 2K refine (30); the coyote two
+  previews and one refine (50). The coyote's first preview was rejected for a turned head and a bent spine; the second
+  still turns its head about 25 degrees and was refined anyway, the attempts being used up. The fauna step's own prompt
+  and judge were used; both pass its colour check.
+- **Rules fixed, not species**: `pipeline/appearance.py` read "tip of the tail black" as a black tail and a nose's or a
+  name's colour ("gray wolf") as the body's; `tools/build_quadruped.py` sizes a species without a generated trait card
+  from its curated record's shoulder height (the coyote's furry mesh came out 0.45 m by mass; now 0.584 against the
+  hand-built 0.580); `tools/hero_model.py`'s ear finder no longer takes a tip near the nose and looks again for a broad
+  ear when it finds one. The wolf, bison and grizzly come out as before.
+- **How a hand-built species opts in**: its loader goes through `pipelineOr(code, hand, pipe)` in
+  `client/src/animalModels.js`: the pipeline's model and hero tiers when client/assets/hero/index.json lists the
+  species, the hand-built model otherwise, under `?hero=0`, or if the pipeline's fails to load. `animals.js` and
+  `groundControl.js` were not changed. Both species have ears and a tail chain (22 joints).
+- **Seen** (home tile, the player's body, old against new; lineup gaits, idle, sit): both read as the animal where the
+  hand-built ones were faceted shapes. Weak: the lion's coat is too orange and the coyote's legs too saturated (the
+  generated texture, and perhaps the hero material's response to the scene's light, which is being checked); the
+  coyote's turned head shows. Not exercised on the new bodies: the pounce, the leap and the kill, climbing a tree, the
+  tail-tip twitch.
+- The ignored job files (model.glb, textures, thumbnails) were copied to the main checkout's library/animals/jobs so
+  they outlive the worktree; the job.json records are in this commit.
+
+## 2026-11-12: The hero answers the light as the old models do; one colour rule for every hero map; the coyote's hero is held back (client/src/hero.js, animalModels.js, client/assets/hero/index.json; branch claude/avatar-realism)
+
+- **Measured, not assumed.** The new lion and coyote looked too bright on the home tile. Both paths were given the same
+  flat grey and the body's pixels read in sun, under trees, at 9:00, at 17:00 and in the misty arrival: hero over old
+  is 1.000 to 1.012 in every channel. The light, shadow, haze and tone paths are the same; the painted coats differ.
+- **One rule for every hero colour map** (`grade` in the index, so the asset tool can own it): saturation only ever
+  scaled down to the old palette's body saturation, value scaled within 0.8 to 1.25 to its luminance. Lion x 0.895 and
+  x 1.176; the others near 1.
+- **A species can be held** (`hold` in the index, with the reason): its hero is built but the hand-built model draws.
+  The coyote is held: its generated coat is nearer a jackal's (grey back, black saddle, rufous legs) and its head is
+  turned in the source. The fauna step's colour check passed it, so that gate is not enough: a likeness check against
+  reference photographs is the next rule to write, before more credits go to the other home species.
+
+## 2026-11-12: The lion's hunt checked on its new body; avatar realism merged (scratch/catch_harness.js lionStrike; docs/avatar-realism.md)
+
+Aaron chose "check, then merge". The check, on the home tile at 10:00 with the catch harness:
+
+- **The AI lion**: three hunts set 6.5 to 9.5 m behind a deer, three kills. The rush, the leap (lift to 0.55 m), the
+  kill at the landing and the crouch over it all hold on the hero pool tiers; a follower's stalk (pose 0.45) holds.
+- **The player's lion**: the pounce (crouch, leap, landing), the kill, the feeding crouch (pose 1), the stalk on Alt+W
+  and the tail's twitch lying down (e1 from -0.69 to 0.68) hold on the hero body with its fur shells.
+- **No climb to check**: the lion's row has `climb: 0` and the player's lion has no climb.
+- **Cost**: frames on the page were 80 to 100 ms with the machine at load 10 to 13; main at the same place gave 84 ms,
+  and the animals' update took 1.6 ms against main's 1.5 ms. Turning the fur shells off changed nothing measurable.
+- **The harness**: since combat.js a hunter with strikes does not kill by the rush alone, so `lionPlayer` ends with no
+  leap on main as well. `lionStrike` is the test now: the deer selected and one hit from dead, the pounce used.
+- **A harness trap, not a fault of the game**: wrapping `ground.update` without returning its value threw in the frame
+  at `minimap.update(flight.pos, f.heading)` and stopped rendering; the page then showed stale frames with pool animals
+  bright against a dark scene. Captures from that stretch were thrown away.
+- **Also seen and left**: the harness's own render (no post pass) draws every pool animal brighter than the scene at
+  dawn, on main too. It is the harness, not the hero material.
+
+Not checked still: two browsers as host and mirror, a phone-class GPU, the fur at speed, the gaits in the world after
+the swing bound (lineup only). The weak list in docs/avatar-realism.md stands: the big ungulates' short stride and the
+giraffe's walk come from rig legs that are short for the body, and merge with this.

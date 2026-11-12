@@ -1,7 +1,7 @@
 {
  "rate": 30,
  "width": 60,
- "height": 44,
+ "height": 43,
  "format": "rgba16f",
  "texels": "row f = frame f; texels j*3..j*3+2 = rows 0..2 of joint j's 3x4 matrix (adopted frame)",
  "joints": [
@@ -163,23 +163,23 @@
   },
   "Walk": {
    "first": 1,
-   "count": 19,
+   "count": 18,
    "loop": true,
-   "duration": 0.6202,
+   "duration": 0.5958,
    "root_motion": [
     0,
     0,
     0
    ],
-   "stride_m": 0.5828,
-   "touchdown": 0.2632,
+   "stride_m": 0.5599,
+   "touchdown": 0.2778,
    "speed_mps": 0.94,
-   "cadence_hz": 1.612,
+   "cadence_hz": 1.678,
    "duty": 0.618,
    "gait": 0
   },
   "Trot": {
-   "first": 20,
+   "first": 19,
    "count": 12,
    "loop": true,
    "duration": 0.3906,
@@ -196,7 +196,7 @@
    "gait": 1
   },
   "Gallop": {
-   "first": 32,
+   "first": 31,
    "count": 10,
    "loop": true,
    "duration": 0.3201,
@@ -213,7 +213,7 @@
    "gait": 2
   },
   "Bed": {
-   "first": 42,
+   "first": 41,
    "count": 1,
    "loop": false,
    "duration": 0,
@@ -224,7 +224,7 @@
    ]
   },
   "Eat": {
-   "first": 43,
+   "first": 42,
    "count": 1,
    "loop": false,
    "duration": 0,

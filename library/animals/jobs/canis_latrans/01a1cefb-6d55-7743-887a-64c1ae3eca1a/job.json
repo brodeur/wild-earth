@@ -1,0 +1,66 @@
+{
+  "species": "canis_latrans",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1cefb-6d55-7743-887a-64c1ae3eca1a",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A wild coyote (Canis latrans) of El Dorado County, California, United States, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+    "ai_model": "latest",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 30000,
+    "moderation": false
+  },
+  "prompt": "A wild coyote (Canis latrans) of El Dorado County, California, United States, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 20,
+  "balance_before": 707,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-12T08:59:06+00:00",
+    "created_at": "2026-11-12T08:59:08+00:00",
+    "started_at": "2026-11-12T08:59:08+00:00",
+    "finished_at": "2026-11-12T09:00:01+00:00",
+    "downloaded": "2026-11-12T09:00:16+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1cefb-6d55-7743-887a-64c1ae3eca1a",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1794473948720,
+    "started_at": 1794473948729,
+    "finished_at": 1794474001785,
+    "consumed_credits": 20,
+    "task_error": null
+  },
+  "credits_charged": 20,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 2196884,
+      "sha256": "632039fa533e441c7470a09789b04d8955cc5624d79f8e04d076660b9dbdcb4d",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1cefb-6d55-7743-887a-64c1ae3eca1a/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 66013,
+      "sha256": "b856f791ca099845d58e255af2d01e616eca6c5860657030b7d3fb5b254de602",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1cefb-6d55-7743-887a-64c1ae3eca1a/output/preview.png"
+    }
+  ],
+  "balance_after": 687
+}

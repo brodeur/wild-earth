@@ -226,6 +226,11 @@ A source whose licence is not confirmed is not used. CC BY-NC data are never shi
    own cadence and phase, the slope and a foothold, the head and tail following late, and a reach rule that took foot
    slide to zero. Left: the preferred speed (the AI's), the first step from a stand, baked variants, a far herd's
    film, attention and bouts, the deer.
+   **2026-11-12, beside it** ([avatar-realism.md](avatar-realism.md)): an idle layer on the same engine (breathing,
+   gaze, ears, tail, acts by a director, a reach test that leaves out what a skeleton cannot do: the first of "What
+   makes it reliable"), ear joints on the hero models, a bound on the leg's swing, and a hero model tier that keeps the
+   generated source's surface with weights computed on the dense mesh. The neck chain and the jaw (item 3) are now what
+   most limits the acts.
 2. **The reading**: `care` and `carry` in the tree for the orders and families the library holds, with sources, and
    the load shares. Pipeline only.
 3. **Sockets, the jaw and carrying on the quadruped skeleton.** A fox carries a vole; a lion drags a deer; a player

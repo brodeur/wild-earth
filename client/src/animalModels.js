@@ -3,6 +3,7 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { uniforms as atmo } from './atmosphere.js';
 import { skeletonOf } from './gait.js';
+import { heroSkinFor, heroEntry } from './hero.js';
 import { segmentWings, scaleWing, wingDecl, WING_BODY, HWI, MASS, FAMILY } from './birdWing.js';
 
 // Procedural low-poly animals for the ambient population (animals.js). Each species is one merged,
@@ -438,8 +439,9 @@ export function antlerState(month, u1 = 0.5, u2 = 0.5, u3 = 0.5) {
 // Skinned since 2026-10-30 (tools/rig_quadruped.py; the leg engine, gait.js): the part rig's constants stay for the fallback.
 export const loadFoxMesh = () => loadTiers(new URL('../assets/fox.glb', import.meta.url),
   { amp: [0.5, 0.35, 1.0, 0], pose: [0.3, -0.25, 0.2, 0], drop: 0.17, gait: true }, { skin: true });
-export const loadCoyoteMesh = () => loadTiers(new URL('../assets/coyote.glb', import.meta.url),
-  { amp: [0.45, 0.3, 1.1, 0], pose: [0.3, -0.35, 0.2, 0], drop: 0.26, gait: true }, { skin: true });
+const COYOTE = { amp: [0.45, 0.3, 1.1, 0], pose: [0.3, -0.35, 0.2, 0], drop: 0.26, gait: true };
+export const loadCoyoteMesh = pipelineOr('canis_latrans', () => loadTiers(new URL('../assets/coyote.glb', import.meta.url), { ...COYOTE }, { skin: true }),
+  () => loadTiers(new URL('../assets/fauna/canis_latrans.glb', import.meta.url), { ...COYOTE }, { skin: true }));
 
 // A built GLB (tools/build_*.py): meshes lod0-lod2 with COLOR_0 and the custom attributes _PART, _PARTW, _PIVOT
 // (and _COLORB, a second colour set for a variant), the rig's parent pivots in the file's extras.rig.
@@ -468,7 +470,13 @@ async function loadTiers(url, model, { keepNormals = false, skin = false } = {})
     }
     // the leg engine's skeleton (tools/rig_quadruped.py; gait.js): the quadrupeds whose pose is computed live into the
     // clip texture's live rows, the far tier on the engine's baked cycles; pose is the engine's (a crouch, then bedded)
-    if (out.skin && extras.skin.legs) { out.legs = skeletonOf(extras.skin); out.poseMax = 1; out.live = out.skin.live; }
+    // a clip set baked on a wider skeleton than this file's (the hero's, with its ears: hero.js) poses on the hero's skeleton
+    let sk = extras.skin;
+    if (out.skin?.joints && out.skin.joints.length !== sk.joints.length) {
+      const hs = await heroSkinFor(extras.species, out.skin.joints.length).catch(() => null);
+      if (hs) sk = hs; else console.warn(`${url.pathname}: clip set ${out.skin.joints.length} joints wide, the skeleton ${sk.joints.length}`);
+    }
+    if (out.skin && sk.legs) { out.legs = skeletonOf(sk); out.poseMax = 1; out.live = out.skin.live; }
   }
   return out;
 }
@@ -481,7 +489,7 @@ function restOnlySkin(sk, liveRows = 0) {
   tex.magFilter = tex.minFilter = THREE.NearestFilter; tex.generateMipmaps = false; tex.needsUpdate = true;
   const index = { joints: sk.joints, joint_rest: sk.joint_rest, scale: 1, clips: { Idle: { first: 0, count: 1, loop: false, duration: 0 } } };
   const headIdx = sk.joints.map((nm, i) => /^(Neck|Head|Ear)/.test(nm) ? i : -1).filter(i => i >= 0);
-  const head = headIdx.length ? { first: headIdx[0], last: headIdx[headIdx.length - 1], pivot: sk.joint_rest[headIdx[0]] } : null;
+  const head = headIdx.length ? { first: headIdx[0], last: headIdx[headIdx.length - 1], set: headIdx, pivot: sk.joint_rest[headIdx[0]] } : null;
   const live = liveRows ? { tex, data, base: 1, rows: liveRows, width: w } : null;
   return { index, tex, names: ['Idle'], clip: { Idle: 0 }, table: [index.clips.Idle], joints: sk.joints, head, legs: null, texScale: 1, ratio: 1, live, key: `rest${n}${liveRows ? ':live' : ''}` };
 }
@@ -514,7 +522,8 @@ async function loadClips(base, skinExtras, liveRows = 0) {
     const table = names.map(n => index.clips[n]);
     // the head chain (neck, head, ears: contiguous in the skin order) and the neck base, for the player's look (PLAYER_HEAD)
     const headIdx = index.joints.map((n, i) => /^(Neck|Head|Ear)/.test(n) ? i : -1).filter(i => i >= 0);
-    const head = headIdx.length ? { first: headIdx[0], last: headIdx[headIdx.length - 1], pivot: index.joint_rest?.[headIdx[0]] || [0, 0, 0] } : null;
+    // a set, not a range: the ears (Ear.L, Ear.R) come after the legs and the tail in a hero skeleton (indices 20, 21)
+    const head = headIdx.length ? { first: headIdx[0], last: headIdx[headIdx.length - 1], set: headIdx, pivot: index.joint_rest?.[headIdx[0]] || [0, 0, 0] } : null;
     // the bend (SKIN_BODY, bendOf): each joint's role (1 a fore leg, 2 a hind leg, 0 the rest), the fore and hind hoof's
     // rest z (their lever round the turning centre), the hips' and the neck base's z (the spine's bend runs between them)
     // and the standing reference frame (Idle's first) a leg's swing is measured from
@@ -828,6 +837,17 @@ export function faunaTemplate(kinLoad, { role, archetype, mass_kg, model } = {})
 // built ones' (the cougar's 0.29 m x (1 - 0.35)); a skinned model drops nothing (the clips and the engine bed it).
 const FAUNA_PATH = /^[A-Za-z0-9_\-/]+\.glb$/;
 export const REPTILE_REF_M = 0.18;   // the reptile templates' body length (the fence lizard's, snout to tail tip)
+// A hand-built species that has since come through the pipeline (2026-11-12: the home tile's lion and coyote): its fauna
+// model (fauna/<code>.glb, tools/build_quadruped.py from a Meshy source, on the same constants) when client/assets/hero
+// lists the species, so hero.js puts the hero tiers on it; the hand-built file otherwise, under ?hero=0, and if the
+// fauna model fails to load. The hand loader's tags (rig, skin: faunaTemplate reads them) are kept.
+function pipelineOr(code, hand, pipe) {
+  const load = async () => {
+    if (!(await heroEntry(code))) return hand();
+    try { return await pipe(); } catch (e) { console.warn(`${code}: pipeline model failed to load; the hand-built one draws`, e); return hand(); }
+  };
+  return Object.assign(load, { rig: hand.rig, skin: hand.skin });
+}
 export function loadFaunaModel(path, template = 'lion', { skin = true, hwi = null, family = null } = {}) {
   if (typeof path !== 'string' || !FAUNA_PATH.test(path) || path.split('/').some(p => !p || p === '.' || p === '..'))
     return Promise.reject(new Error(`fauna model: bad path '${path}'`));
@@ -903,7 +923,7 @@ export const loadSquirrelMesh = rigLoader('squirrel');
 export const loadStellersJayMesh = rigLoader('stjay');
 export const loadRedtailMesh = rigLoader('hawk');
 export const loadVultureMesh = rigLoader('vulture');
-export const loadCougarMesh = rigLoader('lion', { skin: true });   // skinned, the leg engine (gait.js); the rig path's constants for the fallback
+export const loadCougarMesh = pipelineOr('puma_concolor', rigLoader('lion', { skin: true }), () => loadFaunaModel('fauna/puma_concolor.glb', 'lion'));   // skinned, the leg engine (gait.js); the rig path's constants for the fallback
 export const loadBearMesh = rigLoader('bear', { skin: true });
 export const loadRabbitMesh = rigLoader('rabbit', { skin: true });   // skinned, the leg engine's hop (gait.js hopStep); the rig path's constants for the fallback
 export const loadJackrabbitMesh = rigLoader('jackrabbit', { skin: true });
@@ -1588,8 +1608,8 @@ if (abs(aBend.z) + abs(aBend.w) > 0.002) {
   headYaw += uHeadYaw;
   #endif
   if (abs(headYaw) > 0.0005) {
-    vec4 inHead = step(vec4(skin_head.x - 0.5), skinIndex) * step(skinIndex, vec4(skin_head.y + 0.5));
-    float headW = dot(inHead, skinWeight);
+    ivec4 hj = ivec4(skinIndex + 0.5);
+    float headW = dot(vec4(skin_isHead[hj.x], skin_isHead[hj.y], skin_isHead[hj.z], skin_isHead[hj.w]), skinWeight);
     if (headW > 0.0) {
       vec3 hp = (skinM * vec4(skin_neck, 1.0)).xyz;
       transformed = mix(transformed, skinRY(headYaw) * (transformed - hp) + hp, headW);
@@ -1617,7 +1637,9 @@ function skinDecl(model) {
   const sk = model.skin; if (!sk) return '';
   const f = x => (+x || 0).toFixed(4);
   const rows = sk.table.map(c => `vec4(${c.first.toFixed(1)}, ${c.count.toFixed(1)}, ${c.loop ? '1.0' : '0.0'}, 0.0)`);
-  const head = sk.head ? `#define SKIN_HEAD\nconst vec2 skin_head = vec2(${sk.head.first.toFixed(1)}, ${sk.head.last.toFixed(1)});\nconst vec3 skin_neck = vec3(${sk.head.pivot.map(f).join(', ')});\n` : '';
+  // the head's joints as a per-joint mask (Neck, Head and the ears: not contiguous once the ears follow the tail)
+  const nJ = sk.joints?.length || 0, hs = new Set(sk.head?.set || []);
+  const head = sk.head && nJ ? `#define SKIN_HEAD\nconst float skin_isHead[${nJ}] = float[${nJ}](${Array.from({ length: nJ }, (_, j) => hs.has(j) ? '1.0' : '0.0').join(', ')});\nconst vec3 skin_neck = vec3(${sk.head.pivot.map(f).join(', ')});\n` : '';
   const L = sk.legs, legs = L ? `#define SKIN_LEGS\nconst int skin_ref = ${L.ref | 0};\nconst float skin_hipZ = ${f(L.hipZ)}, skin_neckZ = ${f(L.neckZ)};\nconst float skin_role[${L.roles.length}] = float[${L.roles.length}](${L.roles.map(r => r.toFixed(1)).join(', ')});\n` : '';
   return `#define ANIM_SKIN\n${model.live ? '#define SKIN_LIVE\n' : ''}const float skin_ratio = ${f(sk.ratio)};\nconst vec4 skin_clips[${rows.length}] = vec4[${rows.length}](${rows.join(', ')});\n${head}${legs}${SKIN_DECL}\n`;
 }
@@ -1802,11 +1824,71 @@ void RE_Direct_Underwing( const in IncidentLight directLight, const in vec3 geom
 #undef RE_Direct
 #define RE_Direct RE_Direct_Underwing`;
 
+// The hero tier (hero.js; tools/hero_model.py): a textured, smooth tier whose normal map rides on the file's tangents
+// (HERO_TANGENT: turned by the skin as the normal is; the attribute takes the 14th of Metal's 16 slots on the skin path),
+// whose occlusion map darkens the sky light and half the sun's, and whose coat (TEXCOORD_1.x, vHair: 0 bare .. 1 the
+// longest hair) scatters light at grazing angles, tinted by the base colour, strongest with the sun behind it (HERO_LIGHT:
+// the cloud's and the cascaded shadow on it as on the sun). The player's body adds the shells (HERO_SHELLS, hero.js): the
+// body drawn again per shell (gl_InstanceID), pushed out along the skinned normal by its share of the hair's length and
+// sagging a little, its strands a hash of the UV: each strand its own length and taper, its root dark and its tip light,
+// faded to the strands' mean coverage where a strand is under a pixel (fwidth), so the coat neither shimmers nor crawls.
+const HERO_TANGENT = `
+#ifdef USE_TANGENT
+  #if defined(ANIM_SKIN)
+  vec3 objectTangent = normalize(animR * tangent.xyz);
+  #else
+  vec3 objectTangent = vec3(tangent.xyz);
+  #endif
+#endif`;
+const HERO_VERT = `
+vHair = uv1.x;
+#ifdef HERO_SHELLS
+vLayer = (float(gl_InstanceID) + 1.0) / uShells;
+transformed += (objectNormal - vec3(0.0, 0.3 * vLayer, 0.0)) * (vLayer * uFurLen * uv1.x);
+#endif`;
+const HERO_FUR_FRAG = `
+#ifdef HERO_SHELLS
+{
+  if (vHair < 0.06) discard;
+  vec2 fp = vMapUv * uFurDensity, cell = floor(fp), f = fract(fp);
+  vec3 h = fract(sin(vec3(dot(cell, vec2(127.1, 311.7)), dot(cell, vec2(269.5, 183.3)), dot(cell, vec2(419.2, 371.9)))) * 43758.5453);
+  float len = mix(0.45, 1.0, h.z);                              // each strand its own length
+  float r = 0.5 * max(0.0, 1.0 - vLayer / len);                  // tapering to its tip
+  float d = length(f - (0.5 + (h.xy - 0.5) * 0.4));
+  float px = max(length(fwidth(fp)), 1e-4);
+  float a = step(vLayer, len) * (1.0 - smoothstep(0.35 * r, r + 0.5 * px, d));   // a soft round strand, no hard disc
+  float covMean = 0.55 * (1.0 - vLayer) * (1.0 - vLayer) * clamp((1.0 - vLayer) / 0.55, 0.0, 1.0);
+  a = mix(a, covMean, smoothstep(0.35, 1.2, px));                // a strand under a pixel: its mean coverage
+  a *= smoothstep(0.06, 0.25, vHair);                            // no fur on the nose, eyes and pads
+  diffuseColor.rgb *= mix(0.78, 1.12, vLayer);                    // dark at the roots, light at the tips
+  diffuseColor.a = a;
+  if (a < 0.03) discard;
+}
+#endif`;
+const HERO_LIGHT = `
+#ifdef HERO
+{
+  vec3 hN = inverseTransformDirection(normal, viewMatrix), hV = normalize(cameraPosition - vAtmoPos);
+  float rim = pow(1.0 - saturate(dot(hN, hV)), 3.0), back = saturate(dot(-hV, sunDir));
+  float coat = rim * (0.12 + 1.3 * back * back) * smoothstep(0.05, 0.3, vHair) * uHeroRim;
+  #ifdef HERO_SHELLS
+  float lit = cloudOnly(vAtmoPos) * smoothstep(-0.05, 0.1, sunDir.y);   // (the shells: the body under them carries the cascaded shadow's rim)
+  #else
+  float lit = cloudOnly(vAtmoPos) * csmShadow(vAtmoPos, hN, 1.5, 1.5, 1.0) * smoothstep(-0.05, 0.1, sunDir.y);
+  #endif
+  reflectedLight.indirectDiffuse += sunLight * BRDF_Lambert(diffuseColor.rgb) * (coat * lit);
+  #ifdef USE_AOMAP
+  reflectedLight.directDiffuse *= mix(1.0, ambientOcclusion, 0.5);
+  #endif
+}
+#endif`;
+
 // map: a textured tier (the ground raven's lod0): the texture instead of the vertex colours, smooth shaded.
 // head: a { value } uniform (radians) that turns the HEAD part about the vertical through its pivot: the player's own
 // body (groundControl.js and the other controls), whose head follows the camera's look (flight.js look).
-export function animalMaterial(atmosphere, model, { map = null, head = null, snakePath = null } = {}) {   // snakePath: the player's snake's { value: Float32Array(82) } (SN_PATH above)
-  const m = map ? new THREE.MeshLambertMaterial({ map, vertexColors: false }) : new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
+export function animalMaterial(atmosphere, model, { map = null, head = null, snakePath = null, hero = null } = {}) {   // snakePath: the player's snake's { value: Float32Array(82) } (SN_PATH above)
+  const m = map ? new THREE.MeshLambertMaterial({ map, vertexColors: false, normalMap: hero?.normalMap || null, aoMap: hero?.aoMap || null }) : new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
+  if (map && hero?.shells) { m.transparent = true; m.depthWrite = false; }
   atmosphere.patchLambert(m);
   const prev = m.onBeforeCompile;
   // The species' amplitudes and poses are baked in as constants, with a cache key per species: the
@@ -1814,7 +1896,7 @@ export function animalMaterial(atmosphere, model, { map = null, head = null, sna
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   const consts = `\nconst vec4 uAmp = ${v4(model.amp)};\nconst vec4 uPose = ${v4(model.pose)};`;
   const uw = map ? null : underwingSpec(model);
-  const key = `atmosphere-lambert|animal|${programKey(model)}${map ? "|map" : ""}${uw ? `|uw${uw.lead.toFixed(4)},${uw.inv.toFixed(3)},${uw.perch ? 1 : 0}` : ''}${head ? '|head' : ''}${snakePath ? '|snpath' : ''}`;
+  const key = `atmosphere-lambert|animal|${programKey(model)}${map ? "|map" : ""}${uw ? `|uw${uw.lead.toFixed(4)},${uw.inv.toFixed(3)},${uw.perch ? 1 : 0}` : ''}${head ? '|head' : ''}${snakePath ? '|snpath' : ''}${map && hero ? `|hero${hero.normalMap ? 'n' : ''}${hero.aoMap ? 'a' : ''}${hero.shells ? 's' : ''}` : ''}`;
   m.onBeforeCompile = (shader, renderer) => {
     prev.call(m, shader, renderer);
     if (snakePath) shader.uniforms.uSnPath = snakePath;
@@ -1824,8 +1906,20 @@ export function animalMaterial(atmosphere, model, { map = null, head = null, sna
     shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n' + (snakePath ? '#define SN_PATH\n' : '') + animDecl(model) + consts + uwDecl + (head ? '\n#define PLAYER_HEAD\nuniform float uHeadYaw;' : ''));
     // Smooth shaded (a textured tier): pose first, where the normal begins, so the normals turn with the parts.
     if (map) shader.vertexShader = shader.vertexShader
-      .replace('#include <beginnormal_vertex>', animBody(model) + '\nvec3 objectNormal = normal;\n#if defined(ANIM_SKIN)\n  objectNormal = normalize(animR * normal);\n#elif defined(ANIM_WEIGHTED)\n  objectNormal = normalize(mix(normal, animR * normal, aPartW));\n#else\n  objectNormal = animR * normal;\n#endif')
+      .replace('#include <beginnormal_vertex>', animBody(model) + '\nvec3 objectNormal = normal;\n#if defined(ANIM_SKIN)\n  objectNormal = normalize(animR * normal);\n#elif defined(ANIM_WEIGHTED)\n  objectNormal = normalize(mix(normal, animR * normal, aPartW));\n#else\n  objectNormal = animR * normal;\n#endif' + HERO_TANGENT + (hero ? HERO_VERT : ''))
       .replace('#include <begin_vertex>', '');
+    if (map && hero) {
+      shader.uniforms.uHeroRim = hero.rim || { value: 1 };
+      shader.uniforms.uHeroSat = hero.grade || { value: 1 };
+      shader.uniforms.uHeroVal = hero.gradeV || { value: 1 };
+      if (hero.shells) Object.assign(shader.uniforms, { uShells: hero.shells.shells, uFurLen: hero.shells.len, uFurDensity: hero.shells.density });
+      const sh = hero.shells ? '#define HERO_SHELLS\nuniform float uShells; uniform float uFurLen; varying float vLayer;\n' : '';
+      shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n#define HERO\n' + sh + '#ifndef USE_UV1\nattribute vec2 uv1;\n#endif\nvarying float vHair;');
+      shader.fragmentShader = shader.fragmentShader
+        .replace('#include <common>', '#include <common>\n#define HERO\n' + (hero.shells ? '#define HERO_SHELLS\nuniform float uShells; uniform float uFurDensity; varying float vLayer;\n' : '') + 'varying float vHair; uniform float uHeroRim; uniform float uHeroSat; uniform float uHeroVal;')
+        .replace('#include <map_fragment>', '#include <map_fragment>\ndiffuseColor.rgb = mix(vec3(dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722))), diffuseColor.rgb, uHeroSat) * uHeroVal;   // the colour rule (hero.js grade)' + HERO_FUR_FRAG)
+        .replace('vec3 outgoingLight = reflectedLight.directDiffuse', HERO_LIGHT + '\nvec3 outgoingLight = reflectedLight.directDiffuse');
+    }
     shader.vertexShader = shader.vertexShader
       .replace('#include <begin_vertex>', animBody(model))
       // a second colour set (the female quail), picked per instance by aAnim2.w

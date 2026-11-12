@@ -3087,6 +3087,117 @@
     "due": null
    },
    "served_by": "rule"
+  },
+  "puma_concolor": {
+   "kind": "quadruped",
+   "glb": "client/assets/fauna/puma_concolor.glb",
+   "jobs": [
+    "library/animals/jobs/puma_concolor/01a1cefb-59dc-7446-b355-aea69ed3e016",
+    "library/animals/jobs/puma_concolor/01a1cf00-bb0e-7468-9fee-fbc1cd4ee67f"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-12",
+   "build": "tools/build_quadruped.py",
+   "tile": "utm10n_680_4280",
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-12",
+    "model": "library/animals/jobs/puma_concolor/01a1cf00-bb0e-7468-9fee-fbc1cd4ee67f",
+    "glb_sha1": "47cf50d12b961e3a5e1c4f0f795ebbec8440b194",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "built: the GLB exists only if the build's gate passed when it was built"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   },
+   "colour_check": {
+    "ok": true,
+    "score": 1.0,
+    "fails": []
+   }
+  },
+  "canis_latrans": {
+   "kind": "quadruped",
+   "glb": "client/assets/fauna/canis_latrans.glb",
+   "jobs": [
+    "library/animals/jobs/canis_latrans/01a1cefb-6d55-7743-887a-64c1ae3eca1a",
+    "library/animals/jobs/canis_latrans/01a1cefd-8e66-720a-8c02-79440a2c6384",
+    "library/animals/jobs/canis_latrans/01a1cf01-38ce-754f-bcd0-ee77b5a4b9f8"
+   ],
+   "credits": 50,
+   "attempts": 2,
+   "built": "2026-11-12",
+   "build": "tools/build_quadruped.py",
+   "tile": "utm10n_680_4280",
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-12",
+    "model": "library/animals/jobs/canis_latrans/01a1cf01-38ce-754f-bcd0-ee77b5a4b9f8",
+    "glb_sha1": "1ecfa0a501a21b3a1ef1508d807092f553cbf74c",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "built: the GLB exists only if the build's gate passed when it was built"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   },
+   "colour_check": {
+    "ok": true,
+    "score": 1.0,
+    "fails": []
+   }
   }
  },
  "acceptance_rule": {

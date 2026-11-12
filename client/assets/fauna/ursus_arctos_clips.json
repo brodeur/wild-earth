@@ -1,7 +1,7 @@
 {
  "rate": 30,
- "width": 60,
- "height": 54,
+ "width": 66,
+ "height": 51,
  "format": "rgba16f",
  "texels": "row f = frame f; texels j*3..j*3+2 = rows 0..2 of joint j's 3x4 matrix (adopted frame)",
  "joints": [
@@ -24,7 +24,9 @@
   "Foot.HL",
   "UpperLeg.HR",
   "LowerLeg.HR",
-  "Foot.HR"
+  "Foot.HR",
+  "Ear.L",
+  "Ear.R"
  ],
  "joint_rest": [
   [
@@ -126,6 +128,16 @@
    -0.1449,
    0.1346,
    -0.3304
+  ],
+  [
+   0.1617,
+   0.7542,
+   0.4989
+  ],
+  [
+   -0.0823,
+   0.7694,
+   0.5287
   ]
  ],
  "scale": 1,
@@ -135,7 +147,7 @@
   0
  ],
  "source": {
-  "file": "ursus_arctos.glb",
+  "file": "hero/ursus_arctos.glb",
   "engine": "client/src/gait.js (tools/bake_gait.mjs)",
   "species": "ursus_arctos",
   "tile": null,
@@ -163,23 +175,23 @@
   },
   "Walk": {
    "first": 1,
-   "count": 24,
+   "count": 21,
    "loop": true,
-   "duration": 0.7958,
+   "duration": 0.7119,
    "root_motion": [
     0,
     0,
     0
    ],
-   "stride_m": 0.9864,
-   "touchdown": 0.25,
+   "stride_m": 0.8823,
+   "touchdown": 0.2381,
    "speed_mps": 1.239,
-   "cadence_hz": 1.257,
+   "cadence_hz": 1.405,
    "duty": 0.618,
    "gait": 0
   },
   "Trot": {
-   "first": 25,
+   "first": 22,
    "count": 15,
    "loop": true,
    "duration": 0.5011,
@@ -196,7 +208,7 @@
    "gait": 1
   },
   "Gallop": {
-   "first": 40,
+   "first": 37,
    "count": 12,
    "loop": true,
    "duration": 0.4107,
@@ -213,7 +225,7 @@
    "gait": 2
   },
   "Bed": {
-   "first": 52,
+   "first": 49,
    "count": 1,
    "loop": false,
    "duration": 0,
@@ -224,7 +236,7 @@
    ]
   },
   "Eat": {
-   "first": 53,
+   "first": 50,
    "count": 1,
    "loop": false,
    "duration": 0,
