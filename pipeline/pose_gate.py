@@ -423,7 +423,10 @@ def gate(glb_path, m=None):
         why.append(f"the head is turned {m['head_turn']:.1f} degrees (limit {MAX_HEAD_TURN:.1f})")
     if m.get('spine_bend') is not None and m['spine_bend'] > MAX_SPINE_BEND:
         why.append(f"the spine is bent {m['spine_bend']:.1f} degrees (limit {MAX_SPINE_BEND:.1f})")
-    for k, name in (('stagger_fore', 'fore'), ('stagger_hind', 'hind')):
+    # a stride is read only between four feet: with fewer pieces on the ground the pairs are not known to be a fore or a
+    # hind pair (2026-11-13: a bobcat's preview, its long tail on the ground and its fore feet together, read as a fore
+    # stride of 1.48 leg lengths)
+    for k, name in (('stagger_fore', 'fore'), ('stagger_hind', 'hind')) if m['feet'] >= FEET else ():
         if m.get(k) is not None and m[k] > MAX_STAGGER:
             why.append(f"the {name} feet stand {m[k]:.2f} of the leg length apart along the body, a stride "
                        f"(limit {MAX_STAGGER:.2f})")

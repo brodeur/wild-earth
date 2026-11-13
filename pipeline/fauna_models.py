@@ -591,19 +591,52 @@ def shape_gate(code: str, preview: Path, tile_id: str) -> dict:
     return {"ok": not geo, "why": geo}
 
 
+def already_refused(e: dict | None, named: bool) -> bool:
+    """A species named for a paid run whose record holds a model the rule or a verdict refused: its paid jobs were built
+    and judged, so the run goes to a new preview and does not rebuild one of them (run)."""
+    return bool(named and e and (e.get("acceptance") or {}).get("served") is False)
+
+
+def jobs_with(old: list[str], new: list[str]) -> list[str]:
+    """A species' jobs with a run's jobs added: the earlier ones stay on the record (they were paid for), the run's come
+    last, in order (the last job is the model's: rebuild, judge, pipeline/registry.py)."""
+    return [j for j in old if j not in new] + list(new)
+
+
+def note_unbuilt(code: str, row: dict) -> bool:
+    """A run that paid for previews and built no model, added to the record of a species that has one: its credits, its
+    attempts and each preview with why it was refused (`refused_previews`; not `jobs`, whose last is the model's). The
+    model on record and its acceptance stay. (2026-11-13: the bobcat's second preview, 20 credits, refused by the pose
+    gate, left its record at 50 credits.) False when the species has no record: its jobs' own files are the ledger."""
+    reg = registry()
+    e = reg.get("species", {}).get(code)
+    if not e or not row.get("credits"):
+        return False
+    why = {g["preview"]: g.get("why") or [] for k in ("pose", "shape") for g in row.get(k) or [] if not g.get("ok")}
+    seen = {p["job"] for p in e.get("refused_previews", [])}
+    new = [{"job": j["dir"], "at": dt.date.today().isoformat(), "why": why.get(j["dir"], ["no model was built from it"])}
+           for j in row.get("jobs", []) if j.get("mode") == "preview" and j.get("dir") and not j.get("reused") and j["dir"] not in seen]
+    e["credits"] = e.get("credits", 0) + row["credits"]
+    e["attempts"] = e.get("attempts", 0) + row.get("attempts", 0)
+    e["refused_previews"] = e.get("refused_previews", []) + new
+    REGISTRY.write_text(json.dumps(reg, indent=1) + "\n")
+    return True
+
+
 def register(reg: dict, code: str, jobs: list[str], credits: int, attempts: int, tile_id: str, bird: str | None = None,
              reptile: str | None = None, snake: bool = False) -> None:
     fresh = registry()   # another run may have registered species since this one read the registry: merge, never overwrite
     e = fresh.setdefault("species", {}).get(code) or reg.setdefault("species", {}).get(code, {})
     kind = "snake" if snake else "reptile" if reptile else "bird" if bird else "quadruped"
     arch = "snake" if snake else bird or reptile
-    fresh["species"][code] = {"kind": kind, "glb": f"client/assets/fauna/{code}.glb", "jobs": jobs or e.get("jobs", []),
+    fresh["species"][code] = {"kind": kind, "glb": f"client/assets/fauna/{code}.glb", "jobs": jobs_with(e.get("jobs", []), jobs),
                               "credits": e.get("credits", 0) + credits, "attempts": e.get("attempts", 0) + attempts,
                               "built": dt.date.today().isoformat(),
                               "build": {"snake": "tools/build_snake.py", "reptile": "tools/build_reptile.py", "bird": "tools/build_bird.py"}.get(kind, "tools/build_quadruped.py"),
                               "tile": e.get("tile", tile_id), **({"archetype": arch} if arch else {}),
-                              # the recorded verdicts and overrides name their models: they stay with the species
-                              **{k: e[k] for k in ("verdicts", "override") if e.get(k)}}
+                              # the recorded verdicts and overrides name their models: they stay with the species,
+                              # and so do the records of its earlier re-refines and photo jobs (what was paid, which photos)
+                              **{k: e[k] for k in ("verdicts", "override", "recolour", "photo", "refused_previews") if e.get(k)}}
     REGISTRY.write_text(json.dumps(fresh, indent=1) + "\n")
     reg.setdefault("species", {}).update(fresh["species"])
     record_acceptance(code)
@@ -1446,7 +1479,10 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
             continue
         # the jobs already paid for, newest first: a build rule fixed since may make one of them pass at no cost
         # (not in a dry run: 2026-11-12, a dry run rebuilt the refused bobcat from its newest refine and registered it)
-        for job in ([] if dry else sorted(paid_refines(code), key=lambda d: d.stat().st_mtime, reverse=True)):
+        # (nor for a species named whose record holds a refused model: 2026-11-13, the bobcat's second try would have
+        # rebuilt its refused photo refine, called it modelled and paid for no new preview)
+        judged = already_refused(reg.get("species", {}).get(code), bool(codes))
+        for job in ([] if dry or judged else sorted(paid_refines(code), key=lambda d: d.stat().st_mtime, reverse=True)):
             ok, log = build(code, job, tile_id, bird, rept, snk)
             if ok:
                 row["ok"], row["build_log"], row["reused"] = True, log, str(job.relative_to(ROOT))
@@ -1549,6 +1585,8 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
                 break
         # the second rung (iteration 7): no model after the gate, or a model whose geometry fails the feature check, is
         # tried once from its reference photo (image-to-3D)
+        if not row["ok"]:   # paid previews and no build: the spend goes on the species' record, if it has one
+            note_unbuilt(code, row)
         need = None
         if not row.get("stopped") and row["attempts"]:
             if not row["ok"]:

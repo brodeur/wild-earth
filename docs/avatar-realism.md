@@ -386,6 +386,36 @@ source text. Read again, the hyena's tail is "short" and the rule would refuse t
 head and body against 0.25); both records were left as stored. The house cat has two readable photos, too few to
 tell a bobcat from one.
 
+### The second try (2026-11-13): refused at the preview, 20 credits
+
+Aaron answered "Try again, 30". The run was capped at 30 (`--budget 30 --codes lynx_rufus`), paid for one preview
+(20) on the corrected prompt and stopped there: the pose gate refused it and the budget had no second preview in it.
+Balance 577; the bobcat has now cost 70 credits and has no model to draw. The hand-built bobcat draws as before.
+
+- **What came back.** By eye, drawn side-on from the mesh: a cat standing with its fore feet together and a long tail
+  that hangs to the ground, its end curled on it. The prompt said "the short tail a stub, held clear of the legs ...
+  Tail short, about 15 cm". Two prompts, two long-tailed cats: twice is not a rate, but the words about the tail did
+  not reach the mesh either time.
+- **What the gates read.** The pose gate found three pieces on the ground where four feet should be, which is right
+  (the tail's end is one of them). It also read "a fore stride of 1.48 leg lengths", which is wrong: the fore feet
+  stand together, and with three pieces the gate cannot know which two are a pair. A stride is now read only between
+  four feet. The build found no tail on this mesh (a tail joined to the ground is not found), so the shape gate, run
+  alone, would have passed it as short-tailed: the tail finder's weakness (it finds none on 7 of 21) is a hole in the
+  shape gate, and here the pose gate stood in front of it.
+- **Rules fixed around the run.** (1) Named again after a refusal, the species would have been rebuilt from its
+  newest paid refine (the photo one, not kept), called modelled and given no new preview: a species named whose
+  record holds a refused model now goes to a new preview (`already_refused`). (2) Registering a new model replaced
+  the species' jobs and dropped its re-refine and photo records: the earlier jobs now stay, the run's come last, and
+  the records are kept (`jobs_with`). (3) A run that pays for previews and builds nothing left the species' record
+  untouched: its credits, attempts and each refused preview with the reason now go on the record
+  (`note_unbuilt`, `refused_previews`); the bobcat's reads 70 credits, 3 attempts.
+- **What the gates saved.** The first try paid 30 credits after a failure that was in the preview; this one paid
+  nothing after it.
+- **What is left to try.** The text route has drawn a long tail twice. The other rung is a mesh from the rule's
+  photo (30 credits; iNaturalist 205959042, CC BY 4.0, Ken-ichi Ueda): the animal stands side-on with all four feet
+  down and the bobbed tail plain to see, and its head is turned to the camera, by eye about 70 degrees; the largest
+  turn the straightening has set straight is 38.4. Not run: it waits for Aaron.
+
 ## What it looks like
 
 In the session notes' `avatar-realism-captures`:
@@ -420,7 +450,8 @@ standing in the scene's light.
    hero tool to handle the lagomorph rig. Both gates now stand before the spending (above), and a turned head no
    longer costs a preview: it is set straight in the mesh (the section above), so a species was put near 37 credits.
    The bobcat, the first tried, cost 50 and is refused ("The bobcat", above): its preview was a long-tailed cat, which
-   the shape gate now catches at 20. 297 credits stand above the reserve. Before generating, each species' and its
+   the shape gate now catches at 20; a second preview on the corrected prompt (20) had a long tail again and was
+   refused at the gate ("The second try"). 277 credits stand above the reserve. Before generating, each species' and its
    kin's reference photos have to be in the store (the bobcat's and the Canada lynx's are; the elk, mule deer and
    grey fox were started).
 2. **The neck and the jaw.** One neck joint is why the cats cannot groom and the deer cannot scratch, and why a head

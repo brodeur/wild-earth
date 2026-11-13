@@ -228,6 +228,40 @@ class Named(unittest.TestCase):   # a paid run for the species named (the home t
         self.assertIn("no_such_animal", said[0])
 
 
+class SecondTry(unittest.TestCase):   # the bobcat named again after its refusal (2026-11-13)
+    def test_a_named_species_refused_is_not_rebuilt_from_its_paid_jobs(self):
+        refused = {"acceptance": {"served": False}}
+        self.assertTrue(fm.already_refused(refused, named=True))
+        self.assertFalse(fm.already_refused(refused, named=False))   # a tile's run keeps to the jobs it has
+        self.assertFalse(fm.already_refused({"acceptance": {"served": True}}, named=True))
+        self.assertFalse(fm.already_refused(None, named=True))       # never built: a paid job may build now
+
+    def test_the_earlier_jobs_stay_on_the_record_and_the_runs_come_last(self):
+        self.assertEqual(fm.jobs_with(["p1", "r1", "r2"], ["p2", "r3"]), ["p1", "r1", "r2", "p2", "r3"])
+        self.assertEqual(fm.jobs_with(["p1", "r1", "r2"], ["r1"]), ["p1", "r2", "r1"])   # a rebuild: its job last
+        self.assertEqual(fm.jobs_with(["p1"], []), ["p1"])
+
+    def test_a_refused_preview_goes_on_the_record_and_not_among_the_models_jobs(self):
+        import json, tempfile
+        from pathlib import Path
+        from unittest import mock
+        row = {"credits": 20, "attempts": 1, "ok": False, "jobs": [{"mode": "preview", "dir": "jobs/x/p2"}],
+               "pose": [{"preview": "jobs/x/p2", "ok": False, "why": ["3 separate piece(s) stand on the ground"]}]}
+        with tempfile.TemporaryDirectory() as d:
+            reg = Path(d) / "models.json"
+            reg.write_text(json.dumps({"format": 1, "species": {"x": {"jobs": ["jobs/x/p1", "jobs/x/r1"], "credits": 50,
+                                                                      "attempts": 2, "acceptance": {"served": False}}}}))
+            with mock.patch.object(fm, "REGISTRY", reg):
+                self.assertTrue(fm.note_unbuilt("x", row))
+                self.assertFalse(fm.note_unbuilt("y", row))   # no record: the jobs' own files are the ledger
+                e = json.loads(reg.read_text())["species"]["x"]
+        self.assertEqual((e["credits"], e["attempts"]), (70, 3))
+        self.assertEqual(e["jobs"], ["jobs/x/p1", "jobs/x/r1"])   # the last job is still the model's
+        self.assertEqual(e["refused_previews"][0]["job"], "jobs/x/p2")
+        self.assertIn("3 separate", e["refused_previews"][0]["why"][0])
+        self.assertIs(e["acceptance"]["served"], False)
+
+
 class ShortTailPrompt(unittest.TestCase):
     def test_a_short_tail_is_not_asked_to_hang(self):
         mesh, _ = fm.prompts(fm.named_slots({}, ["lynx_rufus"])[0], "El Dorado County, California")

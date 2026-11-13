@@ -9812,3 +9812,28 @@ refused; the hand-built bobcat draws as before and nothing in the client changed
   of its four usable photos, 30) waits for Aaron: the approved credits are spent and more.
 - **Weak**: the 37-credit estimate priced only the pose. The moose's and the hyena's stored features are stale against
   today's reading; the hyena's, re-read, would have the rule refuse the served hyena, so both were left.
+
+## 2026-11-13: The bobcat's second try is refused at the preview for 20 credits; a refused species named again gets a new preview (pipeline/fauna_models.py already_refused, jobs_with, note_unbuilt; pipeline/pose_gate.py; docs/avatar-realism.md "The second try")
+
+Aaron answered "Try again, 30". The run was capped at 30, paid for one preview (20) and stopped: the pose gate
+refused it. Balance 577. The bobcat has cost 70 credits and has no model to draw; the hand-built bobcat draws as
+before and nothing in the client changed.
+
+- **What came back**: by eye, a cat with its fore feet together and a long tail hanging to the ground, on a prompt
+  that asked for "the short tail a stub ... about 15 cm". Two text previews, two long tails.
+- **Decided, as rules**: (1) a species named for a paid run whose record holds a refused model goes to a new
+  preview; before, the run rebuilt its newest paid refine, called the species modelled and paid for nothing new;
+  (2) registering a model keeps the species' earlier jobs (the run's last) and its re-refine and photo records;
+  (3) a run that pays for previews and builds nothing puts its credits, attempts and each refused preview with the
+  reason on the species' record (`refused_previews`); (4) the pose gate reads a stride only between four feet (this
+  preview's three ground pieces read as a fore stride of 1.48 leg lengths; the fore feet stand together).
+- **Weak**: the build found no tail on this preview, so the shape gate alone would have passed it; the pose gate
+  refused it first because the tail reached the ground. A long tail the tail finder misses and that hangs clear of
+  the ground would pass both gates and be caught only after the refine (10 more credits). Four pieces on the ground
+  are taken for four feet whatever they are.
+- **Not decided here**: a mesh from the rule's photo (30 credits; the bobbed tail is plain in it, the head is turned
+  to the camera by about 70 degrees by eye, more than the 38.4 the straightening has handled) or leaving the bobcat
+  hand-built waits for Aaron.
+- **Also**: on Aaron's request to free disk, two merged, clean worktrees were removed (rings-planes,
+  unruffled-davinci-5a31ae; branches kept; 925 MB by df). Measured by shared disk blocks, 16.9 GB of the 23 GB of
+  tiles in the sweet-feistel worktree are clones of the main checkout's and free nothing if removed.
