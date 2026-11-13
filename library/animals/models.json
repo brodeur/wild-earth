@@ -3430,8 +3430,8 @@
     "library/animals/jobs/lynx_rufus/01a1d3ae-d14e-75db-8080-2859005df874",
     "library/animals/jobs/lynx_rufus/01a1d3af-afcd-714e-8757-f3c213d58bce"
    ],
-   "credits": 50,
-   "attempts": 2,
+   "credits": 70,
+   "attempts": 3,
    "built": "2026-11-12",
    "build": "tools/build_quadruped.py",
    "tile": "utm10n_680_4280",
@@ -3610,7 +3610,16 @@
     "by": "the judge (Claude, from the model's render against the species' description)",
     "date": "2026-11-12",
     "model": "library/animals/jobs/lynx_rufus/01a1d3af-afcd-714e-8757-f3c213d58bce"
-   }
+   },
+   "refused_previews": [
+    {
+     "job": "library/animals/jobs/lynx_rufus/01a1d60e-364a-75c9-897e-74959120b4cc",
+     "at": "2026-11-13",
+     "why": [
+      "3 separate piece(s) stand on the ground where four feet should"
+     ]
+    }
+   ]
   }
  },
  "acceptance_rule": {

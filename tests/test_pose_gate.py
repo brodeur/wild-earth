@@ -134,6 +134,18 @@ class PoseGate(unittest.TestCase):
         self.assertLess(g['head_turn'], 1.0)
         self.assertTrue(g['ok'], g['why'])
 
+    def test_no_stride_is_read_between_fewer_than_four_feet(self):
+        # one hind foot lifted and the other set far back: three pieces on the ground, the pairs unknown
+        T = np.concatenate([box(0.0, 1.0, LEG, 0.8, -0.15, 0.15), leg(HIND_X - 0.45, HALF_GAUGE),
+                            box(HIND_X - 0.04, HIND_X + 0.04, 0.3, LEG, -HALF_GAUGE - 0.04, -HALF_GAUGE + 0.04),
+                            leg(FORE_X, -HALF_GAUGE), leg(FORE_X, HALF_GAUGE),
+                            box(FORE_X, FORE_X + 0.45, 0.62, 0.86, -0.07, 0.07)])
+        g = self.run_gate('three_feet', T)
+        self.assertEqual(g['feet'], 3)
+        self.assertFalse(g['ok'])
+        self.assertTrue(any('where four feet should' in w for w in g['why']), g['why'])
+        self.assertFalse(any('a stride' in w for w in g['why']), g['why'])
+
     def test_node_transform_and_orientation(self):
         # the same square animal turned 37 degrees, scaled and moved by its node (TRS), and by a matrix; and facing -x
         t = np.radians(37 / 2)
