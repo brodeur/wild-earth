@@ -1714,9 +1714,12 @@
        "by": "pipeline/likeness.py (dinov2_small, picture 1)"
       },
       "provenance": {
-       "rung": "text",
+       "rung": "photo",
        "mode": "image",
        "rule_photo": "commons_9825969",
+       "photo": "commons_9825969",
+       "use": "image",
+       "photo_usable": true,
        "decides": false
       }
      }
@@ -2022,9 +2025,15 @@
        "by": "pipeline/likeness.py (dinov2_small, picture 1)"
       },
       "provenance": {
-       "rung": "text",
+       "rung": "photo",
        "mode": "image",
        "rule_photo": "inat_717073114",
+       "photo": "inat_250877072",
+       "use": "image",
+       "photo_usable": false,
+       "photo_why_not": [
+        "legs"
+       ],
        "decides": false
       }
      }
@@ -2040,7 +2049,12 @@
     "agrees": true,
     "served": true,
     "served_by": "override",
-    "due": null
+    "due": {
+     "job": "image-to-3D",
+     "photo": "inat_717073114",
+     "credits": 30,
+     "why": "the mesh came from inat_250877072, which today's photo rule refuses (legs); the rule's photo inat_717073114 has no mesh (the model itself passes)"
+    }
    }
   },
   "taxidea_taxus": {
@@ -2517,9 +2531,12 @@
        "params": "library/animals/check_fit.json"
       },
       "provenance": {
-       "rung": "text",
+       "rung": "photo",
        "mode": "refine",
        "rule_photo": "inat_124247019",
+       "photo": "commons_156829804",
+       "use": "texture",
+       "photo_usable": true,
        "decides": false
       }
      }
