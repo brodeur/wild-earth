@@ -1,0 +1,71 @@
+{
+  "species": "lynx_rufus",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1d3af-afcd-714e-8757-f3c213d58bce",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1d3ae-1aa1-719d-b4fc-8f4d2bb11f1f",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural coat colours and markings of a wild adult bobcat (Lynx rufus) as seen in El Dorado County, California, United States. Coloured as the adult is described: body tan, grayish-brown, gray, yellowish with black bars with black streaks with dark brown, black stripes; back brownish-red; flanks brownish-red; belly and underparts off-white; head black tip, black tuft, off-white, brownish-red; tail black tip with dark bars. Correct this: flanks with black bars; flanks with black streaks; back with black bars; back with black streaks. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural coat colours and markings of a wild adult bobcat (Lynx rufus) as seen in El Dorado County, California, United States. Coloured as the adult is described: body tan, grayish-brown, gray, yellowish with black bars with black streaks with dark brown, black stripes; back brownish-red; flanks brownish-red; belly and underparts off-white; head black tip, black tuft, off-white, brownish-red; tail black tip with dark bars. Correct this: flanks with black bars; flanks with black streaks; back with black bars; back with black streaks. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/lynx_rufus/01a1d3ae-1aa1-719d-b4fc-8f4d2bb11f1f",
+  "estimated_credits": 10,
+  "balance_before": 617,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-13T06:54:28+00:00",
+    "created_at": "2026-11-13T06:54:31+00:00",
+    "started_at": "2026-11-13T06:54:31+00:00",
+    "finished_at": "2026-11-13T06:55:03+00:00",
+    "downloaded": "2026-11-13T06:55:15+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1d3af-afcd-714e-8757-f3c213d58bce",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1794552871046,
+    "started_at": 1794552871055,
+    "finished_at": 1794552903131,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 5596016,
+      "sha256": "3ff81bd5c1f54b75dab00475ccd2f3d0c0cc170cafd0afb827d7964af4eeade1",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1d3af-afcd-714e-8757-f3c213d58bce/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 7249245,
+      "sha256": "7638f987b54655a5db58782abdfb99cb9f6cd8908995bfc5430e19130c427214",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1d3af-afcd-714e-8757-f3c213d58bce/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 106847,
+      "sha256": "3c225f4f5e45c6a7782a6f29af1bdb4ba2e02de6808bc6fdeef180ee42b35720",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1d3af-afcd-714e-8757-f3c213d58bce/output/preview.png"
+    }
+  ],
+  "balance_after": 607
+}

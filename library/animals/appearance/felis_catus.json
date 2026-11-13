@@ -1,0 +1,58 @@
+{
+ "format": 2,
+ "code": "felis_catus",
+ "scientific": "Felis catus",
+ "common": null,
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "black"
+   ],
+   "markings": []
+  },
+  "head": {
+   "colours": [],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "white"
+     ]
+    }
+   ]
+  }
+ },
+ "facts": 2,
+ "dropped": {
+  "morph": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Felis",
+   "title": "Felis",
+   "revision": 1362478740,
+   "facts": 2,
+   "genus": true
+  }
+ ],
+ "retrieved": "2026-11-12",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body black; head white spots",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": null
+  },
+  "shoulder_m": null,
+  "head_body_m": null,
+  "total_m": null
+ }
+}

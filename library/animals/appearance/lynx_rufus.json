@@ -1,0 +1,133 @@
+{
+ "format": 2,
+ "code": "lynx_rufus",
+ "scientific": "Lynx rufus",
+ "common": "bobcat",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "tan",
+    "grayish-brown",
+    "gray",
+    "yellowish",
+    "buff",
+    "brown"
+   ],
+   "markings": [
+    {
+     "pattern": "bars",
+     "colours": [
+      "black"
+     ]
+    },
+    {
+     "pattern": "streaks",
+     "colours": [
+      "black"
+     ]
+    },
+    {
+     "pattern": "stripes",
+     "colours": [
+      "dark brown",
+      "black"
+     ]
+    }
+   ]
+  },
+  "upperparts": {
+   "colours": [
+    "brownish-red"
+   ],
+   "markings": []
+  },
+  "flanks": {
+   "colours": [
+    "brownish-red"
+   ],
+   "markings": []
+  },
+  "underparts": {
+   "colours": [
+    "off-white"
+   ],
+   "markings": []
+  },
+  "head": {
+   "colours": [
+    "black tip",
+    "black tuft",
+    "off-white",
+    "brownish-red",
+    "black"
+   ],
+   "markings": []
+  },
+  "tail": {
+   "colours": [
+    "black tip"
+   ],
+   "markings": [
+    {
+     "pattern": "bars",
+     "colours": [
+      "dark"
+     ]
+    }
+   ]
+  }
+ },
+ "facts": 21,
+ "dropped": {
+  "other taxa": 1,
+  "regional": 1,
+  "morph": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Bobcat",
+   "title": "Bobcat",
+   "revision": 1381416479,
+   "facts": 15
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Lynx_rufus/",
+   "title": "ADW: Lynx rufus",
+   "facts": 6
+  }
+ ],
+ "retrieved": "2026-11-12",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body tan, grayish-brown, gray, yellowish with black bars with black streaks with dark brown, black stripes; back brownish-red; flanks brownish-red; belly and underparts off-white; head black tip, black tuft, off-white, brownish-red; tail black tip with dark bars",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [
+    "short"
+   ],
+   "length_m": [
+    0.1,
+    0.195
+   ]
+  },
+  "shoulder_m": [
+   0.375,
+   0.59
+  ],
+  "head_body_m": [
+   0.651,
+   1.0385
+  ],
+  "total_m": [
+   1.25,
+   1.25
+  ]
+ }
+}

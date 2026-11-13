@@ -1,0 +1,152 @@
+{
+ "tile": "utm10n_680_4280",
+ "started": "2026-11-13T06:52:43+00:00",
+ "budget": 50,
+ "reserve": 300,
+ "species": [
+  {
+   "code": "lynx_rufus",
+   "why": "named",
+   "attempts": 1,
+   "credits": 50,
+   "jobs": [
+    {
+     "mode": "preview",
+     "dir": "library/animals/jobs/lynx_rufus/01a1d3ae-1aa1-719d-b4fc-8f4d2bb11f1f"
+    },
+    {
+     "mode": "refine",
+     "dir": "library/animals/jobs/lynx_rufus/01a1d3ae-d14e-75db-8080-2859005df874"
+    },
+    {
+     "mode": "refine",
+     "dir": "library/animals/jobs/lynx_rufus/01a1d3af-afcd-714e-8757-f3c213d58bce"
+    }
+   ],
+   "ok": true,
+   "prompt": "A wild bobcat (Lynx rufus) of El Dorado County, California, United States, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. Tail short, about 15 cm. No base, no ground plane, no props, no rider. Game-ready.",
+   "texture_prompt": "Natural coat colours and markings of a wild adult bobcat (Lynx rufus) as seen in El Dorado County, California, United States. Coloured as the adult is described: body tan, grayish-brown, gray, yellowish with black bars with black streaks with dark brown, black stripes; back brownish-red; flanks brownish-red; belly and underparts off-white; head black tip, black tuft, off-white, brownish-red; tail black tip with dark bars. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+   "pose": [
+    {
+     "preview": "library/animals/jobs/lynx_rufus/01a1d3ae-1aa1-719d-b4fc-8f4d2bb11f1f",
+     "ok": true,
+     "why": [],
+     "head_turn": 1.26,
+     "spine_bend": 0.88,
+     "stagger_fore": 0.145,
+     "stagger_hind": 0.311,
+     "feet": 4,
+     "straightened": null
+    }
+   ],
+   "build_log": "INFO colour from texture source faces 31009\nINFO remeshed 62996 faces\nINFO tail cut y 0.570, 5115 vertices\nINFO feet y fore/hind -0.562 0.351, gap 0.609, leg cut z 0.540\nINFO size by mass mass 8.9041 volume 0.3160 units -> withers 0.359 m; card shoulder 0.463\nLANDMARKS withers 0.359 scale 0.3043 head-body 0.481 tail 0.222 nose [0.005, -0.272, 0.318] neck base [0.0, -0.13, 0.278] pivots {'FR': [-0.048, -0.083, 0.164], 'FL': [0.049, -0.092, 0.164], 'HL': [0.042, 0.139, 0.164], 'HR': [-0.05, 0.114, 0.164]}\nINFO palette 10 colours, shares [0.061, 0.067, 0.112, 0.082, 0.059, 0.155, 0.12, 0.179, 0.069, 0.096]\nINFO pattern (mean neighbour lightness step) 0.0652 -> tiers [('lod0', 7048), ('lod1', 2452), ('lod2', 400)]\nINFO tier lod0 from 125992 to 7048\nINFO tier lod1 from 125992 to 2452\nINFO tier lod2 from 125992 to 400\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/angry-darwin-f5a92b/client/assets/fauna/lynx_rufus.glb 565504 bytes; lod0 7048 tris, lod1 2452 tris, lod2 400 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/angry-darwin-f5a92b/client/assets/fauna/lynx_rufus.glb: species lynx_rufus, posture digitigrade, withers 0.359 m, wrist 0.42 hock 0.5\nTIER lod0: 7891 -> 8332 vertices, 7626 triangles\nTIER lod1: 2947 -> 3156 vertices, 2722 triangles\nTIER lod2: 551 -> 626 vertices, 498 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/angry-darwin-f5a92b/client/assets/fauna/lynx_rufus.glb 846660 bytes\nINFO lynx_rufus.glb: lynx_rufus, row from tiles/utm10n_680_4280; walk 1.57 trot 3.50 m/s, stride 1.18 m at 2.97 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 18 frames, 0.608 s, stride 0.573 m at 0.94 m/s, duty 0.62, touchdown 0.2778\nCLIP Trot: 11 frames, 0.383 s, stride 1.006 m at 2.63 m/s, duty 0.50, touchdown 0.5455\nCLIP Gallop: 9 frames, 0.314 s, stride 1.759 m at 5.60 m/s, duty 0.38, touchdown 0.5556\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/angry-darwin-f5a92b/client/assets/fauna/lynx_rufus_clips.bin (19680 bytes, 60x41 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/angry-darwin-f5a92b/client/assets/fauna/lynx_rufus_clips.json (6 clips)",
+   "colour_check": {
+    "ok": false,
+    "score": 1.0,
+    "fails": [
+     "tail too long: 0.43 of the head and body, described 0.15 m of 0.84 m (0.17)"
+    ],
+    "off": {}
+   },
+   "recolour": {
+    "at": "2026-11-13T06:54:28+00:00",
+    "before": {
+     "ok": false,
+     "score": 1.0,
+     "fails": [
+      "body: no black bars (1.2%)",
+      "body: no black streaks (1.2%)",
+      "tail too long: 0.43 of the head and body, described 0.15 m of 0.84 m (0.17)"
+     ]
+    },
+    "texture_prompt": "Natural coat colours and markings of a wild adult bobcat (Lynx rufus) as seen in El Dorado County, California, United States. Coloured as the adult is described: body tan, grayish-brown, gray, yellowish with black bars with black streaks with dark brown, black stripes; back brownish-red; flanks brownish-red; belly and underparts off-white; head black tip, black tuft, off-white, brownish-red; tail black tip with dark bars. Correct this: flanks with black bars; flanks with black streaks; back with black bars; back with black streaks. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+    "credits": 10,
+    "job": "library/animals/jobs/lynx_rufus/01a1d3af-afcd-714e-8757-f3c213d58bce",
+    "after": {
+     "ok": false,
+     "score": 1.0,
+     "fails": [
+      "tail too long: 0.43 of the head and body, described 0.15 m of 0.84 m (0.17)"
+     ],
+     "off": {}
+    },
+    "kept": "new"
+   },
+   "likeness": {
+    "ok": false,
+    "why": [
+     "nearer the photos of puma concolor (0.72) than its own species' (0.66)"
+    ],
+    "own": 0.657,
+    "floor": 0.649,
+    "rival": "puma_concolor",
+    "rival_nearness": 0.72,
+    "margin": -0.063,
+    "photos": 14,
+    "of": 14,
+    "coat": [
+     "the trunk 23 yellower than the photos'",
+     "the trunk colour strength ranges over 26; the photos' over 6 (patches of another colour)",
+     "the head and rump 14 bluer than the photos' (against the flank)"
+    ],
+    "seen": "the generated source"
+   },
+   "likeness_refine": {
+    "job": "library/animals/jobs/lynx_rufus/01a1d3b0-9ef7-76b6-bc3b-cd1cf49ea89d",
+    "kept": "old",
+    "likeness": {
+     "before": {
+      "ok": false,
+      "why": [
+       "nearer the photos of puma concolor (0.72) than its own species' (0.66)"
+      ],
+      "own": 0.657,
+      "floor": 0.649,
+      "rival": "puma_concolor",
+      "rival_nearness": 0.72,
+      "margin": -0.063,
+      "photos": 14,
+      "of": 14,
+      "coat": [
+       "the trunk 23 yellower than the photos'",
+       "the trunk colour strength ranges over 26; the photos' over 6 (patches of another colour)",
+       "the head and rump 14 bluer than the photos' (against the flank)"
+      ],
+      "seen": "the generated source"
+     },
+     "after": {
+      "ok": false,
+      "why": [
+       "nearer the photos of puma concolor (0.70) than its own species' (0.63)",
+       "further from its species' photos (0.63) than nine in ten of them are from each other (0.65)"
+      ],
+      "own": 0.634,
+      "floor": 0.649,
+      "rival": "puma_concolor",
+      "rival_nearness": 0.702,
+      "margin": -0.068,
+      "photos": 14,
+      "of": 14,
+      "seen": "the generated source"
+     }
+    },
+    "error": null,
+    "reference": {
+     "source": "inaturalist",
+     "id": "inat_163430336",
+     "licence": "CC0 1.0",
+     "author": "Anne Parsons",
+     "attribution": "no rights reserved",
+     "page": "https://www.inaturalist.org/observations/98188297",
+     "photo_page": "https://www.inaturalist.org/photos/163430336",
+     "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/163430336/large.jpeg"
+    }
+   },
+   "acceptance": "rejected"
+  }
+ ],
+ "stand_ins": [],
+ "spent": 50,
+ "balance_after": 597,
+ "modelled": 1
+}

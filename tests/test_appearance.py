@@ -54,6 +54,27 @@ class Facts(unittest.TestCase):
         self.assertIn(("tail", "greenish-yellow", "bars"), f)
 
 
+class SmallParts(unittest.TestCase):   # the bobcat, 2026-11-12
+    def test_the_eyes_and_the_nose_are_not_the_coat(self):
+        f = facts("Its eyes are yellow with black slit pupils. The nose of the test animal is pinkish-red, and it has a base "
+                  "color of gray on its face, sides, and back.")
+        self.assertFalse({c for _, c, _ in f} & {"yellow", "black", "pinkish-red"})
+        self.assertIn(("head", "gray", None), f)
+
+    def test_a_goldeneye_is_no_eye(self):
+        f = facts("The common goldeneye has a round white patch on the face.")
+        self.assertIn(("head", "white", "patches"), f)
+
+    def test_a_sentence_going_on_about_a_colour_form_is_dropped_with_it(self):
+        f = facts("A few melanistic animals have been sighted. They appear black, but may still exhibit a spot pattern. "
+                  "The coat is tan.")
+        self.assertEqual({c for _, c, _ in f}, {"tan"})
+
+    def test_ear_tufts_are_tufts(self):
+        f = facts("The ears are pointed, with short, black tufts.")
+        self.assertEqual({(c, p) for _, c, p in f}, {("black", "tuft")})
+
+
 class Colour(unittest.TestCase):
     def test_named_colours_order(self):
         y, o, b = ap.colour_lab("yellow"), ap.colour_lab("orange"), ap.colour_lab("black")
@@ -164,6 +185,20 @@ class Features(unittest.TestCase):
         self.assertAlmostEqual(f["shoulder_m"][0], 0.823, places=2)
         self.assertAlmostEqual(f["total_m"][1], 1.494, places=2)
 
+    def test_a_tail_inside_a_longer_measure_is_not_the_subject(self):   # the bobcat, 2026-11-12
+        f = self.feats("It reaches a total length, including the tail, of up to 125 cm. The adult is 47.5–125 cm (18.7–49.2 in) "
+                       "long from the head to the base of its distinctive stubby tail, averaging 82.7 cm (32.6 in); the "
+                       "tail is 9 to 20 cm (3.5 to 7.9 in) long.")
+        self.assertEqual(f["tail"]["length_m"], [0.09, 0.2])
+        self.assertEqual(f["tail"]["words"], ["short"])   # "stubby"; the "long" that closes the figure is no word for it
+        self.assertEqual(f["total_m"], [1.25, 1.25])
+        self.assertEqual(f["head_body_m"], [0.651, 1.0385])
+        self.assertEqual(ap.feature_lead({"features": f}), "Tail short, about 15 cm.")
+
+    def test_a_tail_a_length_includes_keeps_its_own_figure(self):
+        f = self.feats("It is 1 m long, including a tail of 30 to 40 cm.")
+        self.assertEqual(f["tail"]["length_m"], [0.3, 0.4])
+
     def test_feature_lead(self):
         app = {"features": {"horns": {"described": True, "words": ["long", "curved"], "colours": ["black"], "length_m": [0.15, 0.28]},
                             "tail": {"words": [], "length_m": [0.1, 0.2]}, "shoulder_m": [1.0, 1.0], "head_body_m": [1.2, 1.8]}}
@@ -178,6 +213,50 @@ class Prompt(unittest.TestCase):
         self.assertTrue(out.startswith("Natural coat colours of a wild adult x (X y) as seen in z. Coloured as"))
         self.assertTrue(out.endswith("Realistic, evenly lit albedo with no baked shadows."))
         self.assertEqual(fm._with_lead(tex, ""), tex)
+
+
+class Named(unittest.TestCase):   # a paid run for the species named (the home tile's bobcat, 2026-11-12)
+    def test_a_tile_slot_or_a_four_legged_trait_card(self):
+        said = []
+        fauna = {"slots": [{"code": "sciurus_niger", "common": "Fox squirrel", "archetype": "tree squirrel"}]}
+        got = fm.named_slots(fauna, ["lynx_rufus", "sciurus_niger", "no_such_animal"], log=said.append)
+        self.assertEqual([s["code"] for s in got], ["lynx_rufus", "sciurus_niger"])
+        self.assertEqual(got[0]["scientific"], "Lynx rufus")
+        self.assertTrue(fm.quadruped(got[0], fm._traits("lynx_rufus")))
+        self.assertEqual(got[1]["archetype"], "tree squirrel")   # the tile's own slot, whole
+        self.assertTrue(all(s["why"] == "named" for s in got))
+        self.assertIn("no_such_animal", said[0])
+
+
+class ShortTailPrompt(unittest.TestCase):
+    def test_a_short_tail_is_not_asked_to_hang(self):
+        mesh, _ = fm.prompts(fm.named_slots({}, ["lynx_rufus"])[0], "El Dorado County, California")
+        self.assertIn("Tail short, about 15 cm.", mesh)
+        self.assertNotIn("hanging", mesh)
+        self.assertIn("the short tail a stub", mesh)
+        mesh, _ = fm.prompts(fm.named_slots({}, ["puma_concolor"])[0], "El Dorado County, California")
+        self.assertIn("tail hanging free clear of the legs", mesh)
+
+
+class ShapeGate(unittest.TestCase):   # the bobcat's long tail, found on the preview (2026-11-12)
+    def gate(self, built, geometry):
+        from unittest import mock
+        from pathlib import Path
+        with mock.patch.object(fm, "build", return_value=(built, "INFO legs\nno legs found")), \
+                mock.patch.object(fm, "appearance", return_value={"features": {}}), \
+                mock.patch.object(ap, "feature_check", return_value={"geometry": geometry, "texture": ["tail ringed"]}):
+            return fm.shape_gate("lynx_rufus", Path("preview"), "utm10n_680_4280")
+
+    def test_the_described_shape_passes_whatever_the_texture(self):
+        self.assertEqual(self.gate(True, []), {"ok": True, "why": []})
+
+    def test_a_long_tail_is_refused_before_the_refine(self):
+        g = self.gate(True, ["tail too long: 0.43 of the head and body"])
+        self.assertFalse(g["ok"]); self.assertIn("tail too long", g["why"][0])
+
+    def test_a_mesh_the_build_cannot_use_is_refused(self):
+        g = self.gate(False, [])
+        self.assertFalse(g["ok"]); self.assertIn("no legs found", g["why"][0])
 
 
 class Iteration8(unittest.TestCase):

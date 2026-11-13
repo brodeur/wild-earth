@@ -1,0 +1,121 @@
+{
+ "format": 2,
+ "code": "lynx_canadensis",
+ "scientific": "Lynx canadensis",
+ "common": null,
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "yellowish brown",
+    "brown",
+    "buff-grey",
+    "greyish",
+    "bluish-grey",
+    "black",
+    "yellowish-brown"
+   ],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "dark"
+     ]
+    }
+   ]
+  },
+  "underparts": {
+   "colours": [
+    "white",
+    "gray",
+    "buff"
+   ],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "dark"
+     ]
+    }
+   ]
+  },
+  "head": {
+   "colours": [
+    "brown",
+    "black tuft"
+   ],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "silvery-grey"
+     ]
+    }
+   ]
+  },
+  "legs": {
+   "colours": [
+    "black tuft"
+   ],
+   "markings": []
+  },
+  "tail": {
+   "colours": [
+    "black tip",
+    "black"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 19,
+ "dropped": {
+  "no body word": 1,
+  "other taxa": 2
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Canada_lynx",
+   "title": "Canada lynx",
+   "revision": 1366722124,
+   "facts": 13
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Lynx_canadensis/",
+   "title": "ADW: Lynx canadensis",
+   "facts": 6
+  }
+ ],
+ "retrieved": "2026-11-12",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body yellowish brown, brown, buff-grey, greyish with dark spots; belly and underparts white, gray, buff with dark spots; head brown, black tuft with silvery-grey spots; legs black tuft; tail black tip, black",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [
+    "short"
+   ],
+   "length_m": [
+    0.05,
+    0.13
+   ]
+  },
+  "shoulder_m": [
+   0.48,
+   0.56
+  ],
+  "head_body_m": [
+   0.067,
+   0.067
+  ],
+  "total_m": [
+   0.73,
+   1.07
+  ]
+ }
+}

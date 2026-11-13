@@ -9787,3 +9787,28 @@ four-legged sources with a head turned over 9.5 degrees, and refusing such previ
   models were not seen on a tile in the world, only in the lineup page (wolf, bison) and drawn from their files.
 - **Credits**: none spent. By the library's rate (28 of 37 meshes pass the gate) a species is about 37 credits, not
   50, and the 347 above the reserve about nine species; that rate is from 37 meshes, a third of them from photos.
+
+## 2026-11-12: The bobcat is refused after 50 credits; a preview's shape is measured before its refine (pipeline/fauna_models.py shape_gate, --codes; pipeline/appearance.py reading rules; docs/avatar-realism.md "The bobcat")
+
+Aaron chose "Generate bobcat" (about 37 credits). The run was capped at 50, spent 50 (balance 597) and the model is
+refused; the hand-built bobcat draws as before and nothing in the client changed.
+
+- **Read first, free.** The bobcat's description gave its tail as 47 to 51 cm (a head-and-body figure and a total
+  length taken for the tail's), called it both short and long, and made its body black, yellow and pinkish-red (the
+  eyes, the nose, a sentence about melanistic animals). Five reading rules in `appearance.py` (a tail inside a longer
+  measure's phrase is not the subject; "head to the base of the tail" is head and body; a "long" that closes a figure;
+  the eyes and the nose; a sentence that goes on about the one before). Re-read on the stored species: six
+  feature records rewritten, 0 changes in what is served. Photos fetched for the bobcat (14 readable), the Canada
+  lynx (11) and the house cat (2).
+- **The run**: preview 20 (pose passes), refine 10, a re-refine for the markings 10 (kept), a re-refine from a photo
+  10 (not kept). A lean orange cat with a long tail: tail 0.43 of the head and body against 0.17 described; nearer
+  the cougar's photos (0.72) than the bobcat's (0.66). Rejected by the rule and by eye (recorded as the judge's).
+- **Decided, as rules**: (1) a tail described short is not asked to "hang free" in the mesh prompt; (2) the shape
+  gate: a four-legged preview is built untextured and its described shape measured before the refine (refuses 3 of
+  the library's 30 text previews, none behind a served model, and finds one the build cannot use); (3) no texture
+  retry on a model whose shape fails; (4) `--codes` names species for a paid run; a dry run does not build; (5) a
+  model the rule alone refuses is not an "accepted" recorded verdict.
+- **Not decided here**: the next try (a text preview on the corrected prompt, 20 or 30, or image-to-3D from the best
+  of its four usable photos, 30) waits for Aaron: the approved credits are spent and more.
+- **Weak**: the 37-credit estimate priced only the pose. The moose's and the hyena's stored features are stale against
+  today's reading; the hyena's, re-read, would have the rule refuse the served hyena, so both were left.

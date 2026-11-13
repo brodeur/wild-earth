@@ -312,6 +312,80 @@ saturation is only ever scaled down to the old palette's, and value scaled to it
 x 0.895, value x 1.176; the wolf, bison and grizzly near 1). The lion is still about 15 % more saturated than the
 hand-built one.
 
+## The bobcat: refused for 50 credits, and a gate on the preview's shape (2026-11-12)
+
+The first home species through the gates. Aaron approved "about 37 credits"; the run was capped at 50 and spent all
+of it, and the model is refused. The hand-built bobcat draws as before; nothing in the client changed.
+
+**Before any credits** (all free):
+
+- The description, read from Wikipedia and Animal Diversity Web, was wrong in ways that would have misled both the
+  prompt and the check, each fixed as a reading rule in `pipeline/appearance.py`:
+  - *The tail.* "47.5-125 cm long from the head to the base of its distinctive stubby tail, averaging 82.7 cm" gave the
+    tail 82.7 cm, and "a total length, including the tail, of up to 125 cm" gave it 125: the bobcat's tail was recorded
+    as 47 to 51 cm. A tail named inside a longer measure's phrase is no longer the subject, and "from the head to the
+    base of the tail" is the head and body. Now: tail 10 to 19.5 cm, head and body 0.65 to 1.04 m, total 1.25 m, and
+    the mesh prompt gains "Tail short, about 15 cm".
+  - *"Long".* "The tail is 9 to 20 cm long" made the tail both "short" and "long": a "long" that only closes a figure
+    is not a word for the tail.
+  - *Eyes and nose.* "Its eyes are yellow with black slit pupils" and "the nose is pinkish-red" made the body black,
+    yellow and pinkish-red: a colour said of the eyes or the nose is not the coat's.
+  - *A sentence that goes on.* "A few melanistic bobcats have been sighted ... They appear black" made the body black:
+    a sentence beginning They, These, Those or Such is dropped with the one before it when that one was about a colour
+    form, the young or another animal.
+  - Ear tufts are tufts ("black tufts" was the head's ground colour).
+- The same rules re-read on the stored species from their cached sources: the colours of one change (the Canada goose loses "legs black",
+  read from a sentence about goslings; its stored record was left), the features of six (the pronghorn, hippo,
+  leopard, buffalo and grizzly lose a "long" that closed a figure; the cougar's total length reads 2.05 to 2.4 m,
+  not 1.95 to 2.58), rewritten; `--accept`: 0 changes in what is served.
+- Photographs: the bobcat's (97 openly licensed candidates, 14 the judge can read), the Canada lynx's (85, 11) and
+  the house cat's (25, 2). With them the store's photos left out one at a time land on their own species 194 times
+  of 213 (91 %, 14 species); no bobcat was taken for a lynx or a lynx for a bobcat.
+
+**The run** (`python -m pipeline.fauna_models utm10n_680_4280 --budget 50 --codes lynx_rufus`; `--codes` now names
+species for a paid run, a tile slot or a four-legged species' trait card):
+
+| job | credits | result |
+|---|---|---|
+| preview | 20 | passes the pose gate (head 1.3 degrees, spine 0.9) |
+| refine | 10 | colours pass; no black bars or streaks; tail too long |
+| refine again, for the markings | 10 | markings pass; kept |
+| refine again, from the species' most typical photo | 10 | likeness no better (0.63); not kept |
+
+The model is a lean orange cat with a long hanging tail (`likeness_bobcat_refused.jpg`). Refused twice over: the tail
+is 0.43 of the head and body where 0.17 is described, and it is nearer the cougar's photos (0.72) than the bobcat's
+(0.66). By eye the same: no bobbed tail, no cheek ruff, no spots. Balance 597.
+
+**What the run showed was wrong in the pipeline**, each fixed as a rule:
+
+1. *The prompt asked for it.* Every four-legged mesh prompt says "tail hanging free clear of the legs", and the
+   bobcat's then said "Tail short, about 15 cm". A tail described short is now asked for as "the short tail a stub,
+   held clear of the legs".
+2. *The shape was measurable at 20 credits.* The long tail is in the untextured preview. `fauna_models.shape_gate`
+   builds the preview to a scratch file (7 s) and measures the described shape on it (the tail against the head and
+   body, the horns against the withers) before the refine is paid. Over the library's 30 text previews it refuses
+   three (the bobcat's, and the mountain goat's two with an ibex's horns, both of which were refined and neither
+   of which is the model served), none of them behind a model that is served, and finds one the build cannot use (a
+   wildebeest's, which was refined and is not the model served).
+3. *A wrong shape was given two more textures.* A model whose shape fails after the refine gets no texture retry.
+4. With 2 and 3 the same preview would have cost 20, not 50.
+5. A dry run rebuilt the species from its newest paid refine and registered it (the bobcat's entry was rewritten from
+   the run's ledger); a dry run no longer builds.
+6. A model the rule alone refuses, never drawn and never judged, counted as "accepted: drawn, no rejection recorded"
+   among the recorded verdicts (`appearance.known_verdicts`); it is left out. The bobcat's verdict is recorded
+   (rejected, by eye), so the rule is now measured on 42 verdicts: no accepted model refused, 10 of 12 rejected
+   models refused.
+
+**What it means for the cost.** "About 37 credits a species" counted only the pose. One species is not a rate, but
+the estimate had no term for a preview of the wrong animal, and this one cost 50 with nothing to draw. The next try
+at the bobcat is either a new text preview on the corrected prompt (20 to see its shape, 30 if it passes) or a mesh
+from its best photo (30; the rule's `due`; four of the 97 photos stand whole, side-on and square enough).
+
+**Left open**: the stored features of the moose and the spotted hyena are older than today's reading rule and
+source text. Read again, the hyena's tail is "short" and the rule would refuse the served hyena (tail 0.37 of the
+head and body against 0.25); both records were left as stored. The house cat has two readable photos, too few to
+tell a bobcat from one.
+
 ## What it looks like
 
 In the session notes' `avatar-realism-captures`:
@@ -344,9 +418,11 @@ standing in the scene's light.
    keeps output three days). Each needs a new generation (30 to 50 credits, so about 300 for the eight) and the loader
    wrapper. The deer is the hard one: it plays hero clips on its own skeleton, not the engine's. The rabbits need the
    hero tool to handle the lagomorph rig. Both gates now stand before the spending (above), and a turned head no
-   longer costs a preview: it is set straight in the mesh (the section above), so a species is near 37 credits and
-   the 347 above the reserve are about nine species. Before generating, each species' and its kin's reference photos
-   have to be in the store (the bobcat, elk, mule deer and grey fox were started).
+   longer costs a preview: it is set straight in the mesh (the section above), so a species was put near 37 credits.
+   The bobcat, the first tried, cost 50 and is refused ("The bobcat", above): its preview was a long-tailed cat, which
+   the shape gate now catches at 20. 297 credits stand above the reserve. Before generating, each species' and its
+   kin's reference photos have to be in the store (the bobcat's and the Canada lynx's are; the elk, mule deer and
+   grey fox were started).
 2. **The neck and the jaw.** One neck joint is why the cats cannot groom and the deer cannot scratch, and why a head
    turned far looks like a roll. No jaw is why there is no yawn, no real chewing and no carrying
    ([behaviour-rig.md](behaviour-rig.md) item 3). A neck chain of three and a jaw, added the way the ears were.
