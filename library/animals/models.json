@@ -1709,7 +1709,7 @@
        "rival_nearness": 0.519,
        "margin": 0.248,
        "photos": 14,
-       "of": 12,
+       "of": 14,
        "seen": "the generated source",
        "by": "pipeline/likeness.py (dinov2_small, picture 1)"
       },
@@ -1793,7 +1793,7 @@
        "rival_nearness": 0.517,
        "margin": 0.21,
        "photos": 17,
-       "of": 12,
+       "of": 14,
        "coat": [
         "the head and rump 16 bluer than the photos' (against the flank)",
         "the underside 13 bluer than the photos' (against the flank)",
@@ -2017,7 +2017,7 @@
        "rival_nearness": 0.402,
        "margin": 0.35,
        "photos": 10,
-       "of": 12,
+       "of": 14,
        "seen": "the generated source",
        "by": "pipeline/likeness.py (dinov2_small, picture 1)"
       },
@@ -2236,7 +2236,7 @@
        "rival_nearness": 0.495,
        "margin": 0.141,
        "photos": 7,
-       "of": 12,
+       "of": 14,
        "seen": "the generated source",
        "by": "pipeline/likeness.py (dinov2_small, picture 1)"
       },
@@ -2610,7 +2610,7 @@
        "rival_nearness": 0.699,
        "margin": 0.052,
        "photos": 15,
-       "of": 12,
+       "of": 14,
        "seen": "the generated source",
        "by": "pipeline/likeness.py (dinov2_small, picture 1)"
       },
@@ -2788,7 +2788,7 @@
        "rival_nearness": 0.624,
        "margin": 0.125,
        "photos": 12,
-       "of": 12,
+       "of": 14,
        "seen": "the generated source",
        "by": "pipeline/likeness.py (dinov2_small, picture 1)"
       },
@@ -3136,7 +3136,7 @@
        "rival_nearness": 0.47,
        "margin": 0.246,
        "photos": 21,
-       "of": 12,
+       "of": 14,
        "seen": "the generated source",
        "by": "pipeline/likeness.py (dinov2_small, picture 1)"
       },
@@ -3279,11 +3279,11 @@
        "fails": [],
        "own": 0.749,
        "floor": 0.348,
-       "rival": "vulpes_vulpes",
-       "rival_nearness": 0.458,
-       "margin": 0.291,
+       "rival": "lynx_canadensis",
+       "rival_nearness": 0.549,
+       "margin": 0.2,
        "photos": 11,
-       "of": 12,
+       "of": 14,
        "coat": [
         "the trunk 13 yellower than the photos'",
         "the head and rump 9 bluer than the photos' (against the flank)"
@@ -3362,7 +3362,7 @@
        "rival_nearness": 0.778,
        "margin": -0.007,
        "photos": 21,
-       "of": 12,
+       "of": 14,
        "seen": "the generated source",
        "by": "pipeline/likeness.py (dinov2_small, picture 1)"
       },
@@ -3404,44 +3404,235 @@
     "date": "2026-11-12",
     "model": "library/animals/jobs/canis_latrans/01a1cf01-38ce-754f-bcd0-ee77b5a4b9f8"
    }
+  },
+  "lynx_rufus": {
+   "kind": "quadruped",
+   "glb": "client/assets/fauna/lynx_rufus.glb",
+   "jobs": [
+    "library/animals/jobs/lynx_rufus/01a1d3ae-1aa1-719d-b4fc-8f4d2bb11f1f",
+    "library/animals/jobs/lynx_rufus/01a1d3ae-d14e-75db-8080-2859005df874",
+    "library/animals/jobs/lynx_rufus/01a1d3af-afcd-714e-8757-f3c213d58bce"
+   ],
+   "credits": 50,
+   "attempts": 2,
+   "built": "2026-11-12",
+   "build": "tools/build_quadruped.py",
+   "tile": "utm10n_680_4280",
+   "colour_check": {
+    "ok": false,
+    "score": 1.0,
+    "fails": [
+     "tail too long: 0.43 of the head and body, described 0.15 m of 0.84 m (0.17)"
+    ],
+    "off": {}
+   },
+   "recolour": [
+    {
+     "at": "2026-11-13T06:54:28+00:00",
+     "before": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "body: no black bars (1.2%)",
+       "body: no black streaks (1.2%)",
+       "tail too long: 0.43 of the head and body, described 0.15 m of 0.84 m (0.17)"
+      ]
+     },
+     "texture_prompt": "Natural coat colours and markings of a wild adult bobcat (Lynx rufus) as seen in El Dorado County, California, United States. Coloured as the adult is described: body tan, grayish-brown, gray, yellowish with black bars with black streaks with dark brown, black stripes; back brownish-red; flanks brownish-red; belly and underparts off-white; head black tip, black tuft, off-white, brownish-red; tail black tip with dark bars. Correct this: flanks with black bars; flanks with black streaks; back with black bars; back with black streaks. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "credits": 10,
+     "job": "library/animals/jobs/lynx_rufus/01a1d3af-afcd-714e-8757-f3c213d58bce",
+     "after": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "tail too long: 0.43 of the head and body, described 0.15 m of 0.84 m (0.17)"
+      ],
+      "off": {}
+     },
+     "kept": "new"
+    }
+   ],
+   "photo": [
+    {
+     "at": "2026-11-13T06:55:29+00:00",
+     "mode": "texture",
+     "job": "library/animals/jobs/lynx_rufus/01a1d3b0-9ef7-76b6-bc3b-cd1cf49ea89d",
+     "credits": 10,
+     "kept": "old",
+     "likeness": {
+      "before": {
+       "ok": false,
+       "why": [
+        "nearer the photos of puma concolor (0.72) than its own species' (0.66)"
+       ],
+       "own": 0.657,
+       "floor": 0.649,
+       "rival": "puma_concolor",
+       "rival_nearness": 0.72,
+       "margin": -0.063,
+       "photos": 14,
+       "of": 14,
+       "coat": [
+        "the trunk 23 yellower than the photos'",
+        "the trunk colour strength ranges over 26; the photos' over 6 (patches of another colour)",
+        "the head and rump 14 bluer than the photos' (against the flank)"
+       ],
+       "seen": "the generated source"
+      },
+      "after": {
+       "ok": false,
+       "why": [
+        "nearer the photos of puma concolor (0.70) than its own species' (0.63)",
+        "further from its species' photos (0.63) than nine in ten of them are from each other (0.65)"
+       ],
+       "own": 0.634,
+       "floor": 0.649,
+       "rival": "puma_concolor",
+       "rival_nearness": 0.702,
+       "margin": -0.068,
+       "photos": 14,
+       "of": 14,
+       "seen": "the generated source"
+      }
+     },
+     "reference": {
+      "source": "inaturalist",
+      "id": "inat_163430336",
+      "licence": "CC0 1.0",
+      "author": "Anne Parsons",
+      "attribution": "no rights reserved",
+      "page": "https://www.inaturalist.org/observations/98188297",
+      "photo_page": "https://www.inaturalist.org/photos/163430336",
+      "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/163430336/large.jpeg"
+     },
+     "error": null,
+     "note": "entry rewritten from the run's ledger (tiles/utm10n_680_4280/fauna/models_run.json) after a dry run re-registered the species"
+    }
+   ],
+   "acceptance": {
+    "format": 2,
+    "at": "2026-11-12",
+    "model": "library/animals/jobs/lynx_rufus/01a1d3af-afcd-714e-8757-f3c213d58bce",
+    "glb_sha1": "1602951e41105a238d72e6ce0b3c6934613e0a1e",
+    "rule": {
+     "decision": "rejected",
+     "why": [
+      "check: tail too long: 0.43 of the head and body, described 0.15 m of 0.84 m (0.17)",
+      "likeness: nearer the photos of puma concolor (0.72) than its own species' (0.66)"
+     ],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "built: the GLB exists only if the build's gate passed when it was built"
+      },
+      "check": {
+       "ok": false,
+       "score": 1.0,
+       "fails": [
+        "tail too long: 0.43 of the head and body, described 0.15 m of 0.84 m (0.17)"
+       ],
+       "geometry": [
+        "tail too long: 0.43 of the head and body, described 0.15 m of 0.84 m (0.17)"
+       ],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "likeness": {
+       "ok": false,
+       "judged": true,
+       "fails": [
+        "nearer the photos of puma concolor (0.72) than its own species' (0.66)"
+       ],
+       "own": 0.657,
+       "floor": 0.649,
+       "rival": "puma_concolor",
+       "rival_nearness": 0.72,
+       "margin": -0.063,
+       "photos": 14,
+       "of": 14,
+       "coat": [
+        "the trunk 23 yellower than the photos'",
+        "the trunk colour strength ranges over 26; the photos' over 6 (patches of another colour)",
+        "the head and rump 14 bluer than the photos' (against the flank)"
+       ],
+       "seen": "the generated source",
+       "by": "pipeline/likeness.py (dinov2_small, picture 1)"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "rule_photo": "inat_205959042",
+       "decides": false
+      }
+     }
+    },
+    "override": {
+     "verdict": "rejected",
+     "serve": false,
+     "by": "the judge (Claude, from the model's render against the species' description)",
+     "why": "by eye, the generated source side-on beside 14 photos of the species (likeness sheet): a lean orange cat with a long hanging tail and a plain coat; no bobbed tail, no cheek ruff, no spots; it reads as a small cougar or a house cat, not a bobcat",
+     "date": "2026-11-12",
+     "source": "judge"
+    },
+    "agrees": true,
+    "served": false,
+    "served_by": "override",
+    "due": {
+     "job": "image-to-3D",
+     "photo": "inat_205959042",
+     "credits": 30,
+     "why": "geometry: tail too long: 0.43 of the head and body, described 0.15 m of 0.84 m (0.17)"
+    }
+   },
+   "judge": {
+    "verdict": "rejected",
+    "why": "by eye, the generated source side-on beside 14 photos of the species (likeness sheet): a lean orange cat with a long hanging tail and a plain coat; no bobbed tail, no cheek ruff, no spots; it reads as a small cougar or a house cat, not a bobcat",
+    "by": "the judge (Claude, from the model's render against the species' description)",
+    "date": "2026-11-12",
+    "model": "library/animals/jobs/lynx_rufus/01a1d3af-afcd-714e-8757-f3c213d58bce"
+   }
   }
  },
  "acceptance_rule": {
   "doc": "pipeline/fauna_models.py, the section 'model acceptance as a rule'",
   "fit": {
-   "date": "2026-11-06",
+   "date": "2026-11-12",
    "by": "pipeline/fauna_models.py fit_acceptance",
-   "models": 39,
-   "rejected": 10,
-   "accepted": 29,
+   "models": 42,
+   "likeness_judged": 14,
+   "rejected": 12,
+   "accepted": 30,
    "rule": {
-    "rejected_flagged": 8,
+    "rejected_flagged": 10,
     "rejected_passed": 2,
-    "accepted_passed": 29,
+    "accepted_passed": 30,
     "accepted_flagged": 0,
-    "balanced_accuracy": 0.9
+    "balanced_accuracy": 0.917
    },
    "loo": {
-    "rejected_flagged": 8,
+    "rejected_flagged": 10,
     "rejected_passed": 2,
-    "accepted_passed": 28,
+    "accepted_passed": 29,
     "accepted_flagged": 1,
-    "balanced_accuracy": 0.883
+    "balanced_accuracy": 0.9
    },
    "not_adopted": {
     "provenance by use (image-to-3D photo must pass USABLE, a texture reference whole, size, clear, body)": {
-     "rejected_flagged": 8,
+     "rejected_flagged": 10,
      "rejected_passed": 2,
-     "accepted_passed": 28,
-     "accepted_flagged": 1,
-     "balanced_accuracy": 0.883
+     "accepted_passed": 30,
+     "accepted_flagged": 0,
+     "balanced_accuracy": 0.917
     },
     "provenance, every USABLE score whatever the use": {
-     "rejected_flagged": 9,
-     "rejected_passed": 1,
-     "accepted_passed": 28,
-     "accepted_flagged": 1,
-     "balanced_accuracy": 0.933
+     "rejected_flagged": 10,
+     "rejected_passed": 2,
+     "accepted_passed": 30,
+     "accepted_flagged": 0,
+     "balanced_accuracy": 0.917
     }
    },
    "disagreements": [
@@ -3451,7 +3642,22 @@
      "verdict": "rejected",
      "by": "the judge, iteration 7",
      "rule": "accepted",
-     "check_fails": []
+     "check_fails": [],
+     "likeness": {
+      "ok": true,
+      "why": [],
+      "own": 0.745,
+      "floor": 0.69,
+      "rival": "ursus_americanus",
+      "rival_nearness": 0.6,
+      "margin": 0.145,
+      "photos": 12,
+      "of": 14,
+      "coat": [
+       "the trunk 14 redder than the photos'"
+      ],
+      "seen": "the generated source"
+     }
     },
     {
      "code": "ursus_arctos",
@@ -3459,7 +3665,22 @@
      "verdict": "rejected",
      "by": "the judge, iteration 7",
      "rule": "accepted",
-     "check_fails": []
+     "check_fails": [],
+     "likeness": {
+      "ok": true,
+      "why": [],
+      "own": 0.8,
+      "floor": 0.69,
+      "rival": "ursus_americanus",
+      "rival_nearness": 0.689,
+      "margin": 0.111,
+      "photos": 12,
+      "of": 14,
+      "coat": [
+       "the trunk colour strength ranges over 2; the photos' over 13 (flatter than the animal)"
+      ],
+      "seen": "the generated source"
+     }
     }
    ]
   }

@@ -34,7 +34,10 @@ in it is per species:
             made from is tried before a new one;
   pose      a four-legged animal's preview is measured before its refine is paid (pipeline/pose_gate.py, 2026-11-12:
             the head's turn, the spine's bend, each foot pair's stagger, four feet down): a preview that does not stand
-            square is a failed attempt (20 credits, not 30, and no turned head built into a model). A turned head
+            square is a failed attempt (20 credits, not 30, and no turned head built into a model), and so is one
+            the build cannot use or whose shape is not the described one (shape_gate: the build run on the untextured
+            preview, the tail and the horns measured against the description); a model whose shape fails after the
+            refine is not given another texture. A turned head
             alone is not one: it is set straight in the mesh the model is built from (pipeline/straighten.py: the neck
             and head's centreline seen from above unbent onto the trunk's line; the job's model.glb is kept and
             model_straight.glb written beside it), and the gate measures that mesh;
@@ -66,6 +69,7 @@ in it is per species:
 Credits are spent only from this command, never from a tile build:
 
   arch -arm64 .venv/bin/python -m pipeline.fauna_models <tile> --budget 800 [--reserve 300] [--max 12] [--kind birds] [--dry-run]
+  arch -arm64 .venv/bin/python -m pipeline.fauna_models <tile> --budget 50 --codes a,b [--dry-run]   # only the species named (a slot, or a four-legged species' trait card)
   arch -arm64 .venv/bin/python -m pipeline.fauna_models <tile> --check [--codes a,b]           # the colour check, no credits
   arch -arm64 .venv/bin/python -m pipeline.fauna_models <tile> --recolour --budget 60 [--codes a,b] [--reserve 1450]
   arch -arm64 .venv/bin/python -m pipeline.fauna_models <tile> --rebuild [--codes a,b]
@@ -287,6 +291,10 @@ def prompts(slot: dict, place: str) -> tuple[str, str]:
         lead = feature_lead(appearance(slot["code"]))
         if lead and len(mesh) + len(lead) + 1 <= 800:
             mesh = mesh.replace(" No base,", f" {lead} No base,", 1)
+            # a tail described short is not asked to hang (2026-11-12: the bobcat's prompt said "tail hanging free" and
+            # then "Tail short, about 15 cm", and its preview came with a long hanging tail)
+            if "Tail short" in lead:
+                mesh = mesh.replace("tail hanging free clear of the legs", "the short tail a stub, held clear of the legs", 1)
     return mesh, _with_lead(tex, _lead(slot["code"], reptile_build(slot)))
 
 
@@ -562,6 +570,25 @@ def gate(code: str, preview: Path, tile_id: str) -> tuple[bool, str]:
     import tempfile
     with tempfile.TemporaryDirectory(prefix=f"gate_{code}_") as d:
         return build(code, preview, tile_id, snake=True, out=Path(d) / f"{code}.glb")
+
+
+def shape_gate(code: str, preview: Path, tile_id: str) -> dict:
+    """A four-legged animal's preview, built untextured to a scratch file, and the described shape measured on it
+    (pipeline/appearance.py feature_check's geometry: the tail against the head and body, the horns against the withers):
+    {ok, why}. Before the refine is paid (2026-11-12: the bobcat's preview had a long tail, 0.43 of the head and body
+    where 0.17 is described; the refine, a re-refine for its markings and one from a photo, 30 credits, could not
+    shorten it). Over the library's 30 text previews it refuses three, the bobcat's and the mountain goat's two with an
+    ibex's horns, none of them behind a model that is served, and finds one the build cannot use."""
+    import tempfile
+    from .appearance import feature_check
+    with tempfile.TemporaryDirectory(prefix=f"gate_{code}_") as d:
+        out = Path(d) / f"{code}.glb"
+        ok, log = build(code, preview, tile_id, out=out)
+        if not ok:
+            return {"ok": False, "why": ["the build cannot use the mesh" + (": " + log.splitlines()[-1][:160] if log.strip() else "")]}
+        app = appearance(code)
+        geo = list(feature_check(out, app).get("geometry") or []) if app else []
+    return {"ok": not geo, "why": geo}
 
 
 def register(reg: dict, code: str, jobs: list[str], credits: int, attempts: int, tile_id: str, bird: str | None = None,
@@ -1380,11 +1407,29 @@ def accept_library(codes: list[str] | None = None, regate_too: bool = False) -> 
     return out
 
 
-def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: str = "all", attempts: int = 2) -> dict:
+def named_slots(fauna: dict, codes: list[str], log=print) -> list[dict]:
+    """The species named with --codes for a paid run, in the order named: the tile's own slot, or, for a four-legged
+    species the tile draws by hand and so has no slot for (the home tile's bobcat, 2026-11-12), one made from its trait
+    card. Anything else is left out and said."""
+    slots = {s["code"]: s for s in fauna.get("slots", [])}
+    out = []
+    for code in codes:
+        s = slots.get(code)
+        if not s:
+            t = _traits(code)
+            s = {"code": code, "common": t.get("common"), "scientific": t.get("scientific"), "mass_kg": t.get("mass_kg")}
+            if not quadruped(s, t):
+                log(f"{code}: no slot on the tile and no four-legged trait card: left out"); continue
+        out.append({**s, "why": "named"})
+    return out
+
+
+def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: str = "all", attempts: int = 2,
+        codes: list[str] | None = None) -> dict:
     tdir = ROOT / "tiles" / tile_id
     fauna = json.loads((tdir / "client" / "fauna.json").read_text())
     place = place_name(tile_id)
-    pick, rest = choose(fauna, budget, max_n, kind)
+    pick, rest = (named_slots(fauna, codes), []) if codes else choose(fauna, budget, max_n, kind)
     reg = registry()
     ledger = {"tile": tile_id, "started": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "budget": budget,
               "reserve": reserve, "species": [], "stand_ins": [{"code": s["code"], "why": s["why"]} for s in rest]}
@@ -1400,7 +1445,8 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
         if row["ok"]:
             continue
         # the jobs already paid for, newest first: a build rule fixed since may make one of them pass at no cost
-        for job in sorted(paid_refines(code), key=lambda d: d.stat().st_mtime, reverse=True):
+        # (not in a dry run: 2026-11-12, a dry run rebuilt the refused bobcat from its newest refine and registered it)
+        for job in ([] if dry else sorted(paid_refines(code), key=lambda d: d.stat().st_mtime, reverse=True)):
             ok, log = build(code, job, tile_id, bird, rept, snk)
             if ok:
                 row["ok"], row["build_log"], row["reused"] = True, log, str(job.relative_to(ROOT))
@@ -1448,6 +1494,11 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
                       + (f" (its head, turned {pg['straightened']:.0f} degrees, set straight)" if pg.get("straightened") else ""), flush=True)
                 if not pg["ok"]:
                     continue
+                sg = shape_gate(code, pv, tile_id)   # the build and the described shape, before the refine is paid
+                row.setdefault("shape", []).append({"preview": str(pv.relative_to(ROOT)), **sg})
+                print(f"{code}: preview {pv.name} {'has the described shape' if sg['ok'] else 'fails the shape gate: ' + '; '.join(sg['why'])}", flush=True)
+                if not sg["ok"]:
+                    continue
             if snk:   # the gate: the build on the untextured preview, before the refine is paid
                 ok, log = gate(code, pv, tile_id)
                 row.setdefault("gate", []).append({"preview": str(pv.relative_to(ROOT)), "ok": ok, "log": log.splitlines()[-3:]})
@@ -1468,7 +1519,10 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
                 row["colour_check"] = {k: c.get(k) for k in ("ok", "score", "fails")}
                 bal = balance()
                 texture_bad = bool(c.get("colour_fails") or (c.get("features") or {}).get("texture"))
-                if texture_bad and bal is not None and bal - COST["refine"] >= reserve and spent + COST["refine"] <= budget:
+                # a mesh of the wrong shape is not worth another texture (2026-11-12: the long-tailed bobcat was re-refined
+                # for its markings and again from a photo, 20 credits, and stayed refused for its tail)
+                shape_bad = bool((c.get("features") or {}).get("geometry"))
+                if texture_bad and not shape_bad and bal is not None and bal - COST["refine"] >= reserve and spent + COST["refine"] <= budget:
                     from .appearance import correction
                     fix = correction(c, appearance(code) or {}, "tortoise" if rept == "tortoise" else None)
                     tex2 = _with_lead(_prompts(s, place)[1], (_lead(code, rept) + " " + fix).strip()) if fix else tex
@@ -1487,7 +1541,7 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
                     row["likeness"] = _likeness_brief(lk)
                     print(f"{code}: likeness {'not judged' if lk.get('ok') is None else 'passes' if lk['ok'] else 'fails'}: {'; '.join(lk.get('why') or [])}", flush=True)
                     bal = balance()
-                    if lk.get("ok") is False and bal is not None and bal - COST["refine"] >= reserve and spent + COST["refine"] <= budget:
+                    if lk.get("ok") is False and not shape_bad and bal is not None and bal - COST["refine"] >= reserve and spent + COST["refine"] <= budget:
                         rec = photo_rung(code, tile_id, "texture", s)   # the species' most typical photo as the texture reference
                         spent += rec.get("credits", 0); row["credits"] += rec.get("credits", 0)
                         row["likeness_refine"] = {k: rec.get(k) for k in ("job", "kept", "likeness", "error", "reference")}
@@ -1575,7 +1629,7 @@ def main() -> None:
     if a.recolour:
         led = recolour_library(a.tile, a.budget, a.reserve, codes, a.dry_run)
         print(json.dumps({k: led[k] for k in ("spent", "balance_after")})); return
-    led = run(a.tile, a.budget, a.reserve, a.max, a.dry_run, a.kind, a.attempts)
+    led = run(a.tile, a.budget, a.reserve, a.max, a.dry_run, a.kind, a.attempts, codes)
     print(json.dumps({k: led[k] for k in ("spent", "balance_after", "modelled")}))
 
 

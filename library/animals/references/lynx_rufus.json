@@ -1,0 +1,5084 @@
+{
+ "format": 2,
+ "code": "lynx_rufus",
+ "scientific": "Lynx rufus",
+ "plan": "quadruped",
+ "retrieved": "2026-11-12",
+ "near": {
+  "tile": "utm10n_680_4280",
+  "lat_lon": [
+   38.69427702607187,
+   -120.87273370965445
+  ],
+  "km": 300
+ },
+ "by": "pipeline/reference_photos.py",
+ "licences": "CC0, CC BY or CC BY-SA only, each photo's own",
+ "chosen": "inat_205959042",
+ "candidates": [
+  {
+   "source": "inaturalist",
+   "id": "inat_205959042",
+   "licence": "CC BY 4.0",
+   "author": "Ken-ichi Ueda",
+   "attribution": "(c) Ken-ichi Ueda, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/121693113",
+   "photo_page": "https://www.inaturalist.org/photos/205959042",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/205959042/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/205959042/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_205959042/photo.jpg",
+   "score": {
+    "total": 0.531,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.106,
+    "band_px": 2.2,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.442,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 13.1,
+    "lean": 6.3,
+    "belly_gap": 0.44,
+    "leg_zone": 0.445,
+    "leans": [
+     -16.1,
+     -5.8,
+     -6.8,
+     -3.0
+    ],
+    "lifts": [
+     0.018,
+     0.022,
+     0.0,
+     0.009
+    ],
+    "plain": 0.474,
+    "colour": 1.0,
+    "box": [
+     0.392,
+     0.252,
+     0.892,
+     0.931
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true,
+    "local": 1.0
+   },
+   "file_large": "pipeline/_cache/references/lynx_rufus/inat_205959042_large/photo.jpg",
+   "file_crop": "pipeline/_cache/references/lynx_rufus/inat_205959042_crop/reference.png"
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_70403107",
+   "licence": "CC BY 4.0",
+   "author": "datadan",
+   "attribution": "(c) datadan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/44404919",
+   "photo_page": "https://www.inaturalist.org/photos/70403107",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/70403107/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/70403107/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_70403107/photo.jpg",
+   "score": {
+    "total": 0.234,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.256,
+    "band_px": 1.99,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.79,
+    "spread": 22.2,
+    "lean": 12.8,
+    "belly_gap": 0.385,
+    "leg_zone": 0.462,
+    "leans": [
+     15.2,
+     12.8,
+     -7.0
+    ],
+    "lifts": [
+     0.02,
+     0.0,
+     0.0
+    ],
+    "plain": 0.19,
+    "colour": 0.993,
+    "box": [
+     0.254,
+     0.336,
+     0.754,
+     0.867
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true,
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_13161062",
+   "licence": "CC0 1.0",
+   "author": "Anne Parsons",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/9638041",
+   "photo_page": "https://www.inaturalist.org/photos/13161062",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/13161062/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/13161062/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_13161062/photo.jpg",
+   "score": {
+    "total": 0.161,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.947,
+    "band_px": 2.79,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.037,
+    "side": 0.618,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 14.2,
+    "lean": 14.2,
+    "belly_gap": 0.415,
+    "leg_zone": 0.374,
+    "leans": [
+     -6.4,
+     -20.6,
+     -14.2
+    ],
+    "lifts": [
+     0.0,
+     0.043,
+     0.029
+    ],
+    "plain": 0.212,
+    "colour": 0.753,
+    "box": [
+     0.316,
+     0.256,
+     0.712,
+     0.813
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true,
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_175108118",
+   "licence": "CC BY 4.0",
+   "author": "Garth Harwood",
+   "attribution": "(c) Garth Harwood, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/104497683",
+   "photo_page": "https://www.inaturalist.org/photos/175108118",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/175108118/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/175108118/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_175108118/photo.jpg",
+   "score": {
+    "total": 0.079,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.955,
+    "band_px": 10.97,
+    "clear": 0.419,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.638,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 1.3,
+    "lean": 7.5,
+    "belly_gap": 0.542,
+    "leg_zone": 0.423,
+    "leans": [
+     8.2,
+     6.9
+    ],
+    "lifts": [
+     0.0,
+     0.04
+    ],
+    "plain": 0.242,
+    "colour": 0.933,
+    "box": [
+     0.21,
+     0.368,
+     0.594,
+     0.951
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true,
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_163430336",
+   "licence": "CC0 1.0",
+   "author": "Anne Parsons",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/98188297",
+   "photo_page": "https://www.inaturalist.org/photos/163430336",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/163430336/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/163430336/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_163430336/photo.jpg",
+   "score": {
+    "total": 0.291,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.363,
+    "band_px": 3.14,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.444,
+    "spread": 27.7,
+    "lean": 11.9,
+    "belly_gap": 0.664,
+    "leg_zone": 0.377,
+    "leans": [
+     -11.9,
+     -19.9,
+     7.8
+    ],
+    "lifts": [
+     0.0,
+     0.038,
+     0.071
+    ],
+    "plain": 0.31,
+    "colour": 1.0,
+    "box": [
+     0.21,
+     0.212,
+     0.788,
+     0.636
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 1.0
+   },
+   "file_large": "pipeline/_cache/references/lynx_rufus/inat_163430336_large/photo.jpg",
+   "file_crop": "pipeline/_cache/references/lynx_rufus/inat_163430336_crop/reference.png"
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_146804889",
+   "licence": "CC BY-SA 4.0",
+   "author": "Rhododendrites",
+   "attribution": "Rhododendrites, CC BY-SA 4.0, via Wikimedia Commons (File:Bobcat (41002).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcat_(41002).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Bobcat_%2841002%29.jpg/500px-Bobcat_%2841002%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Bobcat_%2841002%29.jpg/1280px-Bobcat_%2841002%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_146804889/photo.jpg",
+   "score": {
+    "total": 0.115,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.904,
+    "band_px": 7.28,
+    "clear": 0.727,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.283,
+    "stance": 0.737,
+    "spread": 12.9,
+    "lean": 6.5,
+    "belly_gap": 0.308,
+    "leg_zone": 0.154,
+    "leans": [
+     0.0,
+     12.9
+    ],
+    "lifts": [
+     0.081,
+     0.0
+    ],
+    "plain": 0.149,
+    "colour": 1.0,
+    "box": [
+     0.21,
+     0.31,
+     0.728,
+     0.674
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_77929256",
+   "licence": "CC BY 4.0",
+   "author": "datadan",
+   "attribution": "(c) datadan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/49096301",
+   "photo_page": "https://www.inaturalist.org/photos/77929256",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/77929256/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/77929256/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_77929256/photo.jpg",
+   "score": {
+    "total": 0.108,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.793,
+    "band_px": 2.54,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.673,
+    "side": 0.233,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 17.5,
+    "lean": 6.2,
+    "belly_gap": 0.523,
+    "leg_zone": 0.517,
+    "leans": [
+     14.9,
+     -2.6
+    ],
+    "lifts": [
+     0.0,
+     0.004
+    ],
+    "plain": 0.115,
+    "colour": 0.986,
+    "box": [
+     0.28,
+     0.344,
+     0.664,
+     0.989
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_112846831",
+   "licence": "CC BY 4.0",
+   "author": "benjchristensen",
+   "attribution": "(c) benjchristensen, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/69535466",
+   "photo_page": "https://www.inaturalist.org/photos/112846831",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/112846831/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/112846831/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_112846831/photo.jpg",
+   "score": {
+    "total": 0.085,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.139,
+    "band_px": 3.74,
+    "clear": 1.0,
+    "size": 0.149,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 9.4,
+    "lean": 0.0,
+    "belly_gap": 0.583,
+    "leg_zone": 0.323,
+    "leans": [
+     7.6,
+     -1.8,
+     0.0
+    ],
+    "lifts": [
+     0.025,
+     0.0,
+     0.013
+    ],
+    "plain": 0.144,
+    "colour": 0.999,
+    "box": [
+     0.344,
+     0.505,
+     0.524,
+     0.742
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_163430327",
+   "licence": "CC0 1.0",
+   "author": "Anne Parsons",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/98188297",
+   "photo_page": "https://www.inaturalist.org/photos/163430327",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/163430327/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/163430327/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_163430327/photo.jpg",
+   "score": {
+    "total": 0.082,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.383,
+    "band_px": 2.79,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.487,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.168,
+    "spread": 31.1,
+    "lean": 14.8,
+    "belly_gap": 0.673,
+    "leg_zone": 0.378,
+    "leans": [
+     -14.8,
+     -25.4,
+     5.7
+    ],
+    "lifts": [
+     0.0,
+     0.059,
+     0.101
+    ],
+    "plain": 0.318,
+    "colour": 1.0,
+    "box": [
+     0.312,
+     0.33,
+     0.832,
+     0.706
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_175108125",
+   "licence": "CC BY 4.0",
+   "author": "Garth Harwood",
+   "attribution": "(c) Garth Harwood, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/104497683",
+   "photo_page": "https://www.inaturalist.org/photos/175108125",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/175108125/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/175108125/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_175108125/photo.jpg",
+   "score": {
+    "total": 0.05,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.852,
+    "band_px": 4.38,
+    "clear": 0.968,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.379,
+    "legs": 1.0,
+    "stance": 0.439,
+    "spread": 29.1,
+    "lean": 12.2,
+    "belly_gap": 0.583,
+    "leg_zone": 0.314,
+    "leans": [
+     14.5,
+     -12.2,
+     -14.6
+    ],
+    "lifts": [
+     0.061,
+     0.0,
+     0.031
+    ],
+    "plain": 0.24,
+    "colour": 0.99,
+    "box": [
+     0.376,
+     0.231,
+     0.766,
+     0.908
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_122753644",
+   "licence": "CC BY 4.0",
+   "author": "benjchristensen",
+   "attribution": "(c) benjchristensen, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/75060713",
+   "photo_page": "https://www.inaturalist.org/photos/122753644",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/122753644/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/122753644/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_122753644/photo.jpg",
+   "score": {
+    "total": 0.037,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.798,
+    "band_px": 4.72,
+    "clear": 0.94,
+    "size": 0.823,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.246,
+    "legs": 1.0,
+    "stance": 0.65,
+    "spread": 7.4,
+    "lean": 1.3,
+    "belly_gap": 0.736,
+    "leg_zone": 0.36,
+    "leans": [
+     2.4,
+     -5.0
+    ],
+    "lifts": [
+     0.0,
+     0.088
+    ],
+    "plain": 0.204,
+    "colour": 1.0,
+    "box": [
+     0.568,
+     0.488,
+     0.75,
+     0.893
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_111331496",
+   "licence": "CC BY 4.0",
+   "author": "benjchristensen",
+   "attribution": "(c) benjchristensen, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/68712292",
+   "photo_page": "https://www.inaturalist.org/photos/111331496",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/111331496/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/111331496/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_111331496/photo.jpg",
+   "score": {
+    "total": 0.036,
+    "whole": 1.0,
+    "single": 0.983,
+    "aspect": 1.457,
+    "band_px": 13.47,
+    "clear": 0.211,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.979,
+    "side": 1.0,
+    "legs": 0.425,
+    "stance": 0.337,
+    "spread": 28.2,
+    "lean": 11.8,
+    "belly_gap": 0.714,
+    "leg_zone": 0.171,
+    "leans": [
+     -25.9,
+     2.3
+    ],
+    "lifts": [
+     0.085,
+     0.0
+    ],
+    "plain": 0.728,
+    "colour": 0.995,
+    "box": [
+     0.284,
+     0.318,
+     0.762,
+     0.811
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_111331663",
+   "licence": "CC BY 4.0",
+   "author": "benjchristensen",
+   "attribution": "(c) benjchristensen, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/68712378",
+   "photo_page": "https://www.inaturalist.org/photos/111331663",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/111331663/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/111331663/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_111331663/photo.jpg",
+   "score": {
+    "total": 0.013,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.844,
+    "band_px": 2.92,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.17,
+    "legs": 0.733,
+    "stance": 0.15,
+    "spread": 22.5,
+    "lean": 25.0,
+    "belly_gap": 0.194,
+    "leg_zone": 0.208,
+    "leans": [
+     -13.7,
+     -36.2
+    ],
+    "lifts": [
+     0.094,
+     0.0
+    ],
+    "plain": 0.271,
+    "colour": 0.999,
+    "box": [
+     0.502,
+     0.234,
+     0.86,
+     0.871
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_240363545",
+   "licence": "CC0 1.0",
+   "author": "Chuck Wilson",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/140420038",
+   "photo_page": "https://www.inaturalist.org/photos/240363545",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/240363545/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/240363545/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_240363545/photo.jpg",
+   "score": {
+    "total": 0.012,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.748,
+    "band_px": 3.38,
+    "clear": 1.0,
+    "size": 0.684,
+    "solid": 1.0,
+    "head_end": 0.098,
+    "side": 0.12,
+    "legs": 1.0,
+    "stance": 0.472,
+    "spread": 16.2,
+    "lean": 0.2,
+    "belly_gap": 0.582,
+    "leg_zone": 0.367,
+    "leans": [
+     0.2,
+     -13.7,
+     2.5
+    ],
+    "lifts": [
+     0.001,
+     0.077,
+     0.092
+    ],
+    "plain": 0.163,
+    "colour": 1.0,
+    "box": [
+     0.526,
+     0.365,
+     0.722,
+     0.737
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_441522243",
+   "licence": "CC BY-SA 4.0",
+   "author": "Connor Long",
+   "attribution": "(c) Connor Long, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/247234550",
+   "photo_page": "https://www.inaturalist.org/photos/441522243",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/441522243/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/441522243/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_441522243/photo.jpg",
+   "score": {
+    "total": 0.011,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 6.158,
+    "band_px": 11.66,
+    "clear": 0.362,
+    "size": 0.136,
+    "solid": 1.0,
+    "head_end": 0.806,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.438,
+    "spread": 0.0,
+    "lean": 0.0,
+    "belly_gap": 0.649,
+    "leg_zone": 0.368,
+    "leans": [
+     0.0,
+     0.0
+    ],
+    "lifts": [
+     0.105,
+     0.0
+    ],
+    "plain": 0.153,
+    "colour": 0.998,
+    "box": [
+     0.068,
+     0.698,
+     0.302,
+     0.765
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_509830864",
+   "licence": "CC BY 4.0",
+   "author": "Ronnie",
+   "attribution": "(c) Ronnie, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/283724767",
+   "photo_page": "https://www.inaturalist.org/photos/509830864",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/509830864/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/509830864/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_509830864/photo.jpg",
+   "score": {
+    "total": 0.006,
+    "whole": 1.0,
+    "single": 0.92,
+    "aspect": 1.38,
+    "band_px": 4.36,
+    "clear": 0.97,
+    "size": 0.712,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.027,
+    "spread": 37.4,
+    "lean": 7.6,
+    "belly_gap": 0.632,
+    "leg_zone": 0.36,
+    "leans": [
+     -26.3,
+     11.1
+    ],
+    "lifts": [
+     0.068,
+     0.003
+    ],
+    "plain": 0.344,
+    "colour": 1.0,
+    "box": [
+     0.354,
+     0.539,
+     0.732,
+     0.904
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_112848225",
+   "licence": "CC BY 4.0",
+   "author": "benjchristensen",
+   "attribution": "(c) benjchristensen, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/69536285",
+   "photo_page": "https://www.inaturalist.org/photos/112848225",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/112848225/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/112848225/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_112848225/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.07,
+    "band_px": 2.31,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.581,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.019,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.916,
+    "colour": 1.0,
+    "box": [
+     0.354,
+     0.093,
+     1.0,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_112848254",
+   "licence": "CC BY 4.0",
+   "author": "benjchristensen",
+   "attribution": "(c) benjchristensen, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/69536285",
+   "photo_page": "https://www.inaturalist.org/photos/112848254",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/112848254/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/112848254/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_112848254/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.759,
+    "band_px": 3.57,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.785,
+    "colour": 0.986,
+    "box": [
+     0.146,
+     0.201,
+     0.474,
+     0.85
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_239919523",
+   "licence": "CC0 1.0",
+   "author": "Anne Parsons",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/140186560",
+   "photo_page": "https://www.inaturalist.org/photos/239919523",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/239919523/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/239919523/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_239919523/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 0.919,
+    "band_px": 2.42,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.64,
+    "side": 0.548,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 17.0,
+    "belly_gap": 0.515,
+    "leg_zone": 0.247,
+    "leans": [
+     17.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.977,
+    "colour": 0.982,
+    "box": [
+     0.158,
+     0.084,
+     1.0,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_239919567",
+   "licence": "CC0 1.0",
+   "author": "Anne Parsons",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/140186560",
+   "photo_page": "https://www.inaturalist.org/photos/239919567",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/239919567/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/239919567/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_239919567/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.728,
+    "band_px": 3.73,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.793,
+    "side": 0.07,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 17.7,
+    "belly_gap": 0.82,
+    "leg_zone": 0.417,
+    "leans": [
+     17.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.203,
+    "colour": 0.952,
+    "box": [
+     0.246,
+     0.05,
+     0.744,
+     0.734
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_111331653",
+   "licence": "CC BY 4.0",
+   "author": "benjchristensen",
+   "attribution": "(c) benjchristensen, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/68712378",
+   "photo_page": "https://www.inaturalist.org/photos/111331653",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/111331653/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/111331653/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_111331653/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.784,
+    "band_px": 3.05,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.066,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 20.2,
+    "belly_gap": 0.427,
+    "leg_zone": 0.173,
+    "leans": [
+     -20.2
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.261,
+    "colour": 0.995,
+    "box": [
+     0.354,
+     0.234,
+     0.85,
+     0.652
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_56780862",
+   "licence": "CC BY 4.0",
+   "author": "Garth Harwood",
+   "attribution": "(c) Garth Harwood, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/35963253",
+   "photo_page": "https://www.inaturalist.org/photos/56780862",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/56780862/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/56780862/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_56780862/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.543,
+    "band_px": 4.99,
+    "clear": 0.917,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.335,
+    "side": 0.0,
+    "legs": 0.058,
+    "stance": 0.0,
+    "spread": 47.5,
+    "lean": 7.6,
+    "belly_gap": 0.213,
+    "leg_zone": 0.127,
+    "leans": [
+     -16.2,
+     31.3
+    ],
+    "lifts": [
+     0.029,
+     0.0
+    ],
+    "plain": 0.362,
+    "colour": 0.997,
+    "box": [
+     0.408,
+     0.437,
+     0.596,
+     0.899
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_56780866",
+   "licence": "CC BY 4.0",
+   "author": "Garth Harwood",
+   "attribution": "(c) Garth Harwood, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/35963253",
+   "photo_page": "https://www.inaturalist.org/photos/56780866",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/56780866/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/56780866/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_56780866/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.475,
+    "band_px": 6.66,
+    "clear": 0.779,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.353,
+    "colour": 0.999,
+    "box": [
+     0.45,
+     0.453,
+     0.622,
+     0.936
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_234496568",
+   "licence": "CC BY 4.0",
+   "author": "datadan",
+   "attribution": "(c) datadan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/137317979",
+   "photo_page": "https://www.inaturalist.org/photos/234496568",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/234496568/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/234496568/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_234496568/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.534,
+    "band_px": 12.56,
+    "clear": 0.287,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.633,
+    "stance": 0.0,
+    "spread": 39.1,
+    "lean": 35.0,
+    "belly_gap": 0.565,
+    "leg_zone": 0.196,
+    "leans": [
+     -54.6,
+     -15.5
+    ],
+    "lifts": [
+     0.0,
+     0.082
+    ],
+    "plain": 0.292,
+    "colour": 1.0,
+    "box": [
+     0.15,
+     0.101,
+     0.822,
+     0.685
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_194920528",
+   "licence": "CC BY-SA 4.0",
+   "author": "Justin Guzman",
+   "attribution": "(c) Justin Guzman, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/115493815",
+   "photo_page": "https://www.inaturalist.org/photos/194920528",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/194920528/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/194920528/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_194920528/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.45,
+    "band_px": 9.85,
+    "clear": 0.513,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.336,
+    "side": 0.0,
+    "legs": 0.2,
+    "stance": 0.0,
+    "spread": 41.8,
+    "lean": 7.1,
+    "belly_gap": 0.106,
+    "leg_zone": 0.144,
+    "leans": [
+     13.8,
+     -28.0
+    ],
+    "lifts": [
+     0.0,
+     0.052
+    ],
+    "plain": 0.172,
+    "colour": 1.0,
+    "box": [
+     0.282,
+     0.308,
+     0.544,
+     0.897
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_76601433",
+   "licence": "CC BY 4.0",
+   "author": "datadan",
+   "attribution": "(c) datadan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/48283551",
+   "photo_page": "https://www.inaturalist.org/photos/76601433",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/76601433/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/76601433/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_76601433/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_111331498",
+   "licence": "CC BY 4.0",
+   "author": "benjchristensen",
+   "attribution": "(c) benjchristensen, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/68712292",
+   "photo_page": "https://www.inaturalist.org/photos/111331498",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/111331498/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/111331498/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_111331498/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.263,
+    "band_px": 5.46,
+    "clear": 0.879,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.165,
+    "side": 0.665,
+    "legs": 0.567,
+    "stance": 0.0,
+    "spread": 136.5,
+    "lean": 2.7,
+    "belly_gap": 0.233,
+    "leg_zone": 0.188,
+    "leans": [
+     -65.6,
+     70.9
+    ],
+    "lifts": [
+     0.045,
+     0.0
+    ],
+    "plain": 0.573,
+    "colour": 0.919,
+    "box": [
+     0.156,
+     0.438,
+     0.758,
+     0.838
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_664467505",
+   "licence": "CC0 1.0",
+   "author": "Elin Pierce",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/363994953",
+   "photo_page": "https://www.inaturalist.org/photos/664467505",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/664467505/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/664467505/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_664467505/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.308,
+    "band_px": 6.0,
+    "clear": 0.833,
+    "size": 0.56,
+    "solid": 1.0,
+    "head_end": 0.921,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 100.7,
+    "lean": 5.5,
+    "belly_gap": 0.75,
+    "leg_zone": 0.296,
+    "leans": [
+     49.8,
+     -50.9,
+     -5.5
+    ],
+    "lifts": [
+     0.123,
+     0.077,
+     0.0
+    ],
+    "plain": 0.117,
+    "colour": 0.999,
+    "box": [
+     0.46,
+     0.54,
+     0.8,
+     0.833
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_664467607",
+   "licence": "CC0 1.0",
+   "author": "Elin Pierce",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/363994953",
+   "photo_page": "https://www.inaturalist.org/photos/664467607",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/664467607/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/664467607/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_664467607/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_112846838",
+   "licence": "CC BY 4.0",
+   "author": "benjchristensen",
+   "attribution": "(c) benjchristensen, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/69535466",
+   "photo_page": "https://www.inaturalist.org/photos/112846838",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/112846838/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/112846838/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_112846838/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.793,
+    "band_px": 2.38,
+    "clear": 1.0,
+    "size": 0.185,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.13,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 4.2,
+    "belly_gap": 0.212,
+    "leg_zone": 0.415,
+    "leans": [
+     -4.2
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.146,
+    "colour": 0.999,
+    "box": [
+     0.376,
+     0.502,
+     0.506,
+     0.748
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_104418124",
+   "licence": "CC BY 4.0",
+   "author": "Garth Harwood",
+   "attribution": "(c) Garth Harwood, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/64904105",
+   "photo_page": "https://www.inaturalist.org/photos/104418124",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/104418124/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/104418124/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_104418124/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.03,
+    "band_px": 2.51,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.252,
+    "legs": 0.055,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.5,
+    "belly_gap": 0.161,
+    "leg_zone": 0.164,
+    "leans": [
+     -0.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.3,
+    "colour": 1.0,
+    "box": [
+     0.358,
+     0.776,
+     0.496,
+     0.955
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_104418142",
+   "licence": "CC BY 4.0",
+   "author": "Garth Harwood",
+   "attribution": "(c) Garth Harwood, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/64904105",
+   "photo_page": "https://www.inaturalist.org/photos/104418142",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/104418142/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/104418142/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_104418142/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.895,
+    "band_px": 1.58,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.105,
+    "legs": 0.08,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.143,
+    "leg_zone": 0.184,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.436,
+    "colour": 1.0,
+    "box": [
+     0.734,
+     0.643,
+     0.768,
+     0.693
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_701171789",
+   "licence": "CC0 1.0",
+   "author": "Teja Rachakonda",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/383116722",
+   "photo_page": "https://www.inaturalist.org/photos/701171789",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/701171789/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/701171789/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_701171789/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.182,
+    "band_px": 13.05,
+    "clear": 0.246,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.074,
+    "side": 0.0,
+    "legs": 0.11,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 9.2,
+    "belly_gap": 0.545,
+    "leg_zone": 0.208,
+    "leans": [
+     9.2
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.146,
+    "colour": 1.0,
+    "box": [
+     0.664,
+     0.198,
+     0.701,
+     0.352
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_701171848",
+   "licence": "CC0 1.0",
+   "author": "Teja Rachakonda",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/383116722",
+   "photo_page": "https://www.inaturalist.org/photos/701171848",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/701171848/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/701171848/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_701171848/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.383,
+    "aspect": 2.353,
+    "band_px": 10.67,
+    "clear": 0.444,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.935,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 50.4,
+    "belly_gap": 0.938,
+    "leg_zone": 0.647,
+    "leans": [
+     -50.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.128,
+    "colour": 1.0,
+    "box": [
+     0.707,
+     0.608,
+     0.813,
+     0.642
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_743035442",
+   "licence": "CC0 1.0",
+   "author": "Irene",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/404597097",
+   "photo_page": "https://www.inaturalist.org/photos/743035442",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/743035442/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/743035442/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_743035442/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.136,
+    "band_px": 12.5,
+    "clear": 0.292,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.261,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 21.3,
+    "belly_gap": 0.815,
+    "leg_zone": 0.404,
+    "leans": [
+     21.3
+    ],
+    "lifts": [
+     0.003
+    ],
+    "plain": 0.117,
+    "colour": 1.0,
+    "box": [
+     0.175,
+     0.312,
+     0.87,
+     0.856
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_743035476",
+   "licence": "CC0 1.0",
+   "author": "Irene",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/404597097",
+   "photo_page": "https://www.inaturalist.org/photos/743035476",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/743035476/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/743035476/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_743035476/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.998,
+    "aspect": 0.738,
+    "band_px": 7.87,
+    "clear": 0.677,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.853,
+    "side": 0.095,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 14.3,
+    "belly_gap": 0.668,
+    "leg_zone": 0.509,
+    "leans": [
+     -14.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.133,
+    "colour": 1.0,
+    "box": [
+     0.2,
+     0.158,
+     0.78,
+     0.965
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_113113713",
+   "licence": "CC BY 4.0",
+   "author": "Bob Dodge",
+   "attribution": "(c) Bob Dodge, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/69679392",
+   "photo_page": "https://www.inaturalist.org/photos/113113713",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/113113713/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/113113713/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_113113713/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.942,
+    "single": 0.989,
+    "aspect": 1.031,
+    "band_px": 20.64,
+    "clear": 0.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.828,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 33.3,
+    "belly_gap": 0.381,
+    "leg_zone": 0.371,
+    "leans": [
+     -33.3
+    ],
+    "lifts": [
+     0.001
+    ],
+    "plain": 0.489,
+    "colour": 1.0,
+    "box": [
+     0.406,
+     0.0,
+     0.932,
+     0.68
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_121237407",
+   "licence": "CC BY-SA 4.0",
+   "author": "Arvel Hernandez",
+   "attribution": "(c) Arvel Hernandez, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/74206393",
+   "photo_page": "https://www.inaturalist.org/photos/121237407",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/121237407/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/121237407/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_121237407/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.57,
+    "band_px": 3.18,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.305,
+    "legs": 0.09,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.161,
+    "leg_zone": 0.192,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.009
+    ],
+    "plain": 0.242,
+    "colour": 1.0,
+    "box": [
+     0.274,
+     0.309,
+     0.752,
+     0.589
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_121237417",
+   "licence": "CC BY-SA 4.0",
+   "author": "Arvel Hernandez",
+   "attribution": "(c) Arvel Hernandez, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/74206393",
+   "photo_page": "https://www.inaturalist.org/photos/121237417",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/121237417/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/121237417/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_121237417/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.398,
+    "band_px": 2.54,
+    "clear": 1.0,
+    "size": 0.677,
+    "solid": 1.0,
+    "head_end": 0.084,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 62.9,
+    "lean": 24.7,
+    "belly_gap": 0.664,
+    "leg_zone": 0.422,
+    "leans": [
+     28.6,
+     -34.3,
+     24.7
+    ],
+    "lifts": [
+     0.08,
+     0.048,
+     0.007
+    ],
+    "plain": 0.268,
+    "colour": 1.0,
+    "box": [
+     0.316,
+     0.297,
+     0.66,
+     0.667
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_746817605",
+   "licence": "CC BY 4.0",
+   "author": "Irina Mitine",
+   "attribution": "(c) Irina Mitine, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/406480291",
+   "photo_page": "https://www.inaturalist.org/photos/746817605",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/746817605/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/746817605/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_746817605/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.392,
+    "band_px": 2.35,
+    "clear": 1.0,
+    "size": 0.872,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 17.1,
+    "belly_gap": 0.292,
+    "leg_zone": 0.273,
+    "leans": [
+     -17.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.115,
+    "colour": 1.0,
+    "box": [
+     0.157,
+     0.272,
+     0.41,
+     0.69
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_746817636",
+   "licence": "CC BY 4.0",
+   "author": "Irina Mitine",
+   "attribution": "(c) Irina Mitine, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/406480291",
+   "photo_page": "https://www.inaturalist.org/photos/746817636",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/746817636/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/746817636/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_746817636/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.153,
+    "aspect": 0.881,
+    "band_px": 29.25,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.452,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 31.3,
+    "belly_gap": 0.8,
+    "leg_zone": 0.369,
+    "leans": [
+     -31.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.155,
+    "colour": 1.0,
+    "box": [
+     0.606,
+     0.532,
+     0.705,
+     0.616
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_162810100",
+   "licence": "CC0 1.0",
+   "author": "Irene",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/97853994",
+   "photo_page": "https://www.inaturalist.org/photos/162810100",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/162810100/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/162810100/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_162810100/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.873,
+    "band_px": 6.33,
+    "clear": 0.806,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.071,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 64.1,
+    "belly_gap": 0.571,
+    "leg_zone": 0.177,
+    "leans": [
+     64.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.062,
+    "colour": 0.986,
+    "box": [
+     0.283,
+     0.444,
+     0.748,
+     0.602
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_162810106",
+   "licence": "CC0 1.0",
+   "author": "Irene",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/97853994",
+   "photo_page": "https://www.inaturalist.org/photos/162810106",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/162810106/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/162810106/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_162810106/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.364,
+    "band_px": 3.95,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 46.5,
+    "belly_gap": 0.81,
+    "leg_zone": 0.354,
+    "leans": [
+     -46.5
+    ],
+    "lifts": [
+     0.021
+    ],
+    "plain": 0.125,
+    "colour": 0.902,
+    "box": [
+     0.25,
+     0.514,
+     0.406,
+     0.603
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_77929129",
+   "licence": "CC BY 4.0",
+   "author": "datadan",
+   "attribution": "(c) datadan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/49096302",
+   "photo_page": "https://www.inaturalist.org/photos/77929129",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/77929129/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/77929129/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_77929129/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.287,
+    "band_px": 16.67,
+    "clear": 0.0,
+    "size": 0.651,
+    "solid": 1.0,
+    "head_end": 0.742,
+    "side": 0.605,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 39.7,
+    "belly_gap": 0.221,
+    "leg_zone": 0.257,
+    "leans": [
+     39.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.201,
+    "colour": 0.998,
+    "box": [
+     0.336,
+     0.253,
+     0.686,
+     0.616
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_491671562",
+   "licence": "CC BY 4.0",
+   "author": "Michael Warner",
+   "attribution": "(c) Michael Warner, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/273365400",
+   "photo_page": "https://www.inaturalist.org/photos/491671562",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/491671562/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/491671562/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_491671562/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.358,
+    "band_px": 3.04,
+    "clear": 1.0,
+    "size": 0.696,
+    "solid": 1.0,
+    "head_end": 0.01,
+    "side": 0.0,
+    "legs": 0.124,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 3.8,
+    "belly_gap": 0.648,
+    "leg_zone": 0.219,
+    "leans": [
+     -3.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.24,
+    "colour": 0.983,
+    "box": [
+     0.373,
+     0.328,
+     0.517,
+     0.702
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_455997225",
+   "licence": "CC BY 4.0",
+   "author": "datadan",
+   "attribution": "(c) datadan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/254565134",
+   "photo_page": "https://www.inaturalist.org/photos/455997225",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/455997225/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/455997225/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_455997225/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 0.577,
+    "band_px": 3.97,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.771,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.599,
+    "leg_zone": 0.299,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.168,
+    "colour": 0.989,
+    "box": [
+     0.486,
+     0.149,
+     0.854,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_455998534",
+   "licence": "CC BY 4.0",
+   "author": "datadan",
+   "attribution": "(c) datadan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/254565134",
+   "photo_page": "https://www.inaturalist.org/photos/455998534",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/455998534/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/455998534/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_455998534/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.423,
+    "band_px": 4.87,
+    "clear": 0.927,
+    "size": 0.661,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 9.1,
+    "belly_gap": 0.596,
+    "leg_zone": 0.478,
+    "leans": [
+     9.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.154,
+    "colour": 1.0,
+    "box": [
+     0.472,
+     0.267,
+     0.588,
+     0.632
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_16270022",
+   "licence": "CC BY 4.0",
+   "author": "Bob Dodge",
+   "attribution": "(c) Bob Dodge, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/11411143",
+   "photo_page": "https://www.inaturalist.org/photos/16270022",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/16270022/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/16270022/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_16270022/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_343190323",
+   "licence": "CC BY 4.0",
+   "author": "Ryan Elliott",
+   "attribution": "(c) Ryan Elliott, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/195127095",
+   "photo_page": "https://www.inaturalist.org/photos/343190323",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/343190323/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/343190323/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_343190323/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_132715139",
+   "licence": "CC BY 4.0",
+   "author": "datadan",
+   "attribution": "(c) datadan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/80948536",
+   "photo_page": "https://www.inaturalist.org/photos/132715139",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/132715139/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/132715139/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_132715139/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.977,
+    "band_px": 3.99,
+    "clear": 1.0,
+    "size": 0.576,
+    "solid": 1.0,
+    "head_end": 0.89,
+    "side": 0.692,
+    "legs": 0.942,
+    "stance": 0.0,
+    "spread": 50.0,
+    "lean": 0.2,
+    "belly_gap": 0.545,
+    "leg_zone": 0.233,
+    "leans": [
+     -4.1,
+     -27.7,
+     22.3,
+     8.1,
+     0.2
+    ],
+    "lifts": [
+     0.0,
+     0.016,
+     0.062,
+     0.116,
+     0.062
+    ],
+    "plain": 0.291,
+    "colour": 0.999,
+    "box": [
+     0.366,
+     0.381,
+     0.618,
+     0.725
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_132719383",
+   "licence": "CC BY 4.0",
+   "author": "datadan",
+   "attribution": "(c) datadan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/80948536",
+   "photo_page": "https://www.inaturalist.org/photos/132719383",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/132719383/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/132719383/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_132719383/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.874,
+    "band_px": 4.06,
+    "clear": 0.995,
+    "size": 0.64,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.435,
+    "legs": 0.358,
+    "stance": 0.0,
+    "spread": 53.1,
+    "lean": 0.0,
+    "belly_gap": 0.337,
+    "leg_zone": 0.163,
+    "leans": [
+     17.5,
+     -35.6,
+     14.0,
+     0.0,
+     -21.8
+    ],
+    "lifts": [
+     0.0,
+     0.022,
+     0.081,
+     0.089,
+     0.081
+    ],
+    "plain": 0.273,
+    "colour": 0.998,
+    "box": [
+     0.356,
+     0.387,
+     0.592,
+     0.747
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_573311874",
+   "licence": "CC BY 4.0",
+   "author": "J. Roe",
+   "attribution": "(c) J. Roe, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/317283632",
+   "photo_page": "https://www.inaturalist.org/photos/573311874",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/573311874/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/573311874/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_573311874/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 0.477,
+    "band_px": 14.63,
+    "clear": 0.114,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.223,
+    "colour": 1.0,
+    "box": [
+     0.093,
+     0.006,
+     0.725,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_82552901",
+   "licence": "CC BY 4.0",
+   "author": "Alex",
+   "attribution": "(c) Alex, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/51944599",
+   "photo_page": "https://www.inaturalist.org/photos/82552901",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/82552901/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/82552901/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_82552901/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.994,
+    "aspect": 1.836,
+    "band_px": 17.71,
+    "clear": 0.0,
+    "size": 0.184,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.136,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.357,
+    "leg_zone": 0.229,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.005
+    ],
+    "plain": 0.125,
+    "colour": 1.0,
+    "box": [
+     0.37,
+     0.235,
+     0.616,
+     0.473
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_619762112",
+   "licence": "CC BY 4.0",
+   "author": "Irina Mitine",
+   "attribution": "(c) Irina Mitine, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/340553993",
+   "photo_page": "https://www.inaturalist.org/photos/619762112",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/619762112/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/619762112/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_619762112/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.506,
+    "aspect": 0.571,
+    "band_px": 29.3,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.197,
+    "colour": 0.92,
+    "box": [
+     0.365,
+     0.34,
+     0.397,
+     0.382
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_619762121",
+   "licence": "CC BY 4.0",
+   "author": "Irina Mitine",
+   "attribution": "(c) Irina Mitine, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/340553993",
+   "photo_page": "https://www.inaturalist.org/photos/619762121",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/619762121/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/619762121/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_619762121/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.375,
+    "band_px": 50.2,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.409,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.625,
+    "leg_zone": 0.25,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.178,
+    "colour": 0.784,
+    "box": [
+     0.499,
+     0.598,
+     0.528,
+     0.614
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_466677115",
+   "licence": "CC BY 4.0",
+   "author": "Michael Warner",
+   "attribution": "(c) Michael Warner, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/259921110",
+   "photo_page": "https://www.inaturalist.org/photos/466677115",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/466677115/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/466677115/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_466677115/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.618,
+    "band_px": 2.18,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.938,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.04,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.189,
+    "colour": 0.824,
+    "box": [
+     0.319,
+     0.214,
+     0.745,
+     0.716
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_466677175",
+   "licence": "CC BY 4.0",
+   "author": "Michael Warner",
+   "attribution": "(c) Michael Warner, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/259921110",
+   "photo_page": "https://www.inaturalist.org/photos/466677175",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/466677175/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/466677175/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_466677175/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 0.968,
+    "band_px": 10.1,
+    "clear": 0.492,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.375,
+    "legs": 0.342,
+    "stance": 1.0,
+    "spread": 6.4,
+    "lean": 3.2,
+    "belly_gap": 0.212,
+    "leg_zone": 0.161,
+    "leans": [
+     6.4,
+     0.0
+    ],
+    "lifts": [
+     0.032,
+     0.0
+    ],
+    "plain": 0.363,
+    "colour": 0.991,
+    "box": [
+     0.284,
+     0.069,
+     0.884,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_247822146",
+   "licence": "CC BY 4.0",
+   "author": "Garth Harwood",
+   "attribution": "(c) Garth Harwood, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/144399353",
+   "photo_page": "https://www.inaturalist.org/photos/247822146",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/247822146/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/247822146/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_247822146/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.389,
+    "band_px": 11.01,
+    "clear": 0.416,
+    "size": 0.456,
+    "solid": 1.0,
+    "head_end": 0.811,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 52.2,
+    "lean": 19.1,
+    "belly_gap": 0.746,
+    "leg_zone": 0.394,
+    "leans": [
+     -45.2,
+     7.0
+    ],
+    "lifts": [
+     0.0,
+     0.168
+    ],
+    "plain": 0.286,
+    "colour": 0.154,
+    "box": [
+     0.434,
+     0.451,
+     0.748,
+     0.752
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_247822155",
+   "licence": "CC BY 4.0",
+   "author": "Garth Harwood",
+   "attribution": "(c) Garth Harwood, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/144399353",
+   "photo_page": "https://www.inaturalist.org/photos/247822155",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/247822155/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/247822155/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_247822155/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.545,
+    "band_px": 3.53,
+    "clear": 1.0,
+    "size": 0.56,
+    "solid": 1.0,
+    "head_end": 0.084,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 30.3,
+    "lean": 16.2,
+    "belly_gap": 0.846,
+    "leg_zone": 0.373,
+    "leans": [
+     -32.7,
+     -2.4,
+     -16.2
+    ],
+    "lifts": [
+     0.0,
+     0.1,
+     0.164
+    ],
+    "plain": 0.283,
+    "colour": 0.322,
+    "box": [
+     0.414,
+     0.333,
+     0.754,
+     0.627
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_73992252",
+   "licence": "CC BY 4.0",
+   "author": "datadan",
+   "attribution": "(c) datadan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/46654081",
+   "photo_page": "https://www.inaturalist.org/photos/73992252",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/73992252/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/73992252/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_73992252/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.404,
+    "band_px": 1.86,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 40.8,
+    "lean": 1.6,
+    "belly_gap": 0.422,
+    "leg_zone": 0.415,
+    "leans": [
+     1.6,
+     -21.5,
+     19.3
+    ],
+    "lifts": [
+     0.011,
+     0.029,
+     0.204
+    ],
+    "plain": 0.503,
+    "colour": 0.979,
+    "box": [
+     0.488,
+     0.44,
+     0.648,
+     0.592
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_13161060",
+   "licence": "CC0 1.0",
+   "author": "Anne Parsons",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/9638041",
+   "photo_page": "https://www.inaturalist.org/photos/13161060",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/13161060/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/13161060/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_13161060/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.204,
+    "band_px": 4.17,
+    "clear": 0.986,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.184,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 89.3,
+    "lean": 19.1,
+    "belly_gap": 0.429,
+    "leg_zone": 0.325,
+    "leans": [
+     63.8,
+     -25.5
+    ],
+    "lifts": [
+     0.037,
+     0.0
+    ],
+    "plain": 0.129,
+    "colour": 0.999,
+    "box": [
+     0.284,
+     0.336,
+     0.744,
+     0.845
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_95773621",
+   "licence": "CC BY 4.0",
+   "author": "Garth Harwood",
+   "attribution": "(c) Garth Harwood, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/59918605",
+   "photo_page": "https://www.inaturalist.org/photos/95773621",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/95773621/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/95773621/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_95773621/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.542,
+    "aspect": 0.741,
+    "band_px": 23.17,
+    "clear": 0.0,
+    "size": 0.928,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.098,
+    "legs": 0.027,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 44.9,
+    "belly_gap": 0.292,
+    "leg_zone": 0.142,
+    "leans": [
+     -44.9
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.2,
+    "colour": 1.0,
+    "box": [
+     0.482,
+     0.011,
+     0.722,
+     0.443
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_95773631",
+   "licence": "CC BY 4.0",
+   "author": "Garth Harwood",
+   "attribution": "(c) Garth Harwood, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/59918605",
+   "photo_page": "https://www.inaturalist.org/photos/95773631",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/95773631/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/95773631/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_95773631/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.634,
+    "aspect": 1.649,
+    "band_px": 18.4,
+    "clear": 0.0,
+    "size": 0.216,
+    "solid": 1.0,
+    "head_end": 0.144,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 30.1,
+    "belly_gap": 0.412,
+    "leg_zone": 0.318,
+    "leans": [
+     30.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.188,
+    "colour": 1.0,
+    "box": [
+     0.45,
+     0.157,
+     0.704,
+     0.363
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_258635767",
+   "licence": "CC BY 4.0",
+   "author": "Henrik Kibak",
+   "attribution": "(c) Henrik Kibak, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/150036465",
+   "photo_page": "https://www.inaturalist.org/photos/258635767",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/258635767/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/258635767/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_258635767/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.996,
+    "aspect": 0.623,
+    "band_px": 13.62,
+    "clear": 0.198,
+    "size": 0.552,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 12.4,
+    "belly_gap": 0.311,
+    "leg_zone": 0.465,
+    "leans": [
+     12.4
+    ],
+    "lifts": [
+     0.006
+    ],
+    "plain": 0.187,
+    "colour": 0.977,
+    "box": [
+     0.456,
+     0.327,
+     0.608,
+     0.665
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_258635783",
+   "licence": "CC BY 4.0",
+   "author": "Henrik Kibak",
+   "attribution": "(c) Henrik Kibak, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/150036465",
+   "photo_page": "https://www.inaturalist.org/photos/258635783",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/258635783/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/258635783/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_258635783/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.386,
+    "band_px": 4.34,
+    "clear": 0.971,
+    "size": 0.257,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.173,
+    "colour": 0.996,
+    "box": [
+     0.444,
+     0.405,
+     0.512,
+     0.67
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_122753673",
+   "licence": "CC BY 4.0",
+   "author": "benjchristensen",
+   "attribution": "(c) benjchristensen, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/75060713",
+   "photo_page": "https://www.inaturalist.org/photos/122753673",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/122753673/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/122753673/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_122753673/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.088,
+    "band_px": 3.32,
+    "clear": 1.0,
+    "size": 0.823,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.887,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 12.2,
+    "belly_gap": 0.283,
+    "leg_zone": 0.254,
+    "leans": [
+     12.2
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.201,
+    "colour": 0.999,
+    "box": [
+     0.42,
+     0.498,
+     0.668,
+     0.904
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_509830810",
+   "licence": "CC BY 4.0",
+   "author": "Ronnie",
+   "attribution": "(c) Ronnie, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/283724767",
+   "photo_page": "https://www.inaturalist.org/photos/509830810",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/509830810/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/509830810/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_509830810/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 4.233,
+    "band_px": 8.03,
+    "clear": 0.664,
+    "size": 0.216,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 79.0,
+    "belly_gap": 0.52,
+    "leg_zone": 0.267,
+    "leans": [
+     -79.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.223,
+    "colour": 1.0,
+    "box": [
+     0.65,
+     0.795,
+     0.904,
+     0.875
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_343570802",
+   "licence": "CC BY 4.0",
+   "author": "Michael Warner",
+   "attribution": "(c) Michael Warner, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/195315038",
+   "photo_page": "https://www.inaturalist.org/photos/343570802",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/343570802/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/343570802/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_343570802/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.991,
+    "aspect": 1.362,
+    "band_px": 13.75,
+    "clear": 0.187,
+    "size": 0.713,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 8.7,
+    "belly_gap": 0.795,
+    "leg_zone": 0.388,
+    "leans": [
+     -8.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.226,
+    "colour": 0.998,
+    "box": [
+     0.441,
+     0.426,
+     0.819,
+     0.702
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_343570799",
+   "licence": "CC BY 4.0",
+   "author": "Michael Warner",
+   "attribution": "(c) Michael Warner, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/195315038",
+   "photo_page": "https://www.inaturalist.org/photos/343570799",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/343570799/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/343570799/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_343570799/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.986,
+    "aspect": 1.287,
+    "band_px": 15.21,
+    "clear": 0.066,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 11.3,
+    "belly_gap": 0.801,
+    "leg_zone": 0.325,
+    "leans": [
+     -11.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.202,
+    "colour": 1.0,
+    "box": [
+     0.263,
+     0.342,
+     0.811,
+     0.76
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_441522202",
+   "licence": "CC BY-SA 4.0",
+   "author": "Connor Long",
+   "attribution": "(c) Connor Long, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/247234550",
+   "photo_page": "https://www.inaturalist.org/photos/441522202",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/441522202/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/441522202/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_441522202/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.756,
+    "single": 1.0,
+    "aspect": 0.512,
+    "band_px": 2.07,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.14,
+    "colour": 1.0,
+    "box": [
+     0.75,
+     0.075,
+     1.0,
+     0.943
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_586573071",
+   "licence": "CC0 1.0",
+   "author": "Chuck Wilson",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/324111655",
+   "photo_page": "https://www.inaturalist.org/photos/586573071",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/586573071/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/586573071/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_586573071/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.75,
+    "band_px": 4.8,
+    "clear": 0.934,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.941,
+    "side": 0.335,
+    "legs": 0.041,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 79.1,
+    "belly_gap": 0.167,
+    "leg_zone": 0.153,
+    "leans": [
+     -79.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.199,
+    "colour": 1.0,
+    "box": [
+     0.084,
+     0.018,
+     0.952,
+     0.9
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_586573077",
+   "licence": "CC0 1.0",
+   "author": "Chuck Wilson",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/324111655",
+   "photo_page": "https://www.inaturalist.org/photos/586573077",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/586573077/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/586573077/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_586573077/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.849,
+    "band_px": 11.59,
+    "clear": 0.367,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.946,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.191,
+    "colour": 1.0,
+    "box": [
+     0.068,
+     0.042,
+     0.952,
+     0.875
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_75295432",
+   "licence": "CC BY 4.0",
+   "author": "datadan",
+   "attribution": "(c) datadan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/47473990",
+   "photo_page": "https://www.inaturalist.org/photos/75295432",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/75295432/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/75295432/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/lynx_rufus/inat_75295432/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.45,
+    "band_px": 14.93,
+    "clear": 0.089,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.492,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 5.7,
+    "belly_gap": 0.5,
+    "leg_zone": 0.3,
+    "leans": [
+     5.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.248,
+    "colour": 1.0,
+    "box": [
+     0.572,
+     0.147,
+     0.59,
+     0.2
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_116052083",
+   "licence": "CC BY 2.0",
+   "author": "Becker1999 (Paul and Cathy)",
+   "attribution": "Becker1999 (Paul and Cathy), CC BY 2.0, via Wikimedia Commons (File:Bobcat at Columbus Zoo Boo.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcat_at_Columbus_Zoo_Boo.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Bobcat_at_Columbus_Zoo_Boo.jpg/500px-Bobcat_at_Columbus_Zoo_Boo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Bobcat_at_Columbus_Zoo_Boo.jpg/1280px-Bobcat_at_Columbus_Zoo_Boo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_116052083/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.567,
+    "band_px": 3.86,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.548,
+    "side": 0.0,
+    "legs": 0.025,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 55.2,
+    "belly_gap": 0.2,
+    "leg_zone": 0.14,
+    "leans": [
+     -55.2
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.179,
+    "colour": 0.999,
+    "box": [
+     0.135,
+     0.061,
+     0.918,
+     0.984
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_127605334",
+   "licence": "CC BY-SA 2.0",
+   "author": "Paul Danese",
+   "attribution": "Paul Danese, CC BY-SA 2.0, via Wikimedia Commons (File:This kitty climbed into my swimming pool enclosure on Christmas Eve morning - Flickr - TonySprezzatura.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:This_kitty_climbed_into_my_swimming_pool_enclosure_on_Christmas_Eve_morning_-_Flickr_-_TonySprezzatura.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/This_kitty_climbed_into_my_swimming_pool_enclosure_on_Christmas_Eve_morning_-_Flickr_-_TonySprezzatura.jpg/500px-This_kitty_climbed_into_my_swimming_pool_enclosure_on_Christmas_Eve_morning_-_Flickr_-_TonySprezzatura.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/This_kitty_climbed_into_my_swimming_pool_enclosure_on_Christmas_Eve_morning_-_Flickr_-_TonySprezzatura.jpg/1280px-This_kitty_climbed_into_my_swimming_pool_enclosure_on_Christmas_Eve_morning_-_Flickr_-_TonySprezzatura.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_127605334/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.736,
+    "band_px": 7.89,
+    "clear": 0.676,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.437,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.007,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.157,
+    "colour": 1.0,
+    "box": [
+     0.112,
+     0.225,
+     0.486,
+     0.985
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_127865860",
+   "licence": "CC BY-SA 4.0",
+   "author": "Maria de Bruyn",
+   "attribution": "Maria de Bruyn, CC BY-SA 4.0, via Wikimedia Commons (File:Bobcat-image-MariadB.png)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcat-image-MariadB.png",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Bobcat-image-MariadB.png/500px-Bobcat-image-MariadB.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Bobcat-image-MariadB.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_127865860/photo.png",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.63,
+    "band_px": 2.01,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.899,
+    "side": 1.0,
+    "legs": 0.592,
+    "stance": 0.0,
+    "spread": 85.4,
+    "lean": 19.8,
+    "belly_gap": 0.766,
+    "leg_zone": 0.191,
+    "leans": [
+     -58.8,
+     -19.8,
+     26.6
+    ],
+    "lifts": [
+     0.0,
+     0.069,
+     0.098
+    ],
+    "plain": 0.122,
+    "colour": 1.0,
+    "box": [
+     0.066,
+     0.1,
+     0.976,
+     0.924
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_3355661",
+   "licence": "CC BY-SA 2.0",
+   "author": "Don DeBold from San Jose, CA, USA",
+   "attribution": "Don DeBold from San Jose, CA, USA, CC BY-SA 2.0, via Wikimedia Commons (File:Calero Creek Trail Bobcat.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Calero_Creek_Trail_Bobcat.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Calero_Creek_Trail_Bobcat.jpg/500px-Calero_Creek_Trail_Bobcat.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Calero_Creek_Trail_Bobcat.jpg/1280px-Calero_Creek_Trail_Bobcat.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_3355661/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.256,
+    "band_px": 2.96,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 61.4,
+    "lean": 41.0,
+    "belly_gap": 0.628,
+    "leg_zone": 0.364,
+    "leans": [
+     -42.9,
+     -41.0,
+     18.5
+    ],
+    "lifts": [
+     0.0,
+     0.011,
+     0.044
+    ],
+    "plain": 0.231,
+    "colour": 1.0,
+    "box": [
+     0.124,
+     0.184,
+     0.936,
+     0.82
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_6424448",
+   "licence": "CC BY-SA 2.0",
+   "author": "Malcolm",
+   "attribution": "Malcolm, CC BY-SA 2.0, via Wikimedia Commons (File:Bobcat at Fort Worth Zoo.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcat_at_Fort_Worth_Zoo.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Bobcat_at_Fort_Worth_Zoo.jpg/500px-Bobcat_at_Fort_Worth_Zoo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Bobcat_at_Fort_Worth_Zoo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_6424448/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.831,
+    "band_px": 20.94,
+    "clear": 0.0,
+    "size": 0.459,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.094,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 15.0,
+    "belly_gap": 0.089,
+    "leg_zone": 0.195,
+    "leans": [
+     15.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.152,
+    "colour": 1.0,
+    "box": [
+     0.634,
+     0.021,
+     0.83,
+     0.336
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_49983147",
+   "licence": "CC BY 2.0",
+   "author": "gailhampshire from Cradley, Malvern, U.K",
+   "attribution": "gailhampshire from Cradley, Malvern, U.K, CC BY 2.0, via Wikimedia Commons (File:Bobcat. Lynx rufus - Flickr - gailhampshire.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcat._Lynx_rufus_-_Flickr_-_gailhampshire.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/Bobcat._Lynx_rufus_-_Flickr_-_gailhampshire.jpg/500px-Bobcat._Lynx_rufus_-_Flickr_-_gailhampshire.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/Bobcat._Lynx_rufus_-_Flickr_-_gailhampshire.jpg/1280px-Bobcat._Lynx_rufus_-_Flickr_-_gailhampshire.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_49983147/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.906,
+    "aspect": 0.944,
+    "band_px": 19.79,
+    "clear": 0.0,
+    "size": 0.728,
+    "solid": 1.0,
+    "head_end": 0.93,
+    "side": 0.611,
+    "legs": 0.11,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 30.1,
+    "belly_gap": 0.394,
+    "leg_zone": 0.208,
+    "leans": [
+     -30.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.148,
+    "colour": 0.991,
+    "box": [
+     0.472,
+     0.239,
+     0.744,
+     0.621
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_4771966",
+   "licence": "CC BY 2.0",
+   "author": "Len Blumin",
+   "attribution": "Len Blumin, CC BY 2.0, via Wikimedia Commons (File:Bobcat stare.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcat_stare.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Bobcat_stare.jpg/500px-Bobcat_stare.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Bobcat_stare.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_4771966/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.074,
+    "band_px": 5.08,
+    "clear": 0.91,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.721,
+    "side": 0.935,
+    "legs": 0.4,
+    "stance": 0.0,
+    "spread": 67.1,
+    "lean": 28.4,
+    "belly_gap": 0.488,
+    "leg_zone": 0.168,
+    "leans": [
+     -5.1,
+     62.0
+    ],
+    "lifts": [
+     0.0,
+     0.0
+    ],
+    "plain": 0.193,
+    "colour": 1.0,
+    "box": [
+     0.076,
+     0.174,
+     0.714,
+     0.981
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_126745888",
+   "licence": "CC BY 4.0",
+   "author": "threeagoutdoors",
+   "attribution": "threeagoutdoors, CC BY 4.0, via Wikimedia Commons (File:Lynx rufus 248001110.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lynx_rufus_248001110.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Lynx_rufus_248001110.jpg/500px-Lynx_rufus_248001110.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Lynx_rufus_248001110.jpg/1280px-Lynx_rufus_248001110.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_126745888/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.719,
+    "band_px": 4.9,
+    "clear": 0.925,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.046,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 7.4,
+    "belly_gap": 0.557,
+    "leg_zone": 0.308,
+    "leans": [
+     7.4
+    ],
+    "lifts": [
+     0.002
+    ],
+    "plain": 0.203,
+    "colour": 0.999,
+    "box": [
+     0.172,
+     0.182,
+     0.799,
+     0.834
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_176336412",
+   "licence": "CC BY 2.0",
+   "author": "Hunter Desportes",
+   "attribution": "Hunter Desportes, CC BY 2.0, via Wikimedia Commons (File:Francis Marion National Forest - Wild Bobcat (1984) (3512755027).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Francis_Marion_National_Forest_-_Wild_Bobcat_(1984)_(3512755027).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Francis_Marion_National_Forest_-_Wild_Bobcat_%281984%29_%283512755027%29.jpg/500px-Francis_Marion_National_Forest_-_Wild_Bobcat_%281984%29_%283512755027%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Francis_Marion_National_Forest_-_Wild_Bobcat_%281984%29_%283512755027%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_176336412/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.6,
+    "band_px": 2.31,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 45.0,
+    "lean": 11.1,
+    "belly_gap": 0.897,
+    "leg_zone": 0.3,
+    "leans": [
+     -45.0,
+     -11.1,
+     0.0
+    ],
+    "lifts": [
+     0.067,
+     0.0,
+     0.167
+    ],
+    "plain": 0.118,
+    "colour": 1.0,
+    "box": [
+     0.448,
+     0.444,
+     0.544,
+     0.535
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_126745879",
+   "licence": "CC BY 4.0",
+   "author": "threeagoutdoors",
+   "attribution": "threeagoutdoors, CC BY 4.0, via Wikimedia Commons (File:Lynx rufus 248001166.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lynx_rufus_248001166.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Lynx_rufus_248001166.jpg/500px-Lynx_rufus_248001166.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Lynx_rufus_248001166.jpg/1280px-Lynx_rufus_248001166.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_126745879/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.77,
+    "band_px": 5.7,
+    "clear": 0.859,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.175,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.2,
+    "belly_gap": 0.343,
+    "leg_zone": 0.264,
+    "leans": [
+     0.2
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.179,
+    "colour": 1.0,
+    "box": [
+     0.196,
+     0.086,
+     0.792,
+     0.894
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_156419928",
+   "licence": "CC BY 4.0",
+   "author": "(c) James M. Maley, some rights reserved (CC BY)",
+   "attribution": "(c) James M. Maley, some rights reserved (CC BY), CC BY 4.0, via Wikimedia Commons (File:Bobcat, Western Malibu, Malibu, CA 90265, USA imported from iNaturalist photo 10533853.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcat,_Western_Malibu,_Malibu,_CA_90265,_USA_imported_from_iNaturalist_photo_10533853.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/Bobcat%2C_Western_Malibu%2C_Malibu%2C_CA_90265%2C_USA_imported_from_iNaturalist_photo_10533853.jpg/500px-Bobcat%2C_Western_Malibu%2C_Malibu%2C_CA_90265%2C_USA_imported_from_iNaturalist_photo_10533853.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/Bobcat%2C_Western_Malibu%2C_Malibu%2C_CA_90265%2C_USA_imported_from_iNaturalist_photo_10533853.jpg/1280px-Bobcat%2C_Western_Malibu%2C_Malibu%2C_CA_90265%2C_USA_imported_from_iNaturalist_photo_10533853.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_156419928/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.719,
+    "band_px": 6.56,
+    "clear": 0.787,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.256,
+    "colour": 1.0,
+    "box": [
+     0.188,
+     0.403,
+     0.944,
+     0.773
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_157017268",
+   "licence": "CC BY 4.0",
+   "author": "(c) zr217, some rights reserved (CC BY)",
+   "attribution": "(c) zr217, some rights reserved (CC BY), CC BY 4.0, via Wikimedia Commons (File:Bobcat, San Diego County, US-CA, US imported from iNaturalist photo 441017931.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcat,_San_Diego_County,_US-CA,_US_imported_from_iNaturalist_photo_441017931.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Bobcat%2C_San_Diego_County%2C_US-CA%2C_US_imported_from_iNaturalist_photo_441017931.jpg/500px-Bobcat%2C_San_Diego_County%2C_US-CA%2C_US_imported_from_iNaturalist_photo_441017931.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Bobcat%2C_San_Diego_County%2C_US-CA%2C_US_imported_from_iNaturalist_photo_441017931.jpg/1280px-Bobcat%2C_San_Diego_County%2C_US-CA%2C_US_imported_from_iNaturalist_photo_441017931.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_157017268/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.386,
+    "band_px": 3.38,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.83,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 58.3,
+    "lean": 6.6,
+    "belly_gap": 0.719,
+    "leg_zone": 0.292,
+    "leans": [
+     -35.7,
+     22.6
+    ],
+    "lifts": [
+     0.059,
+     0.0
+    ],
+    "plain": 0.115,
+    "colour": 1.0,
+    "box": [
+     0.292,
+     0.258,
+     0.852,
+     0.865
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_126745870",
+   "licence": "CC BY 4.0",
+   "author": "threeagoutdoors",
+   "attribution": "threeagoutdoors, CC BY 4.0, via Wikimedia Commons (File:Lynx rufus 248001150.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lynx_rufus_248001150.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Lynx_rufus_248001150.jpg/500px-Lynx_rufus_248001150.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Lynx_rufus_248001150.jpg/1280px-Lynx_rufus_248001150.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_126745870/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.145,
+    "band_px": 3.82,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 28.8,
+    "belly_gap": 0.369,
+    "leg_zone": 0.585,
+    "leans": [
+     -28.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.17,
+    "colour": 0.997,
+    "box": [
+     0.0,
+     0.0,
+     0.772,
+     0.849
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_99483295",
+   "licence": "CC BY-SA 4.0",
+   "author": "DestinationFearFan",
+   "attribution": "DestinationFearFan, CC BY-SA 4.0, via Wikimedia Commons (File:Bobcats in tree.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcats_in_tree.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/38/Bobcats_in_tree.jpg/500px-Bobcats_in_tree.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/3/38/Bobcats_in_tree.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_99483295/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 0.813,
+    "aspect": 1.327,
+    "band_px": 17.99,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.41,
+    "side": 0.175,
+    "legs": 0.13,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 13.1,
+    "belly_gap": 0.135,
+    "leg_zone": 0.224,
+    "leans": [
+     -13.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.115,
+    "colour": 0.843,
+    "box": [
+     0.14,
+     0.826,
+     0.27,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_176336413",
+   "licence": "CC BY 2.0",
+   "author": "Hunter Desportes",
+   "attribution": "Hunter Desportes, CC BY 2.0, via Wikimedia Commons (File:Francis Marion National Forest - Bobcat (South Carolina 1984) (3491613623).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Francis_Marion_National_Forest_-_Bobcat_(South_Carolina_1984)_(3491613623).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/Francis_Marion_National_Forest_-_Bobcat_%28South_Carolina_1984%29_%283491613623%29.jpg/500px-Francis_Marion_National_Forest_-_Bobcat_%28South_Carolina_1984%29_%283491613623%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/8/89/Francis_Marion_National_Forest_-_Bobcat_%28South_Carolina_1984%29_%283491613623%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_176336413/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.525,
+    "band_px": 2.37,
+    "clear": 1.0,
+    "size": 0.41,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 0.387,
+    "spread": 7.7,
+    "lean": 2.7,
+    "belly_gap": 0.452,
+    "leg_zone": 0.446,
+    "leans": [
+     -0.6,
+     7.1,
+     2.7
+    ],
+    "lifts": [
+     0.109,
+     0.04,
+     0.0
+    ],
+    "plain": 0.054,
+    "colour": 0.623,
+    "box": [
+     0.44,
+     0.275,
+     0.546,
+     0.578
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_116294357",
+   "licence": "CC BY-SA 4.0",
+   "author": "Garst, Warren, 1922-2016, photographer",
+   "attribution": "Garst, Warren, 1922-2016, photographer, CC BY-SA 4.0, via Wikimedia Commons (File:Bobcat sitting on rock - DPLA - 81372999b326d3a7169cafad54643299.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcat_sitting_on_rock_-_DPLA_-_81372999b326d3a7169cafad54643299.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Bobcat_sitting_on_rock_-_DPLA_-_81372999b326d3a7169cafad54643299.jpg/500px-Bobcat_sitting_on_rock_-_DPLA_-_81372999b326d3a7169cafad54643299.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Bobcat_sitting_on_rock_-_DPLA_-_81372999b326d3a7169cafad54643299.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_116294357/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.505,
+    "band_px": 2.19,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.339,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.281,
+    "colour": 1.0,
+    "box": [
+     0.382,
+     0.074,
+     0.857,
+     0.705
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_139030701",
+   "licence": "CC BY 2.0",
+   "author": "Lisa Zins",
+   "attribution": "Lisa Zins, CC BY 2.0, via Wikimedia Commons (File:Bobcat (18906566796).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcat_(18906566796).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/Bobcat_%2818906566796%29.jpg/500px-Bobcat_%2818906566796%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/Bobcat_%2818906566796%29.jpg/1280px-Bobcat_%2818906566796%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_139030701/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.476,
+    "band_px": 3.45,
+    "clear": 1.0,
+    "size": 0.664,
+    "solid": 1.0,
+    "head_end": 0.701,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 25.7,
+    "belly_gap": 0.842,
+    "leg_zone": 0.25,
+    "leans": [
+     25.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.367,
+    "colour": 1.0,
+    "box": [
+     0.526,
+     0.501,
+     0.892,
+     0.832
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_146804887",
+   "licence": "CC BY-SA 4.0",
+   "author": "Rhododendrites",
+   "attribution": "Rhododendrites, CC BY-SA 4.0, via Wikimedia Commons (File:Bobcat (40999).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcat_(40999).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/Bobcat_%2840999%29.jpg/500px-Bobcat_%2840999%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/Bobcat_%2840999%29.jpg/1280px-Bobcat_%2840999%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_146804887/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.405,
+    "band_px": 8.68,
+    "clear": 0.61,
+    "size": 0.877,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.036,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 21.5,
+    "belly_gap": 0.458,
+    "leg_zone": 0.149,
+    "leans": [
+     21.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.139,
+    "colour": 1.0,
+    "box": [
+     0.42,
+     0.314,
+     0.54,
+     0.734
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_71290256",
+   "licence": "CC BY 3.0",
+   "author": "St Clair Macaulay",
+   "attribution": "St Clair Macaulay, CC BY 3.0, via Wikimedia Commons (File:Kitty Cat (20967805).jpeg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Kitty_Cat_(20967805).jpeg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Kitty_Cat_%2820967805%29.jpeg/500px-Kitty_Cat_%2820967805%29.jpeg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Kitty_Cat_%2820967805%29.jpeg/1280px-Kitty_Cat_%2820967805%29.jpeg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_71290256/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.543,
+    "band_px": 2.89,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.351,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 17.0,
+    "belly_gap": 0.655,
+    "leg_zone": 0.26,
+    "leans": [
+     17.0
+    ],
+    "lifts": [
+     0.002
+    ],
+    "plain": 0.242,
+    "colour": 0.997,
+    "box": [
+     0.084,
+     0.119,
+     0.562,
+     0.871
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_116312708",
+   "licence": "CC BY-SA 4.0",
+   "author": "Garst, Warren, 1922-2016, photographer",
+   "attribution": "Garst, Warren, 1922-2016, photographer, CC BY-SA 4.0, via Wikimedia Commons (File:Bobcat lying on rock - DPLA - cf88791c8e62cecd17ce1a7f48b5cffe.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcat_lying_on_rock_-_DPLA_-_cf88791c8e62cecd17ce1a7f48b5cffe.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/af/Bobcat_lying_on_rock_-_DPLA_-_cf88791c8e62cecd17ce1a7f48b5cffe.jpg/500px-Bobcat_lying_on_rock_-_DPLA_-_cf88791c8e62cecd17ce1a7f48b5cffe.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/af/Bobcat_lying_on_rock_-_DPLA_-_cf88791c8e62cecd17ce1a7f48b5cffe.jpg/1280px-Bobcat_lying_on_rock_-_DPLA_-_cf88791c8e62cecd17ce1a7f48b5cffe.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_116312708/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.938,
+    "band_px": 4.46,
+    "clear": 0.962,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.465,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.252,
+    "colour": 1.0,
+    "box": [
+     0.106,
+     0.122,
+     0.986,
+     0.798
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_116350387",
+   "licence": "CC BY-SA 4.0",
+   "author": "Garst, Warren, 1922-2016, photographer",
+   "attribution": "Garst, Warren, 1922-2016, photographer, CC BY-SA 4.0, via Wikimedia Commons (File:Bobcat with offspring on rock - DPLA - 56a48f19c80a1c574e53f79ea35e21b4.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcat_with_offspring_on_rock_-_DPLA_-_56a48f19c80a1c574e53f79ea35e21b4.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fb/Bobcat_with_offspring_on_rock_-_DPLA_-_56a48f19c80a1c574e53f79ea35e21b4.jpg/500px-Bobcat_with_offspring_on_rock_-_DPLA_-_56a48f19c80a1c574e53f79ea35e21b4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fb/Bobcat_with_offspring_on_rock_-_DPLA_-_56a48f19c80a1c574e53f79ea35e21b4.jpg/1280px-Bobcat_with_offspring_on_rock_-_DPLA_-_56a48f19c80a1c574e53f79ea35e21b4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_116350387/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.594,
+    "aspect": 0.558,
+    "band_px": 2.05,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.092,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 0.387,
+    "spread": 17.0,
+    "lean": 4.9,
+    "belly_gap": 0.438,
+    "leg_zone": 0.312,
+    "leans": [
+     -4.9,
+     -7.5,
+     9.5
+    ],
+    "lifts": [
+     0.0,
+     0.024,
+     0.109
+    ],
+    "plain": 0.176,
+    "colour": 0.982,
+    "box": [
+     0.474,
+     0.249,
+     0.658,
+     0.743
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_95861557",
+   "licence": "CC BY-SA 4.0",
+   "author": "Alejandro G\u00f3mez N\u00edsino",
+   "attribution": "Alejandro G\u00f3mez N\u00edsino, CC BY-SA 4.0, via Wikimedia Commons (File:Lynx rufus fasciatus.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lynx_rufus_fasciatus.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/Lynx_rufus_fasciatus.jpg/500px-Lynx_rufus_fasciatus.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/9/93/Lynx_rufus_fasciatus.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_95861557/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.555,
+    "aspect": 0.93,
+    "band_px": 14.29,
+    "clear": 0.142,
+    "size": 0.267,
+    "solid": 1.0,
+    "head_end": 0.197,
+    "side": 0.575,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 6.7,
+    "belly_gap": 0.568,
+    "leg_zone": 0.282,
+    "leans": [
+     -6.7
+    ],
+    "lifts": [
+     0.002
+    ],
+    "plain": 0.139,
+    "colour": 1.0,
+    "box": [
+     0.538,
+     0.299,
+     0.724,
+     0.565
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_194276204",
+   "licence": "CC BY-SA 4.0",
+   "author": "BeckyKidus",
+   "attribution": "BeckyKidus, CC BY-SA 4.0, via Wikimedia Commons (File:Blynx.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Blynx.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Blynx.jpg/500px-Blynx.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Blynx.jpg/1280px-Blynx.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_194276204/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.976,
+    "aspect": 1.498,
+    "band_px": 16.12,
+    "clear": 0.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.139,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 57.4,
+    "belly_gap": 0.612,
+    "leg_zone": 0.231,
+    "leans": [
+     -57.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.136,
+    "colour": 1.0,
+    "box": [
+     0.036,
+     0.054,
+     0.926,
+     0.898
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_72884241",
+   "licence": "CC BY 2.0",
+   "author": "Andy  Morffew from Itchen Abbas, Hampshire, UK",
+   "attribution": "Andy  Morffew from Itchen Abbas, Hampshire, UK, CC BY 2.0, via Wikimedia Commons (File:Bobcat on the Boardwalk (8292424992).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bobcat_on_the_Boardwalk_(8292424992).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/Bobcat_on_the_Boardwalk_%288292424992%29.jpg/500px-Bobcat_on_the_Boardwalk_%288292424992%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Bobcat_on_the_Boardwalk_%288292424992%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_rufus/commons_72884241/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.371,
+    "band_px": 2.36,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.229,
+    "colour": 1.0,
+    "box": [
+     0.292,
+     0.092,
+     0.752,
+     0.971
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  }
+ ]
+}

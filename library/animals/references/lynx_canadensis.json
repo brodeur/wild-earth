@@ -1,0 +1,4367 @@
+{
+ "format": 2,
+ "code": "lynx_canadensis",
+ "scientific": "Lynx canadensis",
+ "plan": "quadruped",
+ "retrieved": "2026-11-12",
+ "by": "pipeline/reference_photos.py",
+ "licences": "CC0, CC BY or CC BY-SA only, each photo's own",
+ "chosen": "inat_353743592",
+ "candidates": [
+  {
+   "source": "inaturalist",
+   "id": "inat_353743592",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/200491300",
+   "photo_page": "https://www.inaturalist.org/photos/353743592",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/353743592/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/353743592/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_353743592/photo.jpg",
+   "score": {
+    "total": 0.24,
+    "whole": 1.0,
+    "single": 0.839,
+    "aspect": 1.379,
+    "band_px": 2.43,
+    "clear": 1.0,
+    "size": 0.666,
+    "solid": 1.0,
+    "head_end": 0.095,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.9,
+    "spread": 4.0,
+    "lean": 0.2,
+    "belly_gap": 0.681,
+    "leg_zone": 0.379,
+    "leans": [
+     1.8,
+     -2.2
+    ],
+    "lifts": [
+     0.0,
+     0.068
+    ],
+    "plain": 0.617,
+    "colour": 1.0,
+    "box": [
+     0.132,
+     0.534,
+     0.416,
+     0.9
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true
+   },
+   "file_large": "pipeline/_cache/references/lynx_canadensis/inat_353743592_large/photo.jpg",
+   "file_crop": "pipeline/_cache/references/lynx_canadensis/inat_353743592_crop/reference.png"
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_353743879",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/200491420",
+   "photo_page": "https://www.inaturalist.org/photos/353743879",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/353743879/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/353743879/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_353743879/photo.jpg",
+   "score": {
+    "total": 0.215,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.982,
+    "band_px": 1.81,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 0.678,
+    "head_end": 1.0,
+    "side": 0.705,
+    "legs": 0.508,
+    "stance": 0.785,
+    "spread": 22.3,
+    "lean": 5.2,
+    "belly_gap": 0.485,
+    "leg_zone": 0.181,
+    "leans": [
+     -3.1,
+     13.5,
+     14.4,
+     -7.9
+    ],
+    "lifts": [
+     0.054,
+     0.054,
+     0.036,
+     0.0
+    ],
+    "plain": 0.749,
+    "colour": 1.0,
+    "box": [
+     0.156,
+     0.281,
+     0.482,
+     0.872
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_151079681",
+   "licence": "CC BY 4.0",
+   "author": "timboucher",
+   "attribution": "timboucher, CC BY 4.0, via Wikimedia Commons (File:Lynx canadensis 390072761.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lynx_canadensis_390072761.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/Lynx_canadensis_390072761.jpg/500px-Lynx_canadensis_390072761.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/Lynx_canadensis_390072761.jpg/1280px-Lynx_canadensis_390072761.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_151079681/photo.jpg",
+   "score": {
+    "total": 0.165,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.987,
+    "band_px": 7.22,
+    "clear": 0.732,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.638,
+    "legs": 0.417,
+    "stance": 0.975,
+    "spread": 13.1,
+    "lean": 0.0,
+    "belly_gap": 0.278,
+    "leg_zone": 0.17,
+    "leans": [
+     0.0,
+     7.4,
+     -5.7
+    ],
+    "lifts": [
+     0.0,
+     0.062,
+     0.04
+    ],
+    "plain": 0.228,
+    "colour": 0.997,
+    "box": [
+     0.166,
+     0.277,
+     0.608,
+     0.875
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_254692922",
+   "licence": "CC BY-SA 4.0",
+   "author": "Jimmy Dee",
+   "attribution": "(c) Jimmy Dee, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/147955722",
+   "photo_page": "https://www.inaturalist.org/photos/254692922",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/254692922/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/254692922/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_254692922/photo.jpg",
+   "score": {
+    "total": 0.073,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.091,
+    "band_px": 1.93,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.977,
+    "legs": 1.0,
+    "stance": 0.105,
+    "spread": 35.9,
+    "lean": 12.2,
+    "belly_gap": 0.485,
+    "leg_zone": 0.364,
+    "leans": [
+     -5.8,
+     30.1
+    ],
+    "lifts": [
+     0.0,
+     0.011
+    ],
+    "plain": 0.431,
+    "colour": 1.0,
+    "box": [
+     0.5,
+     0.4,
+     0.908,
+     0.892
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_11394686",
+   "licence": "CC BY 2.0",
+   "author": "kdee64 (Keith Williams)",
+   "attribution": "kdee64 (Keith Williams), CC BY 2.0, via Wikimedia Commons (File:Canadian lynx by Keith Williams.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Canadian_lynx_by_Keith_Williams.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Canadian_lynx_by_Keith_Williams.jpg/500px-Canadian_lynx_by_Keith_Williams.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Canadian_lynx_by_Keith_Williams.jpg/1280px-Canadian_lynx_by_Keith_Williams.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_11394686/photo.jpg",
+   "score": {
+    "total": 0.014,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.406,
+    "band_px": 2.73,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.03,
+    "spread": 37.4,
+    "lean": 10.9,
+    "belly_gap": 0.333,
+    "leg_zone": 0.314,
+    "leans": [
+     8.9,
+     46.3,
+     10.9
+    ],
+    "lifts": [
+     0.008,
+     0.0,
+     0.0
+    ],
+    "plain": 0.821,
+    "colour": 1.0,
+    "box": [
+     0.144,
+     0.178,
+     0.864,
+     0.827
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_107681317",
+   "licence": "CC BY-SA 4.0",
+   "author": "Donald Hampton",
+   "attribution": "(c) Donald Hampton, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/66752914",
+   "photo_page": "https://www.inaturalist.org/photos/107681317",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/107681317/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/107681317/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_107681317/photo.jpg",
+   "score": {
+    "total": 0.006,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.0,
+    "band_px": 2.67,
+    "clear": 1.0,
+    "size": 0.23,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.75,
+    "legs": 1.0,
+    "stance": 0.085,
+    "spread": 24.6,
+    "lean": 28.1,
+    "belly_gap": 0.304,
+    "leg_zone": 0.256,
+    "leans": [
+     -40.4,
+     -15.8
+    ],
+    "lifts": [
+     0.0,
+     0.047
+    ],
+    "plain": 0.944,
+    "colour": 0.747,
+    "box": [
+     0.422,
+     0.425,
+     0.594,
+     0.683
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_93044336",
+   "licence": "CC BY-SA 4.0",
+   "author": "Jimmy Dee",
+   "attribution": "(c) Jimmy Dee, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/58291055",
+   "photo_page": "https://www.inaturalist.org/photos/93044336",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/93044336/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/93044336/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_93044336/photo.jpg",
+   "score": {
+    "total": 0.004,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.219,
+    "band_px": 2.52,
+    "clear": 1.0,
+    "size": 0.064,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.176,
+    "spread": 33.4,
+    "lean": 18.5,
+    "belly_gap": 0.569,
+    "leg_zone": 0.438,
+    "leans": [
+     35.2,
+     1.8
+    ],
+    "lifts": [
+     0.0,
+     0.0
+    ],
+    "plain": 0.318,
+    "colour": 1.0,
+    "box": [
+     0.402,
+     0.488,
+     0.58,
+     0.704
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_752529549",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/409299498",
+   "photo_page": "https://www.inaturalist.org/photos/752529549",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/752529549/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/752529549/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_752529549/photo.jpg",
+   "score": {
+    "total": 0.003,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.0,
+    "band_px": 13.45,
+    "clear": 0.213,
+    "size": 0.168,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.75,
+    "legs": 0.592,
+    "stance": 0.254,
+    "spread": 26.0,
+    "lean": 0.0,
+    "belly_gap": 0.527,
+    "leg_zone": 0.191,
+    "leans": [
+     0.0,
+     -26.0,
+     0.0
+    ],
+    "lifts": [
+     0.088,
+     0.0,
+     0.088
+    ],
+    "plain": 0.115,
+    "colour": 0.998,
+    "box": [
+     0.276,
+     0.598,
+     0.412,
+     0.84
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_230674308",
+   "licence": "CC BY-SA 4.0",
+   "author": "Dan Harville",
+   "attribution": "(c) Dan Harville, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/135261869",
+   "photo_page": "https://www.inaturalist.org/photos/230674308",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/230674308/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/230674308/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_230674308/photo.jpg",
+   "score": {
+    "total": 0.003,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.033,
+    "band_px": 6.52,
+    "clear": 0.79,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.833,
+    "legs": 0.433,
+    "stance": 0.026,
+    "spread": 36.3,
+    "lean": 24.9,
+    "belly_gap": 0.408,
+    "leg_zone": 0.172,
+    "leans": [
+     -6.8,
+     -43.1
+    ],
+    "lifts": [
+     0.0,
+     0.066
+    ],
+    "plain": 0.165,
+    "colour": 0.996,
+    "box": [
+     0.386,
+     0.093,
+     0.698,
+     0.547
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_255193319",
+   "licence": "CC BY 4.0",
+   "author": "Owen Strickland",
+   "attribution": "(c) Owen Strickland, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/148216555",
+   "photo_page": "https://www.inaturalist.org/photos/255193319",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/255193319/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/255193319/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_255193319/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.716,
+    "band_px": 3.14,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.63,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 68.3,
+    "lean": 36.6,
+    "belly_gap": 0.895,
+    "leg_zone": 0.269,
+    "leans": [
+     -70.7,
+     -2.4
+    ],
+    "lifts": [
+     0.067,
+     0.003
+    ],
+    "plain": 0.501,
+    "colour": 1.0,
+    "box": [
+     0.158,
+     0.417,
+     0.75,
+     0.745
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_253094707",
+   "licence": "CC BY 4.0",
+   "author": "Maurice Raymond",
+   "attribution": "(c) Maurice Raymond, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/147119437",
+   "photo_page": "https://www.inaturalist.org/photos/253094707",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/253094707/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/253094707/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_253094707/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.457,
+    "aspect": 1.438,
+    "band_px": 1.42,
+    "clear": 1.0,
+    "size": 0.161,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 41.8,
+    "lean": 24.6,
+    "belly_gap": 0.467,
+    "leg_zone": 0.325,
+    "leans": [
+     -24.6,
+     -42.7,
+     -0.9
+    ],
+    "lifts": [
+     0.025,
+     0.025,
+     0.0
+    ],
+    "plain": 0.665,
+    "colour": 1.0,
+    "box": [
+     0.698,
+     0.514,
+     0.928,
+     0.754
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_253095045",
+   "licence": "CC BY 4.0",
+   "author": "Maurice Raymond",
+   "attribution": "(c) Maurice Raymond, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/147119437",
+   "photo_page": "https://www.inaturalist.org/photos/253095045",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/253095045/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/253095045/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_253095045/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.544,
+    "band_px": 1.8,
+    "clear": 1.0,
+    "size": 0.834,
+    "solid": 1.0,
+    "head_end": 0.869,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.914,
+    "colour": 1.0,
+    "box": [
+     0.58,
+     0.276,
+     0.728,
+     0.685
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_748747890",
+   "licence": "CC BY 4.0",
+   "author": "Robyn Perkins",
+   "attribution": "(c) Robyn Perkins, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/407444400",
+   "photo_page": "https://www.inaturalist.org/photos/748747890",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/748747890/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/748747890/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_748747890/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.722,
+    "aspect": 3.0,
+    "band_px": 3.13,
+    "clear": 1.0,
+    "size": 0.136,
+    "solid": 1.0,
+    "head_end": 0.46,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.251,
+    "colour": 1.0,
+    "box": [
+     0.422,
+     0.531,
+     0.656,
+     0.635
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_748747916",
+   "licence": "CC BY 4.0",
+   "author": "Robyn Perkins",
+   "attribution": "(c) Robyn Perkins, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/407444400",
+   "photo_page": "https://www.inaturalist.org/photos/748747916",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/748747916/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/748747916/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_748747916/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.477,
+    "band_px": 2.11,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.377,
+    "colour": 0.98,
+    "box": [
+     0.262,
+     0.493,
+     0.454,
+     0.667
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_96622401",
+   "licence": "CC BY 4.0",
+   "author": "Doug Suitor",
+   "attribution": "(c) Doug Suitor, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/60426319",
+   "photo_page": "https://www.inaturalist.org/photos/96622401",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/96622401/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/96622401/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_96622401/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.286,
+    "single": 0.943,
+    "aspect": 0.628,
+    "band_px": 11.61,
+    "clear": 0.366,
+    "size": 0.798,
+    "solid": 0.403,
+    "head_end": 0.122,
+    "side": 0.0,
+    "legs": 0.001,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 4.9,
+    "belly_gap": 0.344,
+    "leg_zone": 0.121,
+    "leans": [
+     4.9
+    ],
+    "lifts": [
+     0.005
+    ],
+    "plain": 0.472,
+    "colour": 0.99,
+    "box": [
+     0.0,
+     0.381,
+     0.162,
+     0.78
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance",
+     "solid"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_96622423",
+   "licence": "CC BY 4.0",
+   "author": "Doug Suitor",
+   "attribution": "(c) Doug Suitor, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/60426319",
+   "photo_page": "https://www.inaturalist.org/photos/96622423",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/96622423/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/96622423/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_96622423/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.939,
+    "single": 1.0,
+    "aspect": 1.622,
+    "band_px": 13.84,
+    "clear": 0.18,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.618,
+    "colour": 0.987,
+    "box": [
+     0.39,
+     0.342,
+     1.0,
+     0.833
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_391405775",
+   "licence": "CC BY 4.0",
+   "author": "Daughter Dad",
+   "attribution": "(c) Daughter Dad, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/221036409",
+   "photo_page": "https://www.inaturalist.org/photos/391405775",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/391405775/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/391405775/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_391405775/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.759,
+    "band_px": 6.05,
+    "clear": 0.829,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.672,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.052,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.214,
+    "colour": 0.999,
+    "box": [
+     0.219,
+     0.158,
+     0.876,
+     0.854
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_391405787",
+   "licence": "CC BY 4.0",
+   "author": "Daughter Dad",
+   "attribution": "(c) Daughter Dad, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/221036409",
+   "photo_page": "https://www.inaturalist.org/photos/391405787",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/391405787/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/391405787/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_391405787/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.331,
+    "band_px": 4.39,
+    "clear": 0.968,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.174,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 56.4,
+    "lean": 12.0,
+    "belly_gap": 0.544,
+    "leg_zone": 0.36,
+    "leans": [
+     11.5,
+     -26.4,
+     -5.7,
+     -44.9,
+     -12.0
+    ],
+    "lifts": [
+     0.115,
+     0.083,
+     0.086,
+     0.058,
+     0.0
+    ],
+    "plain": 0.134,
+    "colour": 1.0,
+    "box": [
+     0.136,
+     0.247,
+     0.876,
+     0.854
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_752529546",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/409299498",
+   "photo_page": "https://www.inaturalist.org/photos/752529546",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/752529546/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/752529546/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_752529546/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.947,
+    "band_px": 3.9,
+    "clear": 1.0,
+    "size": 0.268,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.617,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.304,
+    "leg_zone": 0.253,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.115,
+    "colour": 0.987,
+    "box": [
+     0.274,
+     0.577,
+     0.416,
+     0.843
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_365666774",
+   "licence": "CC BY 4.0",
+   "author": "Mary Krieger",
+   "attribution": "(c) Mary Krieger, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/206769416",
+   "photo_page": "https://www.inaturalist.org/photos/365666774",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/365666774/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/365666774/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_365666774/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.594,
+    "aspect": 2.551,
+    "band_px": 11.1,
+    "clear": 0.408,
+    "size": 0.2,
+    "solid": 1.0,
+    "head_end": 0.38,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 71.4,
+    "belly_gap": 0.8,
+    "leg_zone": 0.265,
+    "leans": [
+     71.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.478,
+    "colour": 1.0,
+    "box": [
+     0.588,
+     0.605,
+     0.838,
+     0.779
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_365666793",
+   "licence": "CC BY 4.0",
+   "author": "Mary Krieger",
+   "attribution": "(c) Mary Krieger, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/206769416",
+   "photo_page": "https://www.inaturalist.org/photos/365666793",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/365666793/medium.png",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/365666793/large.png",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_365666793/photo.png",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.987,
+    "aspect": 2.636,
+    "band_px": 8.8,
+    "clear": 0.6,
+    "size": 1.0,
+    "solid": 0.994,
+    "head_end": 0.844,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 38.0,
+    "lean": 14.2,
+    "belly_gap": 0.837,
+    "leg_zone": 0.434,
+    "leans": [
+     23.8,
+     -14.2,
+     14.2
+    ],
+    "lifts": [
+     0.0,
+     0.01,
+     0.192
+    ],
+    "plain": 0.542,
+    "colour": 1.0,
+    "box": [
+     0.318,
+     0.548,
+     0.84,
+     0.9
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_551018890",
+   "licence": "CC0 1.0",
+   "author": "Dominique B\u00e9rub\u00e9",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/305599501",
+   "photo_page": "https://www.inaturalist.org/photos/551018890",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/551018890/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/551018890/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_551018890/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.885,
+    "band_px": 2.46,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.926,
+    "side": 0.145,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 34.4,
+    "belly_gap": 0.163,
+    "leg_zone": 0.402,
+    "leans": [
+     -34.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.612,
+    "colour": 1.0,
+    "box": [
+     0.289,
+     0.25,
+     0.945,
+     0.926
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_551346675",
+   "licence": "CC0 1.0",
+   "author": "Dominique B\u00e9rub\u00e9",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/305599501",
+   "photo_page": "https://www.inaturalist.org/photos/551346675",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/551346675/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/551346675/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_551346675/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.794,
+    "band_px": 2.27,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 40.1,
+    "belly_gap": 0.07,
+    "leg_zone": 0.361,
+    "leans": [
+     -40.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.589,
+    "colour": 1.0,
+    "box": [
+     0.285,
+     0.254,
+     0.928,
+     0.924
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_486650547",
+   "licence": "CC BY 4.0",
+   "author": "Megan Dark",
+   "attribution": "(c) Megan Dark, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/270590331",
+   "photo_page": "https://www.inaturalist.org/photos/486650547",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/486650547/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/486650547/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_486650547/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_486650570",
+   "licence": "CC BY 4.0",
+   "author": "Megan Dark",
+   "attribution": "(c) Megan Dark, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/270590331",
+   "photo_page": "https://www.inaturalist.org/photos/486650570",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/486650570/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/486650570/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_486650570/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.427,
+    "band_px": 13.95,
+    "clear": 0.171,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.622,
+    "side": 0.0,
+    "legs": 0.032,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 43.0,
+    "belly_gap": 0.179,
+    "leg_zone": 0.146,
+    "leans": [
+     -43.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.168,
+    "colour": 0.925,
+    "box": [
+     0.41,
+     0.385,
+     0.48,
+     0.549
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_200090415",
+   "licence": "CC BY-SA 4.0",
+   "author": "Fyn Kynd",
+   "attribution": "(c) Fyn Kynd, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/118429136",
+   "photo_page": "https://www.inaturalist.org/photos/200090415",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/200090415/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/200090415/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_200090415/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.713,
+    "band_px": 2.69,
+    "clear": 1.0,
+    "size": 0.648,
+    "solid": 1.0,
+    "head_end": 0.598,
+    "side": 0.024,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 1.1,
+    "belly_gap": 0.25,
+    "leg_zone": 0.616,
+    "leans": [
+     -1.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.117,
+    "colour": 1.0,
+    "box": [
+     0.4,
+     0.414,
+     0.744,
+     0.776
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_200100555",
+   "licence": "CC BY-SA 4.0",
+   "author": "Fyn Kynd",
+   "attribution": "(c) Fyn Kynd, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/118434940",
+   "photo_page": "https://www.inaturalist.org/photos/200100555",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/200100555/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/200100555/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_200100555/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.858,
+    "band_px": 4.72,
+    "clear": 0.94,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.245,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 3.4,
+    "belly_gap": 0.224,
+    "leg_zone": 0.458,
+    "leans": [
+     -3.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.107,
+    "colour": 1.0,
+    "box": [
+     0.213,
+     0.31,
+     0.763,
+     0.79
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_249080338",
+   "licence": "CC BY 4.0",
+   "author": "Jo Roberts",
+   "attribution": "(c) Jo Roberts, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/145045616",
+   "photo_page": "https://www.inaturalist.org/photos/249080338",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/249080338/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/249080338/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_249080338/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.995,
+    "aspect": 0.895,
+    "band_px": 8.08,
+    "clear": 0.66,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.487,
+    "legs": 0.101,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 39.8,
+    "belly_gap": 0.573,
+    "leg_zone": 0.201,
+    "leans": [
+     39.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.147,
+    "colour": 0.992,
+    "box": [
+     0.294,
+     0.195,
+     0.668,
+     0.752
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_353727395",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/200483342",
+   "photo_page": "https://www.inaturalist.org/photos/353727395",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/353727395/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/353727395/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_353727395/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.575,
+    "band_px": 3.61,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 0.165,
+    "spread": 34.7,
+    "lean": 10.3,
+    "belly_gap": 0.534,
+    "leg_zone": 0.268,
+    "leans": [
+     -27.7,
+     7.0
+    ],
+    "lifts": [
+     0.008,
+     0.0
+    ],
+    "plain": 0.258,
+    "colour": 1.0,
+    "box": [
+     0.41,
+     0.317,
+     0.556,
+     0.769
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_353727403",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/200483342",
+   "photo_page": "https://www.inaturalist.org/photos/353727403",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/353727403/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/353727403/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_353727403/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.404,
+    "band_px": 3.88,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 0.5,
+    "lean": 2.0,
+    "belly_gap": 0.18,
+    "leg_zone": 0.577,
+    "leans": [
+     -2.2,
+     -1.7
+    ],
+    "lifts": [
+     0.026,
+     0.0
+    ],
+    "plain": 0.268,
+    "colour": 1.0,
+    "box": [
+     0.43,
+     0.214,
+     0.556,
+     0.769
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_344472621",
+   "licence": "CC BY-SA 4.0",
+   "author": "Jimmy Dee",
+   "attribution": "(c) Jimmy Dee, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/195758155",
+   "photo_page": "https://www.inaturalist.org/photos/344472621",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/344472621/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/344472621/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_344472621/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.361,
+    "band_px": 3.38,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.959,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 27.1,
+    "lean": 9.8,
+    "belly_gap": 0.699,
+    "leg_zone": 0.301,
+    "leans": [
+     3.7,
+     -23.4
+    ],
+    "lifts": [
+     0.0,
+     0.146
+    ],
+    "plain": 0.104,
+    "colour": 1.0,
+    "box": [
+     0.384,
+     0.268,
+     0.98,
+     0.942
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_344473152",
+   "licence": "CC BY-SA 4.0",
+   "author": "Jimmy Dee",
+   "attribution": "(c) Jimmy Dee, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/195758155",
+   "photo_page": "https://www.inaturalist.org/photos/344473152",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/344473152/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/344473152/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_344473152/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.305,
+    "band_px": 3.03,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.565,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 50.3,
+    "belly_gap": 0.751,
+    "leg_zone": 0.343,
+    "leans": [
+     -50.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.218,
+    "colour": 1.0,
+    "box": [
+     0.36,
+     0.099,
+     0.984,
+     0.814
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_600602096",
+   "licence": "CC BY-SA 4.0",
+   "author": "Jimmy Dee",
+   "attribution": "(c) Jimmy Dee, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/331119005",
+   "photo_page": "https://www.inaturalist.org/photos/600602096",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/600602096/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/600602096/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_600602096/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.915,
+    "band_px": 8.72,
+    "clear": 0.607,
+    "size": 0.384,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.538,
+    "legs": 0.111,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 1.9,
+    "belly_gap": 0.731,
+    "leg_zone": 0.209,
+    "leans": [
+     -1.9
+    ],
+    "lifts": [
+     0.001
+    ],
+    "plain": 0.21,
+    "colour": 1.0,
+    "box": [
+     0.438,
+     0.302,
+     0.632,
+     0.598
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_600602175",
+   "licence": "CC BY-SA 4.0",
+   "author": "Jimmy Dee",
+   "attribution": "(c) Jimmy Dee, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/331119005",
+   "photo_page": "https://www.inaturalist.org/photos/600602175",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/600602175/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/600602175/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_600602175/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.533,
+    "band_px": 1.67,
+    "clear": 1.0,
+    "size": 0.211,
+    "solid": 1.0,
+    "head_end": 0.172,
+    "side": 0.0,
+    "legs": 0.114,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 5.3,
+    "belly_gap": 0.821,
+    "leg_zone": 0.211,
+    "leans": [
+     5.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.128,
+    "colour": 1.0,
+    "box": [
+     0.842,
+     0.438,
+     0.938,
+     0.691
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_250634381",
+   "licence": "CC BY-SA 4.0",
+   "author": "Jimmy Dee",
+   "attribution": "(c) Jimmy Dee, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/145860617",
+   "photo_page": "https://www.inaturalist.org/photos/250634381",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/250634381/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/250634381/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_250634381/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.644,
+    "band_px": 1.82,
+    "clear": 1.0,
+    "size": 0.694,
+    "solid": 1.0,
+    "head_end": 0.871,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 9.9,
+    "belly_gap": 0.066,
+    "leg_zone": 0.403,
+    "leans": [
+     9.9
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.67,
+    "colour": 1.0,
+    "box": [
+     0.374,
+     0.326,
+     0.526,
+     0.699
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_250695304",
+   "licence": "CC BY-SA 4.0",
+   "author": "Jimmy Dee",
+   "attribution": "(c) Jimmy Dee, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/145860617",
+   "photo_page": "https://www.inaturalist.org/photos/250695304",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/250695304/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/250695304/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_250695304/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.743,
+    "band_px": 2.13,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 3.5,
+    "belly_gap": 0.078,
+    "leg_zone": 0.451,
+    "leans": [
+     3.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.786,
+    "colour": 1.0,
+    "box": [
+     0.234,
+     0.275,
+     0.552,
+     0.913
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_32545849",
+   "licence": "CC BY 4.0",
+   "author": "Sean Frey",
+   "attribution": "(c) Sean Frey, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/21064999",
+   "photo_page": "https://www.inaturalist.org/photos/32545849",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/32545849/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/32545849/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_32545849/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.584,
+    "aspect": 1.5,
+    "band_px": 1.49,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.466,
+    "colour": 1.0,
+    "box": [
+     0.604,
+     0.574,
+     0.706,
+     0.676
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_310177542",
+   "licence": "CC BY 4.0",
+   "author": "Christian Langlois",
+   "attribution": "(c) Christian Langlois, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/178270555",
+   "photo_page": "https://www.inaturalist.org/photos/310177542",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/310177542/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/310177542/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_310177542/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.825,
+    "aspect": 0.624,
+    "band_px": 6.77,
+    "clear": 0.769,
+    "size": 0.712,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 24.6,
+    "belly_gap": 0.463,
+    "leg_zone": 0.249,
+    "leans": [
+     24.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.161,
+    "colour": 0.996,
+    "box": [
+     0.58,
+     0.512,
+     0.816,
+     0.89
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_219818228",
+   "licence": "CC BY 4.0",
+   "author": "Ryan Menchion",
+   "attribution": "(c) Ryan Menchion, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/129357115",
+   "photo_page": "https://www.inaturalist.org/photos/219818228",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/219818228/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/219818228/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_219818228/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_219818253",
+   "licence": "CC BY 4.0",
+   "author": "Ryan Menchion",
+   "attribution": "(c) Ryan Menchion, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/129357115",
+   "photo_page": "https://www.inaturalist.org/photos/219818253",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/219818253/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/219818253/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_219818253/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_334947043",
+   "licence": "CC BY-SA 4.0",
+   "author": "Jimmy Dee",
+   "attribution": "(c) Jimmy Dee, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/190992704",
+   "photo_page": "https://www.inaturalist.org/photos/334947043",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/334947043/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/334947043/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_334947043/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.738,
+    "band_px": 6.42,
+    "clear": 0.799,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.328,
+    "side": 0.027,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 35.0,
+    "belly_gap": 0.158,
+    "leg_zone": 0.379,
+    "leans": [
+     -35.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.203,
+    "colour": 1.0,
+    "box": [
+     0.31,
+     0.057,
+     0.676,
+     0.799
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_334947609",
+   "licence": "CC BY-SA 4.0",
+   "author": "Jimmy Dee",
+   "attribution": "(c) Jimmy Dee, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/190992704",
+   "photo_page": "https://www.inaturalist.org/photos/334947609",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/334947609/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/334947609/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_334947609/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.042,
+    "band_px": 2.83,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.855,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 59.8,
+    "lean": 16.1,
+    "belly_gap": 0.461,
+    "leg_zone": 0.414,
+    "leans": [
+     -13.8,
+     46.0
+    ],
+    "lifts": [
+     0.103,
+     0.0
+    ],
+    "plain": 0.15,
+    "colour": 1.0,
+    "box": [
+     0.246,
+     0.141,
+     0.794,
+     0.928
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_397921061",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/224509964",
+   "photo_page": "https://www.inaturalist.org/photos/397921061",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/397921061/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/397921061/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_397921061/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.649,
+    "band_px": 2.27,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.661,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 6.0,
+    "lean": 13.7,
+    "belly_gap": 0.705,
+    "leg_zone": 0.377,
+    "leans": [
+     -16.7,
+     -10.7
+    ],
+    "lifts": [
+     0.0,
+     0.012
+    ],
+    "plain": 0.158,
+    "colour": 1.0,
+    "box": [
+     0.288,
+     0.228,
+     0.51,
+     0.836
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_397921079",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/224509964",
+   "photo_page": "https://www.inaturalist.org/photos/397921079",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/397921079/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/397921079/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_397921079/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.038,
+    "band_px": 2.96,
+    "clear": 1.0,
+    "size": 0.695,
+    "solid": 1.0,
+    "head_end": 0.347,
+    "side": 0.587,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 66.3,
+    "lean": 5.1,
+    "belly_gap": 0.239,
+    "leg_zone": 0.255,
+    "leans": [
+     -28.1,
+     38.2
+    ],
+    "lifts": [
+     0.007,
+     0.026
+    ],
+    "plain": 0.12,
+    "colour": 1.0,
+    "box": [
+     0.244,
+     0.47,
+     0.462,
+     0.843
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_254692956",
+   "licence": "CC BY-SA 4.0",
+   "author": "Jimmy Dee",
+   "attribution": "(c) Jimmy Dee, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/147955722",
+   "photo_page": "https://www.inaturalist.org/photos/254692956",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/254692956/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/254692956/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_254692956/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.624,
+    "band_px": 1.88,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 1.3,
+    "belly_gap": 0.127,
+    "leg_zone": 0.471,
+    "leans": [
+     1.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.33,
+    "colour": 1.0,
+    "box": [
+     0.498,
+     0.408,
+     0.694,
+     0.861
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_93043658",
+   "licence": "CC BY-SA 4.0",
+   "author": "Jimmy Dee",
+   "attribution": "(c) Jimmy Dee, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/58291055",
+   "photo_page": "https://www.inaturalist.org/photos/93043658",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/93043658/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/93043658/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_93043658/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.908,
+    "band_px": 5.47,
+    "clear": 0.878,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.166,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.164,
+    "leg_zone": 0.492,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.736,
+    "colour": 0.995,
+    "box": [
+     0.404,
+     0.209,
+     0.738,
+     0.81
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_180772262",
+   "licence": "CC BY 4.0",
+   "author": "Norma Malinowski",
+   "attribution": "(c) Norma Malinowski, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/107476924",
+   "photo_page": "https://www.inaturalist.org/photos/180772262",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/180772262/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/180772262/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_180772262/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.043,
+    "band_px": 3.5,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.857,
+    "legs": 0.043,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 20.7,
+    "belly_gap": 0.442,
+    "leg_zone": 0.154,
+    "leans": [
+     20.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.619,
+    "colour": 1.0,
+    "box": [
+     0.336,
+     0.224,
+     0.92,
+     0.971
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_318006860",
+   "licence": "CC0 1.0",
+   "author": "Thompson Hyggen",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/182396729",
+   "photo_page": "https://www.inaturalist.org/photos/318006860",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/318006860/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/318006860/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_318006860/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.4,
+    "band_px": 1.66,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.725,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.38,
+    "spread": 30.4,
+    "lean": 12.6,
+    "belly_gap": 0.6,
+    "leg_zone": 0.444,
+    "leans": [
+     -10.9,
+     19.5,
+     12.6
+    ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "plain": 0.48,
+    "colour": 1.0,
+    "box": [
+     0.412,
+     0.532,
+     0.538,
+     0.667
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_353689353",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/200465920",
+   "photo_page": "https://www.inaturalist.org/photos/353689353",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/353689353/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/353689353/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_353689353/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.632,
+    "aspect": 0.494,
+    "band_px": 3.03,
+    "clear": 1.0,
+    "size": 0.467,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.458,
+    "colour": 1.0,
+    "box": [
+     0.464,
+     0.516,
+     0.552,
+     0.833
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_353689363",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/200465920",
+   "photo_page": "https://www.inaturalist.org/photos/353689363",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/353689363/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/353689363/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_353689363/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.624,
+    "aspect": 0.552,
+    "band_px": 3.47,
+    "clear": 1.0,
+    "size": 0.438,
+    "solid": 1.0,
+    "head_end": 0.386,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.051,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.444,
+    "colour": 1.0,
+    "box": [
+     0.458,
+     0.523,
+     0.554,
+     0.833
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_642777598",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/352178505",
+   "photo_page": "https://www.inaturalist.org/photos/642777598",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/642777598/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/642777598/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_642777598/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_642777615",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/352178505",
+   "photo_page": "https://www.inaturalist.org/photos/642777615",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/642777615/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/642777615/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_642777615/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.667,
+    "band_px": 15.1,
+    "clear": 0.075,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 26.6,
+    "belly_gap": 0.778,
+    "leg_zone": 0.389,
+    "leans": [
+     26.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.126,
+    "colour": 1.0,
+    "box": [
+     0.704,
+     0.786,
+     0.728,
+     0.851
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_752676963",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/409368210",
+   "photo_page": "https://www.inaturalist.org/photos/752676963",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/752676963/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/752676963/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_752676963/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.539,
+    "band_px": 3.03,
+    "clear": 1.0,
+    "size": 0.282,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.064,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 9.3,
+    "belly_gap": 0.469,
+    "leg_zone": 0.171,
+    "leans": [
+     9.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.204,
+    "colour": 1.0,
+    "box": [
+     0.374,
+     0.548,
+     0.456,
+     0.819
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_752676962",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/409368210",
+   "photo_page": "https://www.inaturalist.org/photos/752676962",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/752676962/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/752676962/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_752676962/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.577,
+    "band_px": 1.87,
+    "clear": 1.0,
+    "size": 0.211,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.044,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 55.7,
+    "belly_gap": 0.156,
+    "leg_zone": 0.155,
+    "leans": [
+     55.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.204,
+    "colour": 1.0,
+    "box": [
+     0.374,
+     0.587,
+     0.456,
+     0.84
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_353743887",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/200491420",
+   "photo_page": "https://www.inaturalist.org/photos/353743887",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/353743887/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/353743887/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_353743887/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.719,
+    "aspect": 1.667,
+    "band_px": 13.36,
+    "clear": 0.22,
+    "size": 0.14,
+    "solid": 1.0,
+    "head_end": 0.2,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 51.0,
+    "lean": 7.7,
+    "belly_gap": 0.511,
+    "leg_zone": 0.242,
+    "leans": [
+     7.8,
+     -14.3,
+     -1.1,
+     -43.2
+    ],
+    "lifts": [
+     0.03,
+     0.03,
+     0.0,
+     0.045
+    ],
+    "plain": 0.717,
+    "colour": 1.0,
+    "box": [
+     0.158,
+     0.605,
+     0.378,
+     0.84
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_610858147",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/336185937",
+   "photo_page": "https://www.inaturalist.org/photos/610858147",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/610858147/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/610858147/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_610858147/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.329,
+    "band_px": 9.35,
+    "clear": 0.554,
+    "size": 0.239,
+    "solid": 1.0,
+    "head_end": 0.418,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 12.5,
+    "lean": 40.4,
+    "belly_gap": 0.795,
+    "leg_zone": 0.377,
+    "leans": [
+     -46.6,
+     -34.1
+    ],
+    "lifts": [
+     0.0,
+     0.11
+    ],
+    "plain": 0.117,
+    "colour": 1.0,
+    "box": [
+     0.494,
+     0.502,
+     0.688,
+     0.762
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_610858144",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/336185937",
+   "photo_page": "https://www.inaturalist.org/photos/610858144",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/610858144/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/610858144/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_610858144/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.4,
+    "band_px": 42.55,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.121,
+    "colour": 1.0,
+    "box": [
+     0.518,
+     0.665,
+     0.532,
+     0.683
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_353742627",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/200490935",
+   "photo_page": "https://www.inaturalist.org/photos/353742627",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/353742627/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/353742627/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_353742627/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.616,
+    "band_px": 1.72,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.401,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 9.2,
+    "lean": 1.1,
+    "belly_gap": 0.459,
+    "leg_zone": 0.407,
+    "leans": [
+     3.5,
+     -5.7
+    ],
+    "lifts": [
+     0.0,
+     0.033
+    ],
+    "plain": 0.524,
+    "colour": 1.0,
+    "box": [
+     0.324,
+     0.278,
+     0.51,
+     0.815
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_353742638",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/200490935",
+   "photo_page": "https://www.inaturalist.org/photos/353742638",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/353742638/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/353742638/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_353742638/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.769,
+    "aspect": 0.766,
+    "band_px": 3.1,
+    "clear": 1.0,
+    "size": 0.538,
+    "solid": 1.0,
+    "head_end": 0.271,
+    "side": 0.062,
+    "legs": 0.043,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 16.5,
+    "belly_gap": 0.175,
+    "leg_zone": 0.154,
+    "leans": [
+     -16.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.498,
+    "colour": 1.0,
+    "box": [
+     0.176,
+     0.498,
+     0.32,
+     0.833
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_180819403",
+   "licence": "CC BY 4.0",
+   "author": "Norma Malinowski",
+   "attribution": "(c) Norma Malinowski, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/107502579",
+   "photo_page": "https://www.inaturalist.org/photos/180819403",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/180819403/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/180819403/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_180819403/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.5,
+    "band_px": 3.43,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 58.1,
+    "lean": 40.5,
+    "belly_gap": 0.368,
+    "leg_zone": 0.3,
+    "leans": [
+     -58.9,
+     -0.8,
+     -41.5,
+     -39.6
+    ],
+    "lifts": [
+     0.042,
+     0.0,
+     0.042,
+     0.05
+    ],
+    "plain": 0.119,
+    "colour": 1.0,
+    "box": [
+     0.295,
+     0.56,
+     0.936,
+     0.8
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_353743603",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/200491300",
+   "photo_page": "https://www.inaturalist.org/photos/353743603",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/353743603/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/353743603/large.jpeg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_353743603/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.468,
+    "band_px": 3.6,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.527,
+    "colour": 1.0,
+    "box": [
+     0.336,
+     0.32,
+     0.48,
+     0.868
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_107681308",
+   "licence": "CC BY-SA 4.0",
+   "author": "Donald Hampton",
+   "attribution": "(c) Donald Hampton, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/66752914",
+   "photo_page": "https://www.inaturalist.org/photos/107681308",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/107681308/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/107681308/large.jpg",
+   "adult": false,
+   "local": false,
+   "file_small": "pipeline/_cache/references/lynx_canadensis/inat_107681308/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.089,
+    "band_px": 1.86,
+    "clear": 1.0,
+    "size": 0.146,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.972,
+    "legs": 0.063,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 59.2,
+    "belly_gap": 0.449,
+    "leg_zone": 0.17,
+    "leans": [
+     -59.2
+    ],
+    "lifts": [
+     0.006
+    ],
+    "plain": 0.924,
+    "colour": 0.791,
+    "box": [
+     0.384,
+     0.455,
+     0.556,
+     0.692
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_11517719",
+   "licence": "CC BY-SA 3.0",
+   "author": "Michael Zahra",
+   "attribution": "Michael Zahra, CC BY-SA 3.0, via Wikimedia Commons (File:Canada lynx by Michael Zahra.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Canada_lynx_by_Michael_Zahra.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Canada_lynx_by_Michael_Zahra.jpg/500px-Canada_lynx_by_Michael_Zahra.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Canada_lynx_by_Michael_Zahra.jpg/1280px-Canada_lynx_by_Michael_Zahra.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_11517719/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.571,
+    "band_px": 2.2,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.208,
+    "side": 0.0,
+    "legs": 0.05,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 64.5,
+    "belly_gap": 0.191,
+    "leg_zone": 0.16,
+    "leans": [
+     64.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.447,
+    "colour": 1.0,
+    "box": [
+     0.164,
+     0.277,
+     0.718,
+     0.924
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_90116315",
+   "licence": "CC BY-SA 3.0",
+   "author": "Michael Zahra",
+   "attribution": "Michael Zahra, CC BY-SA 3.0, via Wikimedia Commons (File:Canada lynx by Michael Zahra (cropped).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Canada_lynx_by_Michael_Zahra_(cropped).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Canada_lynx_by_Michael_Zahra_%28cropped%29.jpg/500px-Canada_lynx_by_Michael_Zahra_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Canada_lynx_by_Michael_Zahra_%28cropped%29.jpg/1280px-Canada_lynx_by_Michael_Zahra_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_90116315/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.575,
+    "band_px": 2.66,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.188,
+    "side": 0.0,
+    "legs": 0.051,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 65.3,
+    "belly_gap": 0.191,
+    "leg_zone": 0.161,
+    "leans": [
+     65.3
+    ],
+    "lifts": [
+     0.002
+    ],
+    "plain": 0.664,
+    "colour": 1.0,
+    "box": [
+     0.095,
+     0.045,
+     0.821,
+     0.955
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_11394713",
+   "licence": "CC BY 2.0",
+   "author": "Keith Williams",
+   "attribution": "Keith Williams, CC BY 2.0, via Wikimedia Commons (File:Lynx Canadensis.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lynx_Canadensis.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Lynx_Canadensis.jpg/500px-Lynx_Canadensis.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Lynx_Canadensis.jpg/1280px-Lynx_Canadensis.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_11394713/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.246,
+    "band_px": 1.94,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 87.7,
+    "lean": 18.1,
+    "belly_gap": 0.602,
+    "leg_zone": 0.324,
+    "leans": [
+     -33.0,
+     41.8,
+     -5.6,
+     54.7
+    ],
+    "lifts": [
+     0.048,
+     0.019,
+     0.0,
+     0.034
+    ],
+    "plain": 0.864,
+    "colour": 0.997,
+    "box": [
+     0.028,
+     0.226,
+     0.958,
+     0.885
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_3119787",
+   "licence": "CC BY-SA 2.5",
+   "author": "Mark Pellegrini",
+   "attribution": "Mark Pellegrini, CC BY-SA 2.5, via Wikimedia Commons (File:MP-lynx canadensis 3.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:MP-lynx_canadensis_3.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/MP-lynx_canadensis_3.jpg/500px-MP-lynx_canadensis_3.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/MP-lynx_canadensis_3.jpg/1280px-MP-lynx_canadensis_3.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_3119787/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.576,
+    "band_px": 7.13,
+    "clear": 0.74,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.132,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 71.1,
+    "lean": 28.3,
+    "belly_gap": 0.357,
+    "leg_zone": 0.422,
+    "leans": [
+     43.9,
+     -27.2,
+     28.3
+    ],
+    "lifts": [
+     0.03,
+     0.004,
+     0.0
+    ],
+    "plain": 0.154,
+    "colour": 1.0,
+    "box": [
+     0.04,
+     0.296,
+     0.768,
+     0.912
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_56891487",
+   "licence": "CC BY-SA 4.0",
+   "author": "0x010C",
+   "attribution": "0x010C, CC BY-SA 4.0, via Wikimedia Commons (File:2016-11 zoo sauvage de Saint-F\u00e9licien - Lynx canadensis 03.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:2016-11_zoo_sauvage_de_Saint-F%C3%A9licien_-_Lynx_canadensis_03.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/26/2016-11_zoo_sauvage_de_Saint-F%C3%A9licien_-_Lynx_canadensis_03.jpg/500px-2016-11_zoo_sauvage_de_Saint-F%C3%A9licien_-_Lynx_canadensis_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/26/2016-11_zoo_sauvage_de_Saint-F%C3%A9licien_-_Lynx_canadensis_03.jpg/1280px-2016-11_zoo_sauvage_de_Saint-F%C3%A9licien_-_Lynx_canadensis_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_56891487/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.121,
+    "band_px": 5.31,
+    "clear": 0.891,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.652,
+    "side": 0.07,
+    "legs": 0.045,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 15.6,
+    "belly_gap": 0.114,
+    "leg_zone": 0.156,
+    "leans": [
+     -15.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.207,
+    "colour": 1.0,
+    "box": [
+     0.0,
+     0.0,
+     0.612,
+     0.82
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_165493583",
+   "licence": "CC BY 4.0",
+   "author": "Vicpeters",
+   "attribution": "Vicpeters, CC BY 4.0, via Wikimedia Commons (File:Canada lynx and Varying Hare diorama at American Museum of Natural History.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Canada_lynx_and_Varying_Hare_diorama_at_American_Museum_of_Natural_History.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Canada_lynx_and_Varying_Hare_diorama_at_American_Museum_of_Natural_History.jpg/500px-Canada_lynx_and_Varying_Hare_diorama_at_American_Museum_of_Natural_History.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Canada_lynx_and_Varying_Hare_diorama_at_American_Museum_of_Natural_History.jpg/1280px-Canada_lynx_and_Varying_Hare_diorama_at_American_Museum_of_Natural_History.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_165493583/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.432,
+    "aspect": 0.83,
+    "band_px": 13.94,
+    "clear": 0.172,
+    "size": 0.395,
+    "solid": 1.0,
+    "head_end": 0.655,
+    "side": 0.326,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 42.5,
+    "belly_gap": 0.757,
+    "leg_zone": 0.375,
+    "leans": [
+     -42.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.19,
+    "colour": 1.0,
+    "box": [
+     0.694,
+     0.491,
+     0.88,
+     0.789
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_29788364",
+   "licence": "CC BY 2.0",
+   "author": "Superior National Forest",
+   "attribution": "Superior National Forest, CC BY 2.0, via Wikimedia Commons (File:Lynx (5187417687).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lynx_(5187417687).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Lynx_%285187417687%29.jpg/500px-Lynx_%285187417687%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Lynx_%285187417687%29.jpg/1280px-Lynx_%285187417687%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_29788364/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.905,
+    "aspect": 0.937,
+    "band_px": 16.78,
+    "clear": 0.0,
+    "size": 0.652,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.593,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 43.8,
+    "belly_gap": 0.598,
+    "leg_zone": 0.308,
+    "leans": [
+     43.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.106,
+    "colour": 1.0,
+    "box": [
+     0.286,
+     0.452,
+     0.554,
+     0.815
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_46114406",
+   "licence": "CC BY-SA 4.0",
+   "author": "SMCurator",
+   "attribution": "SMCurator, CC BY-SA 4.0, via Wikimedia Commons (File:Canadian lynx.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Canadian_lynx.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/Canadian_lynx.jpg/500px-Canadian_lynx.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/Canadian_lynx.jpg/1280px-Canadian_lynx.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_46114406/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 0.727,
+    "band_px": 7.86,
+    "clear": 0.679,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.208,
+    "colour": 1.0,
+    "box": [
+     0.035,
+     0.121,
+     0.994,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_72047419",
+   "licence": "CC BY-SA 4.0",
+   "author": "Lucas Vogel",
+   "attribution": "Lucas Vogel, CC BY-SA 4.0, via Wikimedia Commons (File:Lynx du Canada (Lynx canadensis).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lynx_du_Canada_(Lynx_canadensis).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Lynx_du_Canada_%28Lynx_canadensis%29.jpg/500px-Lynx_du_Canada_%28Lynx_canadensis%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Lynx_du_Canada_%28Lynx_canadensis%29.jpg/1280px-Lynx_du_Canada_%28Lynx_canadensis%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_72047419/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.522,
+    "band_px": 3.33,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.377,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 7.1,
+    "belly_gap": 0.302,
+    "leg_zone": 0.657,
+    "leans": [
+     -7.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.182,
+    "colour": 1.0,
+    "box": [
+     0.376,
+     0.325,
+     0.616,
+     0.9
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_105254102",
+   "licence": "CC BY 2.0",
+   "author": "Thomas Quine",
+   "attribution": "Thomas Quine, CC BY 2.0, via Wikimedia Commons (File:Canada Lynx (48712067207).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Canada_Lynx_(48712067207).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Canada_Lynx_%2848712067207%29.jpg/500px-Canada_Lynx_%2848712067207%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Canada_Lynx_%2848712067207%29.jpg/1280px-Canada_Lynx_%2848712067207%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_105254102/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.397,
+    "band_px": 6.58,
+    "clear": 0.785,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.808,
+    "side": 1.0,
+    "legs": 0.075,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 62.5,
+    "belly_gap": 0.306,
+    "leg_zone": 0.18,
+    "leans": [
+     62.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.141,
+    "colour": 1.0,
+    "box": [
+     0.242,
+     0.21,
+     0.784,
+     0.793
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_45036612",
+   "licence": "CC BY-SA 4.0",
+   "author": "Lamiot",
+   "attribution": "Lamiot, CC BY-SA 4.0, via Wikimedia Commons (File:Milliers fourrures vendues 90 ans odum 1953.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Milliers_fourrures_vendues_90_ans_odum_1953.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Milliers_fourrures_vendues_90_ans_odum_1953.jpg/500px-Milliers_fourrures_vendues_90_ans_odum_1953.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/0/06/Milliers_fourrures_vendues_90_ans_odum_1953.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_45036612/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.947,
+    "aspect": 2.07,
+    "band_px": 9.27,
+    "clear": 0.561,
+    "size": 1.0,
+    "solid": 0.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.254,
+    "spread": 30.0,
+    "lean": 3.7,
+    "belly_gap": 0.565,
+    "leg_zone": 0.249,
+    "leans": [
+     16.6,
+     10.5,
+     15.1,
+     12.2,
+     3.7,
+     -1.7,
+     -13.4,
+     -2.5,
+     -6.9
+    ],
+    "lifts": [
+     0.023,
+     0.009,
+     0.009,
+     0.066,
+     0.085,
+     0.028,
+     0.0,
+     0.0,
+     0.047
+    ],
+    "plain": 0.383,
+    "colour": 1.0,
+    "box": [
+     0.088,
+     0.186,
+     0.97,
+     0.882
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance",
+     "solid"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_42091894",
+   "licence": "CC BY 2.0",
+   "author": "Mike Beauregard",
+   "attribution": "Mike Beauregard, CC BY 2.0, via Wikimedia Commons (File:Who says cats don't swim... Lynx swims the North Nahanni River (cropped).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Who_says_cats_don%27t_swim..._Lynx_swims_the_North_Nahanni_River_(cropped).jpg",
+   "url_small": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Who_says_cats_don%27t_swim..._Lynx_swims_the_North_Nahanni_River_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Who_says_cats_don%27t_swim..._Lynx_swims_the_North_Nahanni_River_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_42091894/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 3.714,
+    "band_px": 3.48,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.051,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 71.8,
+    "belly_gap": 0.653,
+    "leg_zone": 0.161,
+    "leans": [
+     71.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.811,
+    "colour": 1.0,
+    "box": [
+     0.272,
+     0.675,
+     0.772,
+     0.847
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_79892441",
+   "licence": "CC BY-SA 2.0",
+   "author": "daryl_mitchell from Saskatoon, Saskatchewan, Canada",
+   "attribution": "daryl_mitchell from Saskatoon, Saskatchewan, Canada, CC BY-SA 2.0, via Wikimedia Commons (File:Rabbit and Lynx (5177339464).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Rabbit_and_Lynx_(5177339464).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Rabbit_and_Lynx_%285177339464%29.jpg/500px-Rabbit_and_Lynx_%285177339464%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Rabbit_and_Lynx_%285177339464%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_79892441/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.747,
+    "single": 0.542,
+    "aspect": 0.203,
+    "band_px": 7.94,
+    "clear": 0.672,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 8.6,
+    "belly_gap": 0.75,
+    "leg_zone": 0.475,
+    "leans": [
+     8.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.109,
+    "colour": 1.0,
+    "box": [
+     0.321,
+     0.0,
+     0.478,
+     0.578
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_95507860",
+   "licence": "CC BY-SA 4.0",
+   "author": "Sandraabisror",
+   "attribution": "Sandraabisror, CC BY-SA 4.0, via Wikimedia Commons (File:Lynx du Canada .jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lynx_du_Canada_.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Lynx_du_Canada_.jpg/500px-Lynx_du_Canada_.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Lynx_du_Canada_.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_95507860/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.45,
+    "band_px": 3.01,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.362,
+    "side": 0.855,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 25.6,
+    "belly_gap": 0.271,
+    "leg_zone": 0.528,
+    "leans": [
+     -25.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.442,
+    "colour": 1.0,
+    "box": [
+     0.138,
+     0.031,
+     0.924,
+     0.959
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_10685140",
+   "licence": "CC BY 2.0",
+   "author": "Mike Beauregard",
+   "attribution": "Mike Beauregard, CC BY 2.0, via Wikimedia Commons (File:Who says cats don't swim... Lynx swims the North Nahanni River.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Who_says_cats_don%27t_swim..._Lynx_swims_the_North_Nahanni_River.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/Who_says_cats_don%27t_swim..._Lynx_swims_the_North_Nahanni_River.jpg/500px-Who_says_cats_don%27t_swim..._Lynx_swims_the_North_Nahanni_River.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/Who_says_cats_don%27t_swim..._Lynx_swims_the_North_Nahanni_River.jpg/1280px-Who_says_cats_don%27t_swim..._Lynx_swims_the_North_Nahanni_River.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_10685140/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 4.462,
+    "band_px": 3.39,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.428,
+    "side": 1.0,
+    "legs": 0.139,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.745,
+    "leg_zone": 0.231,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.193,
+    "colour": 1.0,
+    "box": [
+     0.444,
+     0.431,
+     0.56,
+     0.47
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_10685243",
+   "licence": "CC BY 2.0",
+   "author": "Mike Beauregard",
+   "attribution": "Mike Beauregard, CC BY 2.0, via Wikimedia Commons (File:Who says cats don't swim... Lynx swims the North Nahanni River -b.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Who_says_cats_don%27t_swim..._Lynx_swims_the_North_Nahanni_River_-b.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/22/Who_says_cats_don%27t_swim..._Lynx_swims_the_North_Nahanni_River_-b.jpg/500px-Who_says_cats_don%27t_swim..._Lynx_swims_the_North_Nahanni_River_-b.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/2/22/Who_says_cats_don%27t_swim..._Lynx_swims_the_North_Nahanni_River_-b.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_10685243/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 4.533,
+    "band_px": 4.45,
+    "clear": 0.962,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.646,
+    "side": 1.0,
+    "legs": 0.016,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.745,
+    "leg_zone": 0.133,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.208,
+    "colour": 1.0,
+    "box": [
+     0.488,
+     0.49,
+     0.624,
+     0.534
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_101007061",
+   "licence": "CC BY-SA 4.0",
+   "author": "Rocktiff",
+   "attribution": "Rocktiff, CC BY-SA 4.0, via Wikimedia Commons (File:Lynx-Canada.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lynx-Canada.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Lynx-Canada.jpg/500px-Lynx-Canada.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Lynx-Canada.jpg/1280px-Lynx-Canada.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_101007061/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.349,
+    "band_px": 2.07,
+    "clear": 1.0,
+    "size": 0.18,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 47.8,
+    "belly_gap": 0.839,
+    "leg_zone": 0.291,
+    "leans": [
+     -47.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.032,
+    "colour": 0.971,
+    "box": [
+     0.3,
+     0.484,
+     0.532,
+     0.729
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_105250088",
+   "licence": "CC BY 2.0",
+   "author": "Thomas Quine",
+   "attribution": "Thomas Quine, CC BY 2.0, via Wikimedia Commons (File:Canada Lynx (29781483297).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Canada_Lynx_(29781483297).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Canada_Lynx_%2829781483297%29.jpg/500px-Canada_Lynx_%2829781483297%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Canada_Lynx_%2829781483297%29.jpg/1280px-Canada_Lynx_%2829781483297%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_105250088/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.841,
+    "band_px": 5.44,
+    "clear": 0.88,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.95,
+    "stance": 0.0,
+    "spread": 86.4,
+    "lean": 2.7,
+    "belly_gap": 0.476,
+    "leg_zone": 0.234,
+    "leans": [
+     -4.2,
+     -30.4,
+     9.6,
+     56.0
+    ],
+    "lifts": [
+     0.005,
+     0.08,
+     0.0,
+     0.06
+    ],
+    "plain": 0.123,
+    "colour": 0.999,
+    "box": [
+     0.114,
+     0.081,
+     0.854,
+     0.685
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_72624238",
+   "licence": "CC BY-SA 4.0",
+   "author": "Agnes Deans Cameron",
+   "attribution": "Agnes Deans Cameron, CC BY-SA 4.0, via Wikimedia Commons (File:Canadian Lynx (S2004-877 LS).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Canadian_Lynx_(S2004-877_LS).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Canadian_Lynx_%28S2004-877_LS%29.jpg/500px-Canadian_Lynx_%28S2004-877_LS%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Canadian_Lynx_%28S2004-877_LS%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_72624238/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.999,
+    "aspect": 1.223,
+    "band_px": 19.75,
+    "clear": 0.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.053,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.587,
+    "colour": 1.0,
+    "box": [
+     0.016,
+     0.017,
+     0.86,
+     0.867
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_45036611",
+   "licence": "CC BY-SA 4.0",
+   "author": "Lamiot",
+   "attribution": "Lamiot, CC BY-SA 4.0, via Wikimedia Commons (File:Milliers fourrures vendues en environ 90 ans odum 1953 en.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Milliers_fourrures_vendues_en_environ_90_ans_odum_1953_en.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5b/Milliers_fourrures_vendues_en_environ_90_ans_odum_1953_en.jpg/500px-Milliers_fourrures_vendues_en_environ_90_ans_odum_1953_en.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Milliers_fourrures_vendues_en_environ_90_ans_odum_1953_en.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_45036611/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.967,
+    "aspect": 2.07,
+    "band_px": 6.09,
+    "clear": 0.826,
+    "size": 1.0,
+    "solid": 0.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.289,
+    "spread": 30.2,
+    "lean": 4.1,
+    "belly_gap": 0.574,
+    "leg_zone": 0.254,
+    "leans": [
+     17.1,
+     4.1,
+     15.0,
+     14.0,
+     2.9,
+     6.2,
+     -13.1,
+     -1.0,
+     -10.0
+    ],
+    "lifts": [
+     0.019,
+     0.005,
+     0.005,
+     0.061,
+     0.08,
+     0.028,
+     0.0,
+     0.0,
+     0.047
+    ],
+    "plain": 0.419,
+    "colour": 1.0,
+    "box": [
+     0.088,
+     0.183,
+     0.97,
+     0.879
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance",
+     "solid"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_117114005",
+   "licence": "CC BY-SA 4.0",
+   "author": "NGC 54",
+   "attribution": "NGC 54, CC BY-SA 4.0, via Wikimedia Commons (File:Milliers fourrures vendues en environ 90 ans odum 1953 ro.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Milliers_fourrures_vendues_en_environ_90_ans_odum_1953_ro.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Milliers_fourrures_vendues_en_environ_90_ans_odum_1953_ro.jpg/500px-Milliers_fourrures_vendues_en_environ_90_ans_odum_1953_ro.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Milliers_fourrures_vendues_en_environ_90_ans_odum_1953_ro.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_117114005/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.747,
+    "aspect": 1.559,
+    "band_px": 5.2,
+    "clear": 0.9,
+    "size": 1.0,
+    "solid": 0.0,
+    "head_end": 0.705,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.216,
+    "spread": 31.2,
+    "lean": 3.5,
+    "belly_gap": 0.623,
+    "leg_zone": 0.263,
+    "leans": [
+     16.9,
+     15.6,
+     3.5,
+     4.8,
+     -12.8,
+     3.1,
+     -14.3
+    ],
+    "lifts": [
+     0.014,
+     0.066,
+     0.085,
+     0.033,
+     0.0,
+     0.0,
+     0.052
+    ],
+    "plain": 0.346,
+    "colour": 1.0,
+    "box": [
+     0.304,
+     0.183,
+     0.968,
+     0.879
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance",
+     "solid"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_20058160",
+   "licence": "CC BY 3.0",
+   "author": "Karl Friedrich Herhold",
+   "attribution": "Karl Friedrich Herhold, CC BY 3.0, via Wikimedia Commons (File:Brooks Range (19) Lynx trail.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Brooks_Range_(19)_Lynx_trail.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Brooks_Range_%2819%29_Lynx_trail.jpg/500px-Brooks_Range_%2819%29_Lynx_trail.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Brooks_Range_%2819%29_Lynx_trail.jpg/1280px-Brooks_Range_%2819%29_Lynx_trail.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_20058160/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 2.912,
+    "band_px": 1.85,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.029,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.025,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.799,
+    "colour": 1.0,
+    "box": [
+     0.252,
+     0.694,
+     0.846,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_51802457",
+   "licence": "CC BY 2.0",
+   "author": "Thomas Quine",
+   "attribution": "Thomas Quine, CC BY 2.0, via Wikimedia Commons (File:Lynx (23025566142).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lynx_(23025566142).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/Lynx_%2823025566142%29.jpg/500px-Lynx_%2823025566142%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/Lynx_%2823025566142%29.jpg/1280px-Lynx_%2823025566142%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/lynx_canadensis/commons_51802457/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.27,
+    "band_px": 4.08,
+    "clear": 0.993,
+    "size": 0.978,
+    "solid": 1.0,
+    "head_end": 0.282,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 49.7,
+    "belly_gap": 0.821,
+    "leg_zone": 0.345,
+    "leans": [
+     -49.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.208,
+    "colour": 1.0,
+    "box": [
+     0.498,
+     0.324,
+     0.874,
+     0.769
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  }
+ ]
+}

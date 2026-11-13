@@ -102,7 +102,7 @@ PATTERN = {"spot": "spots", "spots": "spots", "spotted": "spots", "spotting": "s
            "ringed": "rings", "line": "lines", "lines": "lines", "dash": "dashes", "dashes": "dashes", "mottled": "mottling",
            "mottling": "mottling", "speckled": "speckles", "speckles": "speckles", "chevrons": "chevrons", "marks": "marks",
            "markings": "marks", "border": "marks", "borders": "marks",
-           "tuft": "tuft", "tip": "tip", "tipped": "tip", "mask": "mask", "dappling": "dappling",
+           "tuft": "tuft", "tufts": "tuft", "tip": "tip", "tipped": "tip", "mask": "mask", "dappling": "dappling",
            "crossbands": "bands", "cross-bands": "bands"}
 REGION = {
     "head": "head", "face": "head", "facial": "head", "muzzle": "head", "snout": "head", "ear": "head", "ears": "head",
@@ -139,6 +139,12 @@ OTHER_TAXA = re.compile(r"\b(unlike|confused with|other species|related species|
 # with wolves gave its body gray): not a body colour
 ANIMAL_NOUN = re.compile(r"\s*(?:wol(?:f|ves)|jackals?|fox(?:es)?|bears?|deer|squirrels?|kangaroos?|lynx|bobcats?|eagles?|hawks?)\b")
 PAST = re.compile(r"\b(had|were)\b", re.I)
+# the eyes and the nose: their colour is not the coat's
+SMALL_PART = r"\b(?:eyes?|iris|irises|pupils?|noses?|nostrils?)\b"
+# a sentence that goes on about the animals of the sentence before ("A few melanistic bobcats have been sighted ... They
+# appear black", 2026-11-12): dropped with it when that one was about a colour form, the young or another animal
+CARRIES = re.compile(r"(?:They|These|Those|Such)\b")
+CARRIED = ("morph", "young", "other taxa")
 NONBODY = re.compile(r"\b(secret\w*|eggs?|eggshells?|glands?|sweat|milk|dung|faeces|feces|tongue|teeth|blood|sunscreen|"
                      r"urine|nests?|horns?|tusks?|ivory|poaching|meat)\b", re.I)
 FEMALE = re.compile(r"\b(females?|female's|cows|hens?|does|ewes?)\b", re.I)
@@ -361,11 +367,15 @@ def facts_from(text: str, sci: str, names: list[str], male_text: bool, trace: li
     """(facts, dropped counts): a fact is {region, colours [phrases], pattern | None, male}. trace (a list) collects
     (sentence, why dropped | facts) for --explain."""
     out, dropped = [], {}
+    before = None   # why the sentence before was dropped
     for s in _sentences(text):
-        if not PHRASE.search(s.lower()):
-            continue
         s2 = _strip_names(s, names)
         why = _keep(s2, sci, male_text)
+        if not why and before in CARRIED and CARRIES.match(s2):
+            why = before
+        before = why
+        if not PHRASE.search(s.lower()):
+            continue
         about_it = re.match(r"(?:\w+,\s*)?(?:the\s+)?it\b", s2, re.I)   # the species is the subject
         if not why and not about_it and not _region_hits(s2) and not re.search("|".join(PATTERN), s2, re.I):
             why = "no body word"
@@ -396,8 +406,10 @@ def facts_from(text: str, sci: str, names: list[str], male_text: bool, trace: li
             phrases = [(m.start(), m.end(), m.group(0)) for m in PHRASE.finditer(low)]
             # a colour word capitalised mid-sentence is a name (Orange River, Red List); "green eyes" is no body colour
             # (nor is "a pinkish nose": 2026-11-12, the cougar's nose read as its body's colour)
+            # (2026-11-12, the bobcat: nor "black slit pupils", one adjective between; nor a colour said of them, "its eyes
+            # are yellow", "the nose is pinkish-red": the eyes or the nose the subject before the verb, no body word after)
             phrases = [p for p in phrases if not (p[0] > 0 and cl[p[0]].isupper()) and colour_lab(p[2]) is not None
-                       and not re.match(r"\s*(?:eyes?|iris|irises|pupils?|noses?|nostrils?)\b", low[p[1]:])
+                       and not re.match(rf"\s*(?:(?!{SMALL_PART})[a-z]+(?:-[a-z]+)*\s+)?{SMALL_PART}", low[p[1]:])
                        and not ANIMAL_NOUN.match(low[p[1]:])]
             if not phrases:
                 if regs:
@@ -413,6 +425,9 @@ def facts_from(text: str, sci: str, names: list[str], male_text: bool, trace: li
                 win_b = [(p, r) for p, r in regs if lo <= p < a]
                 win_a = [r for p, r in regs if b <= p < hi]
                 verb = re.search(r"\b(is|are|has|have|was|appears?|ranges?|varies|vary|being)\b", low[lo:a])
+                small = [m.start() for m in re.finditer(SMALL_PART, low[lo:a])]
+                if small and verb and small[-1] < verb.start() and not any(p >= lo + small[-1] for p, _ in win_b):
+                    continue
                 subj = _specific(r for p, r in win_b if not verb or p < lo + verb.start()) if win_b else []
                 nxt = _next_word(after)
                 # a region word between the colour and a pattern word is the marking's place, not the colour's ground: "a
@@ -598,12 +613,21 @@ UNIT = {"mm": 0.001, "cm": 0.01, "m": 1.0, "in": 0.0254, "ft": 0.3048}
 _NUM = r"\d+(?:\.\d+)?"
 MEAS = re.compile(rf"(?<![\d.])({_NUM})(?:\s*(mm|cm|m|in|ft)\b)?\s*(?:to|–|—|-|and)\s*({_NUM})\s*(mm|cm|m|in|ft)\b"
                   rf"|(?<![\d.])({_NUM})\s*(mm|cm|m|in|ft)\b")
+# (2026-11-12, the bobcat: "47.5-125 cm long from the head to the base of its distinctive stubby tail, averaging 82.7 cm"
+# gave the tail 82.7 cm, and "a total length, including the tail, of up to 125 cm" gave it 125: a tail named inside a
+# longer measure's phrase is not the subject. "From the head to the base of the tail" is the head and body; a tail that
+# a length includes, excludes or runs to is masked before the nearest subject is looked for.)
+TO_TAIL_BASE = r"\b(?:head|nose|snout) to (?:the )?(?:base|root) of (?:the |its )?(?:[a-z-]+ ){0,3}tail\b"
+NOT_THE_TAIL = re.compile(TO_TAIL_BASE + r"|\b(?:head|nose|snout) to (?:the )?tail\b"
+                          r"|\b(?:including|excluding|without|not counting) (?:the |its |a )?(?:[a-z-]+ ){0,2}tails?\b"
+                          r"(?! (?:of|is|are|measur|which|that)\b)", re.I)
 SUBJECT_BEFORE = [("horn", r"\bhorns?\b|\bhorn sheaths?\b"), ("antler", r"\bantlers?\b"), ("tail", r"\btails?\b"),
                   ("ear", r"\bears?\b"), ("shoulder", r"\bshoulders?\b|\bwithers\b"),
                   ("total", r"\b(?:head|nose|snout) to (?:the )?tail\b|\btotal length\b"),
-                  ("head_body", r"\bhead[\s–-]*(?:and|to)?[\s–-]*body\b|\bbody length\b"),
+                  ("head_body", r"\bhead[\s–-]*(?:and|to)?[\s–-]*body\b|\bbody length\b|" + TO_TAIL_BASE),
                   ("other", r"\b(?:manes?|beards?|hairs?|fur|hooves|feet|foot|skull|neck|legs?|wingspan|eggs?|young|weigh\w*)\b")]
 SUBJECT_AFTER = [("shoulder", r"^[^.;]{0,30}?\b(?:at|to) the (?:shoulders?|withers)\b|^[^.;]{0,25}?shoulder height"),
+                 ("head_body", r"^[^.;]{0,25}?\b(?:from )?(?:the )?" + TO_TAIL_BASE[2:]),
                  ("total", r"^[^.;]{0,25}?\b(?:from )?(?:the )?(?:head|nose|snout) to (?:the )?tail\b|^[^.;]{0,20}?total length"),
                  ("head_body", r"^[^.;]{0,25}?\bhead[\s–-]*(?:and|to)?[\s–-]*body\b|^[^.;]{0,20}?body length")]
 HORN_WORDS = {"short": "short", "small": "short", "long": "long", "large": "long", "massive": "long", "curved": "curved",
@@ -626,13 +650,17 @@ def _raw_sentences(text: str) -> list[str]:
 
 
 def _subject(clause: str, start: int, end: int, lo: int) -> str | None:
-    after = clause[end:end + 60]
+    after = clause[end:end + 80]
     for name, rx in SUBJECT_AFTER:
         if re.search(rx, after, re.I):
             return name
     best, bp = None, -1
+    before = clause[lo:start]
+    held = [(m.start(), m.end()) for m in NOT_THE_TAIL.finditer(before)]
     for name, rx in SUBJECT_BEFORE:
-        for m in re.finditer(rx, clause[lo:start], re.I):
+        for m in re.finditer(rx, before, re.I):
+            if name == "tail" and any(a <= m.start() < b for a, b in held):
+                continue
             if m.start() > bp:
                 best, bp = name, m.start()
     return best
@@ -682,6 +710,8 @@ def features_from(sources: list[dict], sci: str, names: list[str]) -> dict:
                     if re.search(r"\btails?\b", low):
                         # the words of the tail's own phrase: "a short tail", "the tail is short", not "long ears and an
                         # inconspicuous tail" (the ears' long)
+                        # (a "long" that only closes a figure, "the tail is 9 to 20 cm long", is no word for the tail)
+                        low = re.sub(rf"({_NUM}\s*(?:mm|cm|m|in|ft))\s+long\b", r"\1", low)
                         for m in re.finditer(r"\btails?\b", low):
                             near = re.findall(r"[a-z]+", low[max(0, m.start() - 25):m.end() + 25])
                             for w in near:
@@ -1329,7 +1359,7 @@ def rule_served(e: dict) -> bool:
 def known_verdicts() -> list[dict]:
     """The library's models whose verdicts are known: every species' current model (its judge's verdict; else a
     'current' entry of its `verdicts`; else accepted: drawn, no rejection recorded; but not a model the rule alone
-    served, rule_served, unless someone has judged it) and every judged job in `verdicts`."""
+    served, rule_served, or alone refused, unless someone has judged it) and every judged job in `verdicts`."""
     reg = json.loads((ROOT / "library" / "animals" / "models.json").read_text())["species"]
     out = []
     for code, e in reg.items():
@@ -1341,6 +1371,11 @@ def known_verdicts() -> list[dict]:
             verdict, by = cur["verdict"], cur["by"]
         elif rule_served(e):
             verdict = None   # served by the rule's own decision (a procedural snake): no one has judged it, and the rule is not fitted on itself
+        elif (e.get("acceptance") or {}).get("served") is False and not (e.get("acceptance") or {}).get("override"):
+            # refused by the rule's own decision and so never drawn (2026-11-12, the long-tailed bobcat): no one has judged
+            # it either. (A model that was drawn and that the rule now refuses is caught where it is dropped:
+            # tests/test_model_acceptance.py "no model drawn before the rule is dropped".)
+            verdict = None
         else:
             verdict, by = "accepted", "drawn, no rejection recorded"
         if verdict is not None and e.get("glb"):
