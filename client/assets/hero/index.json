@@ -10,10 +10,10 @@
    "joints": 22,
    "ears": true,
    "bytes": {
-    "canis_lupus.glb": 1189360,
-    "canis_lupus_color.jpg": 673910,
-    "canis_lupus_normal.png": 601767,
-    "canis_lupus_ao.jpg": 104874
+    "canis_lupus.glb": 1170776,
+    "canis_lupus_color.jpg": 707957,
+    "canis_lupus_normal.png": 657027,
+    "canis_lupus_ao.jpg": 102441
    },
    "tail": true,
    "weights": "heat",
@@ -41,17 +41,17 @@
   "bison_bison": {
    "glb": "bison_bison.glb",
    "triangles": [
-    20000,
-    6666,
-    2000
+    19988,
+    6662,
+    1998
    ],
-   "joints": 20,
-   "ears": false,
+   "joints": 22,
+   "ears": true,
    "bytes": {
-    "bison_bison.glb": 1174728,
-    "bison_bison_color.jpg": 340826,
-    "bison_bison_normal.png": 607710,
-    "bison_bison_ao.jpg": 98559
+    "bison_bison.glb": 1178820,
+    "bison_bison_color.jpg": 347176,
+    "bison_bison_normal.png": 605473,
+    "bison_bison_ao.jpg": 95804
    },
    "tail": true,
    "weights": "heat",
@@ -164,10 +164,10 @@
    "tail": true,
    "weights": "heat",
    "bytes": {
-    "canis_latrans.glb": 1161240,
-    "canis_latrans_color.jpg": 703910,
-    "canis_latrans_normal.png": 631097,
-    "canis_latrans_ao.jpg": 96178
+    "canis_latrans.glb": 1159600,
+    "canis_latrans_color.jpg": 616818,
+    "canis_latrans_normal.png": 581600,
+    "canis_latrans_ao.jpg": 89089
    },
    "maps": {
     "color": "canis_latrans_color.jpg",
@@ -189,7 +189,7 @@
      }
     }
    },
-   "hold": "the acceptance rule does not serve this model (2026-11-12): likeness: nearer the photos of lupulella mesomelas (0.78) than its own species' (0.75) [recorded verdict: by eye on 2026-11-12, on the home tile and in the lineup: the generated coat is not a coyote's (a grey back with a black saddle and rufous legs, nearer a jackal) and the head is turned in the source; the appearance check passed it]"
+   "hold": "the acceptance rule does not serve this model (2026-11-12): likeness: nearer the photos of lupulella mesomelas (0.78) than its own species' (0.77) [recorded verdict: by eye on 2026-11-12, on the home tile and in the lineup: the generated coat is not a coyote's (a grey back with a black saddle and rufous legs, nearer a jackal) and the head is turned in the source; the appearance check passed it]"
   }
  }
 }

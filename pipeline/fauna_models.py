@@ -34,7 +34,10 @@ in it is per species:
             made from is tried before a new one;
   pose      a four-legged animal's preview is measured before its refine is paid (pipeline/pose_gate.py, 2026-11-12:
             the head's turn, the spine's bend, each foot pair's stagger, four feet down): a preview that does not stand
-            square is a failed attempt (20 credits, not 30, and no turned head built into a model);
+            square is a failed attempt (20 credits, not 30, and no turned head built into a model). A turned head
+            alone is not one: it is set straight in the mesh the model is built from (pipeline/straighten.py: the neck
+            and head's centreline seen from above unbent onto the trunk's line; the job's model.glb is kept and
+            model_straight.glb written beside it), and the gate measures that mesh;
   check     the built model's colours against the described appearance (pipeline/appearance.py check): a mismatch is
             re-refined once from the same preview (10 credits, the mesh kept) and the better of the two is kept;
             --recolour does the same for the library's models (--codes to name them, else every one that fails);
@@ -401,7 +404,8 @@ def build(code: str, job: Path, tile: str, bird: str | None = None, reptile: str
         [BLENDER, "-b", "--factory-startup", "-P", str(ROOT / "tools" / "build_bird.py"), "--", str(job), str(out), "--species", code,
          "--archetype", bird],
     ] if bird else [
-        [BLENDER, "-b", "--factory-startup", "-P", str(ROOT / "tools" / "build_quadruped.py"), "--", str(job), str(out), "--species", code],
+        # a four-legged animal is built from its job's mesh with a turned head set straight (pipeline/straighten.py)
+        [BLENDER, "-b", "--factory-startup", "-P", str(ROOT / "tools" / "build_quadruped.py"), "--", str(straight_source(job)), str(out), "--species", code],
         ["arch", "-arm64", str(ROOT / ".venv" / "bin" / "python"), str(ROOT / "tools" / "rig_quadruped.py"), str(out)],
         [NODE, str(ROOT / "tools" / "bake_gait.mjs"), str(out), "--tile", tile],
     ]
@@ -425,15 +429,33 @@ def colour_check(code: str) -> dict:
     return check(glb, app)
 
 
+def straight_source(job: Path) -> Path:
+    """The mesh a four-legged model is built from: the job's model.glb, or the copy beside it with a turned head set
+    straight (pipeline/straighten.py source; made once, recorded in the job's straighten.json). A model.glb given by
+    path is taken as it is when it is not a job's."""
+    from . import straighten
+    job = Path(job)
+    if job.is_file() and job.name != "model.glb":
+        return job
+    return straighten.source(job)
+
+
 def pose_check(job: Path) -> dict:
-    """The pose gate on a job's mesh (pipeline/pose_gate.py): {ok, why, head_turn, spine_bend, stagger_fore,
-    stagger_hind, feet}; a mesh that cannot be read fails."""
-    from . import pose_gate
+    """The pose gate (pipeline/pose_gate.py) on the mesh a job's model would be built from, a turned head set straight
+    first (straight_source): {ok, why, head_turn, spine_bend, stagger_fore, stagger_hind, feet, straightened: the turn
+    found and taken out, or None}; a mesh that cannot be read fails."""
+    from . import pose_gate, straighten
     try:
-        g = pose_gate.gate(Path(job) / "model.glb")
+        src = straight_source(job)
+        g = pose_gate.gate(src)
+        rec = straighten.record(job) or {}
     except Exception as ex:   # an unreadable mesh is no animal standing square
         return {"ok": False, "why": [f"the mesh could not be measured ({type(ex).__name__}: {str(ex)[:80]})"]}
-    return {k: g.get(k) for k in ("ok", "why", "head_turn", "spine_bend", "stagger_fore", "stagger_hind", "feet")}
+    out = {k: g.get(k) for k in ("ok", "why", "head_turn", "spine_bend", "stagger_fore", "stagger_hind", "feet")}
+    out["straightened"] = (rec.get("before") or {}).get("head_turn") if rec.get("out") else None
+    if not rec.get("ok", True) and not g["ok"]:
+        out["why"] = list(out["why"]) + [w for w in rec.get("why", []) if w not in out["why"]]
+    return out
 
 
 def likeness_check(code: str, tile_id: str | None = None, fetch: bool = False) -> dict:
@@ -1422,7 +1444,8 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
             if not (snk or bird or rept):   # a four-legged animal: the pose gate, before the refine is paid
                 pg = pose_check(pv)
                 row.setdefault("pose", []).append({"preview": str(pv.relative_to(ROOT)), **pg})
-                print(f"{code}: preview {pv.name} {'stands square' if pg['ok'] else 'fails the pose gate: ' + '; '.join(pg.get('why') or [])}", flush=True)
+                print(f"{code}: preview {pv.name} {'stands square' if pg['ok'] else 'fails the pose gate: ' + '; '.join(pg.get('why') or [])}"
+                      + (f" (its head, turned {pg['straightened']:.0f} degrees, set straight)" if pg.get("straightened") else ""), flush=True)
                 if not pg["ok"]:
                     continue
             if snk:   # the gate: the build on the untextured preview, before the refine is paid

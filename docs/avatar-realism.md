@@ -174,8 +174,9 @@ species. Neither spends credits to run.
 **The pose gate** (`pipeline/pose_gate.py`, on a preview's mesh, before its 10-credit refine). Seen from above, the
 trunk's centreline is traced between the hind and the fore feet; the gate measures the head's turn from that line,
 the bend between the trunk's two halves, how far apart along the body each pair of feet stands (a stride), and that
-four feet are down. Limits: head 9.5 degrees, spine 3.5 degrees, stagger 1.0 leg length. Synthetic box animals with a
-known turn, bend and stride read within 1 degree and 0.03 leg lengths (`tests/test_pose_gate.py`).
+four feet are down. Limits: head 9.9 degrees (9.5 on the first measure, below), spine 3.5 degrees, stagger 1.0 leg
+length. Synthetic box animals with a known turn, bend and stride read within 1 degree and 0.03 leg lengths
+(`tests/test_pose_gate.py`).
 
 - It gets the known cases right: the coyote's two previews fail (head 25.1 and 32.5 degrees, spine 7.2 and 4.4) and
   the lion's passes (2.1 and 1.0).
@@ -184,7 +185,9 @@ known turn, bend and stride read within 1 degree and 0.03 leg lengths (`tests/te
   the wolf 25.1, the wild dog 22.5, the mountain goat 22.2). Checked by eye on top-down pictures: those heads are
   turned. They were accepted because a side view hides it. So about half of the generator's previews would be refused
   at 9.5 degrees (at 12.5, the next gap in the library's numbers, about four in ten), which puts a species at about
-  50 credits, not 30, until the build can straighten a head (the weak list, item 1).
+  50 credits, not 30, until the build can straighten a head. It now does: the next section. (These are the first
+  measure's numbers, on the surface's foremost point; the head's end is now found on the solid, and the same heads
+  read a little further off: next section.)
 
 **The likeness** (`pipeline/likeness.py`, on a refine's textured model, and as the last stage of the model acceptance
 rule). The model is pictured side-on from both sides in its own colours under a plain sky, cut out and set on grey;
@@ -221,6 +224,86 @@ Limits, plainly: the photo sets are small (7 to 26 readable photos a species) an
 dogs); between close kin the margins are a few hundredths; a model is told only from the species whose photos are in
 the store (12 on 2026-11-12, among them the wolf, coyote, jackal, red fox and black bear), so a new species needs its kin's photos
 fetched with its own; the picture is the generated source's, not the hero's graded map.
+
+## A turned head set straight, a body set square (2026-11-12, `pipeline/straighten.py`)
+
+The pose gate found the turned heads; refusing them would have cost a preview each. They are now turned back in the
+mesh before anything is built from it, by one rule for every four-legged species, at no credits. The generator's file
+is kept; `model_straight.glb` is written beside it once, with a record of what was found (`straighten.json`), and the
+quadruped build, the hero build, the likeness picture and the pose gate all read that mesh (`straighten.source`).
+Only positions and normals differ: the texture, its coordinates and the triangles are the generator's.
+
+How, in the order it runs:
+
+1. **The head's end, found on the solid.** The first measure took the surface's foremost point, and a moose's antler
+   tines reach past its muzzle (a leopard's whiskers past its nose); horns and ears in that slab also pulled the head's
+   middle toward the body's line. The part ahead of the fore feet is now filled as a solid, everything thinner than
+   2.5 % of the body's length taken away (ears, tines, whiskers), and the head's end is the front of what is left. The
+   same heads read further off than before: the bison 17.9 degrees (14.1), the moose 10.3 (6.5), the wolf 26.2 (25.1).
+   The gate's limit moved with the measure, to 9.9: the gap is 9.4 (the cheetah, no turn seen) to 10.3 (the moose, its
+   muzzle off the line from the front). By it, 12 of the 21 served sources were over the limit.
+2. **Where along the neck and head each vertex sits**, 0 to 1: the steady state of heat on the mesh, the trunk and
+   legs held at 0 and the nose at 1. What hangs from the head takes the value where it joins, so antlers and horns
+   reaching back over the shoulders go with the head whole; a hump, a mane or the withers touch the trunk under them
+   and stay.
+3. **The neck and head's centreline seen from above**, through the middle of each band of that field (weighted by
+   where the field climbs, which leaves ears and horns out), fitted by one smooth curve that leaves the neck's base
+   along the trunk.
+4. **The unbend.** The curve is laid straight along the trunk's own line with its length kept, and every vertex goes
+   with its place on it. Heights do not change: a lowered head stays lowered.
+5. **The body set square.** The whole animal can stand turned in the file: the wolf stood 16.9 degrees off the axis
+   the build and the rig take for forward, so in the game its body ran crabwise to its own skeleton (the mountain goat
+   12.2, the coyote 7.7; fifteen of the 21 under 2). Over 2 degrees, the mesh is turned onto the nearest axis.
+6. **The check.** The pose is measured again. Nothing is written when the head was turned over 45 degrees, is still
+   over 3, or an edge in a hundred changed length by more than a factor of 2; the pose gate then refuses the mesh for
+   its head, as before.
+
+What it did, measured:
+
+| | |
+|---|---|
+| served sources with a head turned over 3 degrees | 14 of 21 (5.5 to 38.4 degrees) |
+| after straightening | 0.1 to 2.3 degrees, all 14 |
+| volume and surface area of the 14 meshes | within 0.6 % and 0.7 % of what they were |
+| the most an edge in a hundred changed length | a factor of 1.04 to 1.83 (the wolf, 26 degrees on a short ruffed neck) |
+| every mesh in the library (37 distinct) passing the pose gate | 28, where 12 did |
+| heads over the limit that could be straightened | 20 of 21 (a moose from a photo was left at 3.4, and is refused) |
+| the game's rebuilt models, head off the body's line | 0.4 to 3.8 degrees (was 6.0 to 37.2) |
+| the game's rebuilt models, body off the forward axis | within 0.2 degrees (the wolf was 16.7) |
+
+By eye, on each of the 14 from above, the front and three-quarter, before and after
+(`straighten_sources_before_after_1.jpg` and `_2.jpg` in the captures): each faces forward, the antlers and horns sit
+square on the head, and I could find no tear, fold or smeared texture. In the game's own renderer the hero wolf and
+bison walk with the head along the body where the wolf ran crabwise with its head aside
+(`straighten_game_before_after.jpg`: the lineup page, the old models from the main checkout beside the new;
+`straighten_game_models_before_after.jpg`: all 14 game models from above and the front, drawn from their files). On the test's lofted
+animal with its neck swung 35 degrees, the neck's centre comes out within 1.3 % of the body's length of the line and a
+bar set along the head 4 degrees off it (`tests/test_straighten.py`).
+
+**All 14 models were rebuilt from the straightened mesh** (the 13 served and the held coyote; no credits), and the
+wolf's, the bison's and the coyote's hero tiers with them (the bison's ears, which the ear finder could not find
+under its horns on the turned head, are found on the straight one: 22 joints now). Nothing changed in what is served; the coyote is still
+refused by likeness (0.77 against the jackal's 0.78). Two rules had to be corrected on the way, because a square
+animal showed them up:
+
+- **The build's tail finder** took the rear face of the mountain goat's rump for an 18 cm tail once the goat stood
+  square to its cut. A tail now has to reach further along its surface from where it joins the body than that join's
+  half-width. The 14 tails the build finds read 4.0 to 40.7 on that ratio and the hippo's stub 2.0; the goat's rump
+  face 0.74 (the cut moves on and finds its real 3.5 cm stub) and the coyote's tail, fused to its rump and legs by
+  the remesh, 0.67 (no tail part, as for the wolf).
+- **The horn check** read the same goat's horns as 1.5 cm: one nub the voxels found kept it from looking at the horn-
+  coloured pieces, where the horns are 22 cm. It now looks at the pieces when the voxels find nothing or only a nub.
+
+What a turned head costs now: nothing. Of the meshes on disk about three in four pass the pose gate (28 of 37) where
+one in three did, so a species is back near 37 credits by that rate (20 x 37/28 for the previews, 10 for the refine),
+not 50, and the 347 credits above the reserve are about nine species. That rate is from 37 meshes, a third of them
+from photos.
+
+Limits, plainly: the largest turn it has been seen to fix is 38 degrees; the fitted curve is one bend and its return,
+so a neck with two bends would come out wavy and be refused by the check; the texture's painted light and any
+asymmetry the generator drew for a turned head (an ear folded, fur swept) stay; **a bent spine is not straightened**
+(the wild dog is served with 6.3 degrees, the coyote has 4.4), though the same unbend could be run along the trunk;
+a stride is not undone.
 
 **The hero answers the light as the old models do.** The first home captures looked too bright, so both paths were
 given the same flat grey and the pixels read, in sun, under trees, at 9 and at 17 and in the misty arrival: they agree
@@ -260,12 +343,10 @@ standing in the scene's light.
    bobcat, black bear, fox, otter and the rabbits were hand-built or reduced from previews Meshy has since deleted (it
    keeps output three days). Each needs a new generation (30 to 50 credits, so about 300 for the eight) and the loader
    wrapper. The deer is the hard one: it plays hero clips on its own skeleton, not the engine's. The rabbits need the
-   hero tool to handle the lagomorph rig. Both gates now stand before the spending (above), and the pose gate
-   changes the sum: half the generator's previews have a turned head, so a species is nearer 50 credits than 30 and
-   the 347 credits above the reserve are six or seven species, not eight. **Straightening a turned head in the build**
-   (the turn is measured; turning the neck and head back about the neck's base is a rule, not a re-roll) would let
-   the gate pass a head it can fix and refuse only a bent spine or a stride. It would also fix the wolf, whose head is
-   turned 25 degrees in the game today.
+   hero tool to handle the lagomorph rig. Both gates now stand before the spending (above), and a turned head no
+   longer costs a preview: it is set straight in the mesh (the section above), so a species is near 37 credits and
+   the 347 above the reserve are about nine species. Before generating, each species' and its kin's reference photos
+   have to be in the store (the bobcat, elk, mule deer and grey fox were started).
 2. **The neck and the jaw.** One neck joint is why the cats cannot groom and the deer cannot scratch, and why a head
    turned far looks like a roll. No jaw is why there is no yawn, no real chewing and no carrying
    ([behaviour-rig.md](behaviour-rig.md) item 3). A neck chain of three and a jaw, added the way the ears were.
@@ -273,20 +354,28 @@ standing in the scene's light.
    dual-quaternion blending in the skin shader.
 4. **Texture memory.** 35 MB a species will not hold for a tile of twenty. Compressed textures (KTX2) and the
    full-size maps only for the body the player is in.
-5. **The build's tail finder** (4 of 19 fauna models without tail weights) and the **ear finder under horns** (the
-   bison): fix the rules in `tools/build_quadruped.py` and `tools/hero_model_blender.py`.
-6. **The legs are still the old proportions.** The skeleton is fitted from geometry with fixed fractions, and its leg
+5. **A bent spine** is still a refusal (two of the library's text previews, and the served wild dog's 6.3 degrees):
+   the head's unbend run along the trunk would straighten it, the legs going with their stations.
+6. **The build's tail finder** (7 of 21 quadrupeds with no tail part: the wolf, the lion, the wild dog, the moose, the
+   pronghorn, the bighorn, the grizzly; and the coyote's tail fused to its legs): fix the rule in
+   `tools/build_quadruped.py`. (The hero tier finds its own tail and does not depend on it.)
+7. **The legs are still the old proportions.** The skeleton is fitted from geometry with fixed fractions, and its leg
    is short for the body on the big ungulates (the elk's leg joints stand 1.0 m high under 1.3 m withers), which is why
    they now walk too quick; measured
    limb-bone lengths exist for 423 mammal species (Serio et al. 2024, Dryad; its licence to confirm) and belong in the
    fitter ([behaviour-rig.md](behaviour-rig.md) section 2).
-7. **Eyes.** They are paint. A corneal highlight and a lid that blinks (dogs blink 14.5 times a minute: Tada et al.
+8. **Eyes.** They are paint. A corneal highlight and a lid that blinks (dogs blink 14.5 times a minute: Tada et al.
    2013) need two small joints or a shader term.
-8. **The idle clock across pages.** A mirror runs its own; it should take the host's as the stride clock does. The
+9. **The idle clock across pages.** A mirror runs its own; it should take the host's as the stride clock does. The
    fauna-step species read generated rows without an `idle` block and get Mammalia's defaults until
    `pipeline/fauna.py` writes them.
-9. **Attention.** `inp.look` is a hook nothing calls yet: the head and ears should follow sounds, scent and other
+10. **Attention.** `inp.look` is a hook nothing calls yet: the head and ears should follow sounds, scent and other
    animals. That is the AI's lane.
+
+Not checked after the straightening (2026-11-12): any of the 14 rebuilt models on a tile in the world (the hero wolf
+and bison were filmed walking in the lineup page; the other twelve were drawn from their files, not in the game's
+renderer); the idle measures on the rebuilt heroes (`tools/idle_measure.mjs` not re-run); the rebuilt bison's new ear
+joints in motion.
 
 Not checked: the fur in motion at speed (stills only), the hero tiers on a phone-class GPU, two browsers as host and
 mirror, anything on the home tile, the ears by eye (they are small on film; they rest on the measures), the world after

@@ -24,8 +24,12 @@ accepted by eye with its head turned, and the turn shows in the game. This gate 
             was tried first: a hollow shell's two flanks make it noisy, 1 to 2.5 degrees of spine bend between sampling
             seeds on the same mesh; the extent's middle repeats within 0.5.)
               head turn    (signed: positive toward the animal's left) the angle between the trunk's centreline (a line fitted to all its stations) and the line from
-                           the neck's base (that line at the fore feet) to the head's end (the centroid of the surface
-                           within HEAD_TIP of the body's length from the foremost point of the head).
+                           the neck's base (that line at the fore feet) to the head's end: the middle of the head as
+                           a solid, within HEAD_TIP of the body's length of its foremost point, with everything
+                           thinner than THIN of the body's length taken away first (head_end). The surface's own
+                           foremost point was used at first: a moose's antler tines reach past its muzzle and a
+                           leopard's whiskers past its nose, and horns and ears in the slab pulled the middle toward
+                           the body's line (a bison read 14.1 where its muzzle stands 17.9 off; a moose 6.5 for 10.3).
               spine bend   (signed likewise: the front half's turn from the rear's) the angle between lines fitted to the rear and front halves of the trunk's centreline.
               stagger      for each foot pair, how far apart along the body its two feet stand, as a share of the leg
                            length. Standing square both are near zero; in a stride they open.
@@ -38,6 +42,11 @@ accepted by eye with its head turned, and the turn shows in the game. This gate 
   eye without a pose check, and by eye on the top-down sheets many of their heads are turned: their numbers do not
   bound what passes. The limits sit in the widest gap of each measure's distribution at or below the known bad cases,
   checked against the sheets by eye.
+
+  A turned head is no longer a reason to refuse a mesh by itself: pipeline/straighten.py turns it back before anything
+  is built (the same frame, and this module's measures before and after), and the build's check
+  (fauna_models.pose_check) gates the straightened mesh. The head's limit here then refuses only a head that could not
+  be straightened; a bent spine and a stride are refused as before.
 
   arch -arm64 .venv/bin/python -m pipeline.pose_gate <job dir or glb> [...] [--sheet out.jpg]
   arch -arm64 .venv/bin/python -m pipeline.pose_gate --library [--sheet-dir DIR] [--json]
@@ -66,16 +75,22 @@ FOOT_SLAB = 0.30       # the feet are the pieces of the slab from the ground to 
 GRID = 0.008           # raster cell for the feet and the belly, as a share of the body's horizontal length
 STATIONS = 12          # slices of the trunk between the hind and fore feet
 EXTENT_PCT = 2         # a slice's lateral extent: these percentiles of its points (a stray point cannot move it)
-HEAD_TIP = 0.10        # the head's end: surface within this share of the length from the foremost point
+HEAD_TIP = 0.10        # the head's end: what lies within this share of the length of the head's foremost point
+THIN = 0.025           # ... of the head as a solid with everything thinner than this share of the body's length taken
+                       # away: ears, antlers, horns and whiskers are not the head's end (a moose's tines reach past its
+                       # muzzle, a leopard's whiskers past its nose)
+CELL = 0.005           # the solid's grid, as a share of the body's length
+HEAD_SAMPLES = 400_000 # surface points over the part ahead of the fore feet, so the grid's shell has no holes
 BACK_PCT = 95          # the trunk's top: this percentile of height over the middle half of the trunk (a moose's
                        # antler reaching back over the shoulders read as a 14-degree spine bend without it)
 TRUNK_LOW = 0.25       # the trunk's bottom: this share of the way from the belly to that top (upper legs stay out)
 
 # ---- thresholds (2026-11-12, measured on every quadruped job in the library; known cases named by job) ----------
-MAX_HEAD_TURN = 9.5    # degrees. Known: puma 01a1cefb straight, 2.1; coyote 01a1cefb rejected by eye, 25.1; coyote
-                       # 01a1cefd turned "about 25 by eye", 32.5. The library runs continuously from 0.1 to 36; the
-                       # gap 8.6 (cheetah) to 10.1 (buffalo) is where the sheets start to show a turn by eye (buffalo,
-                       # giraffe, pronghorn, bighorn at 10.1 to 11.1 all visibly turned): margin 0.9 above, 0.6 below.
+MAX_HEAD_TURN = 9.9    # degrees, on the head's end found on the solid (2026-11-12, later the same day; 9.5 on the
+                       # surface's before). Known: puma 01a1cefb straight, 1.8; coyote 01a1cefb rejected by eye, 26.8;
+                       # coyote 01a1cefd turned "about 25 by eye", 33.6. The library's 37 distinct meshes run from 0.1
+                       # to 38.4; the gap 9.4 (cheetah, no turn seen on its sheet) to 10.3 (moose 01a1b12c, its muzzle
+                       # off the line seen from the front) is where a turn starts to show: margin 0.45 either side.
 MAX_SPINE_BEND = 3.5   # degrees. Known: puma 1.0; coyote 01a1cefb (bent by eye) 7.2. Every served mesh reads 0.0 to
                        # 2.2 except coyote 01a1cefd, 4.4 (a slight arc by eye), and wild dog 01a1afc7, 6.3 (an arc by
                        # eye). Margin 1.3 above 2.2, 0.9 below 4.4.
@@ -236,17 +251,65 @@ def _feet(P, u, v, ymin, leg, length):
     return pieces
 
 
+def _ball(r):
+    k = np.arange(-r, r + 1)
+    return (k[:, None, None] ** 2 + k[None, :, None] ** 2 + k[None, None, :] ** 2) <= r * r + 1
+
+
+def head_solid(Q, length):
+    """The part ahead of the fore feet as a solid on a grid of CELL. Q: its surface points (U, V, y), dense enough to
+    close the grid, cut off square at the low end of U. The shell is thickened by a cell (a cell the surface only
+    clips can be missed, and one gap lets the outside in), the cut end closed by its own filled outline, the inside
+    filled, and the thickening taken off again. Returns (solid, lo, cell): a cell (i, j, k) has its middle at
+    lo + (i + 0.5, j + 0.5, k + 0.5) cell."""
+    cell = CELL * length
+    lo = Q.min(0) - 3 * cell
+    I = ((Q - lo) / cell).astype(int)
+    surf = np.zeros(tuple(I.max(0) + 4), bool)
+    surf[I[:, 0], I[:, 1], I[:, 2]] = True
+    thick = ndimage.binary_dilation(surf)
+    k0 = int(I[:, 0].min())
+    for k in range(max(k0 - 1, 0), k0 + 2):
+        thick[k] = ndimage.binary_fill_holes(thick[k])
+    return ndimage.binary_erosion(ndimage.binary_fill_holes(thick)) | surf, lo, cell
+
+
+def head_end(Q, length, floor):
+    """The head's end on the solid (head_solid) opened by a ball THIN across: the largest piece left is the head and
+    neck without what is thin. Returns (tip, nose): tip the (U, V) middle of that piece within HEAD_TIP of the length
+    of its foremost cell above `floor` (a height: a foot stepped forward is not the head), nose that foremost point
+    (U, V, y); or None when nothing solid is left."""
+    solid, lo, cell = head_solid(Q, length)
+    r = max(1, int(round(0.5 * THIN / CELL - 0.5)))
+    core = ndimage.binary_opening(solid, structure=_ball(r))
+    lab, n = ndimage.label(core)
+    if n == 0:
+        return None
+    big = lab == (1 + int(np.argmax(ndimage.sum(core, lab, range(1, n + 1)))))
+    iu, iv, iy = np.nonzero(big)
+    Uc, Vc, yc = (lo[0] + (iu + 0.5) * cell, lo[1] + (iv + 0.5) * cell, lo[2] + (iy + 0.5) * cell)
+    up = yc > floor
+    if not up.any():
+        return None
+    umax = Uc[up].max()
+    tm = up & (Uc > umax - HEAD_TIP * length)
+    fm = up & (Uc > umax - 2 * cell)
+    return np.array([Uc[tm].mean(), Vc[tm].mean()]), np.array([Uc[fm].mean(), Vc[fm].mean(), yc[fm].mean()])
+
+
 def measure(glb_path, samples=SAMPLES, seed=SEED, keep=False):
     js, bin_ = load_glb(glb_path)
-    P = sample_surface(triangles(js, bin_), samples, seed)
-    return measure_points(P, keep=keep)
+    T = triangles(js, bin_)
+    return measure_points(sample_surface(T, samples, seed), keep=keep, tris=T)
 
 
-def measure_points(P, keep=False):
-    """The pose measures of a surface given as uniformly spread points P (n, 3), y up."""
+def measure_points(P, keep=False, tris=None):
+    """The pose measures of a surface given as uniformly spread points P (n, 3), y up. tris: the surface's triangles
+    (k, 3, 3), with which the head's end is found on the solid (head_end); without them, on the points."""
     y = P[:, 1]
     ymin, height = y.min(), np.ptp(y)
-    H = P[:, [0, 2]] - P[:, [0, 2]].mean(0)
+    centre = P[:, [0, 2]].mean(0)
+    H = P[:, [0, 2]] - centre
     w, V = np.linalg.eigh(np.cov(H.T))
     ax = V[:, np.argmax(w)]
     lat = np.array([-ax[1], ax[0]])
@@ -302,11 +365,24 @@ def measure_points(P, keep=False):
     # head: the surface beyond the fore feet, above half the leg; its end within HEAD_TIP of the foremost point
     hm = (U > chord) & (y > ymin + 0.5 * leg)
     head_turn = None
-    tip = base = None
+    tip = base = nose = None
     if hm.any():
         umax = U[hm].max()
         tm = hm & (U > umax - HEAD_TIP * length)
         tip = np.array([U[tm].mean(), Vl[tm].mean()])
+        nose = np.array([umax, float(Vl[hm][np.argmax(U[hm])]), float(y[hm][np.argmax(U[hm])])])
+        if tris is not None:                            # the head's end on the solid, thin parts taken away
+            def placed(X):
+                uv = np.stack([(X[:, [0, 2]] - centre) @ ax, (X[:, [0, 2]] - centre) @ lat], 1) - hind
+                return np.stack([uv @ d, uv @ n2, X[:, 1]], 1)
+            c3 = tris.mean(1)
+            ahead = placed(c3)[:, 0] > chord - 0.05 * length
+            if ahead.any():
+                Q = placed(sample_surface(tris[ahead], HEAD_SAMPLES, SEED))
+                Q = Q[Q[:, 0] > chord - 0.02 * length]
+                he = head_end(Q, length, ymin + 0.5 * leg) if len(Q) else None
+                if he is not None:
+                    tip, nose = he
         a, b = np.polyfit(su, sv, 1)
         base = np.array([chord, a + b * chord])
         head_turn = _angle(trunk, tip - base)
@@ -328,6 +404,11 @@ def measure_points(P, keep=False):
                         'feet': [((np.array([p['u'], p['v']]) - hind) @ d, (np.array([p['u'], p['v']]) - hind) @ n2)
                                  for p in f4], 'chord': chord, 'trunk': trunk, 'rear': rear, 'front': front,
                         'length': length}
+        # the body's frame, for whoever places other points in it (pipeline/straighten.py): a point's horizontal
+        # (x, z) less 'mean' gives (u, v) on 'ax' and 'lat'; less 'hind' and on 'd' and 'n2', (U, V)
+        out['_frame'] = {'mean': centre, 'nose': nose, 'ax': ax, 'lat': lat, 'hind': hind, 'd': d, 'n2': n2,
+                         'chord': chord, 'length': length, 'ymin': float(ymin), 'leg': float(leg), 'belly': float(yb),
+                         'top': float(top), 'trunk': trunk, 'base': base, 'tip': tip}
     return out
 
 

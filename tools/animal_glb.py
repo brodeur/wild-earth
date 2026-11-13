@@ -326,9 +326,8 @@ def components(adj, members):
     return sorted(out, key=len, reverse=True)
 
 
-def tube_axis(me, adj, comp, roots, bins=24):
-    """Axis polyline of a tube-like vertex set (a tail): edge-path distance from the root vertices, binned, the
-    centroid of each bin. Returns (points, {vertex: arc fraction 0-1})."""
+def path_distance(me, adj, comp, roots):
+    """{vertex: edge-path distance from the nearest root} over the vertex set comp."""
     comp = set(comp); dist = {r: 0.0 for r in roots if r in comp}
     import heapq
     h = [(0.0, r) for r in dist]; heapq.heapify(h)
@@ -339,6 +338,13 @@ def tube_axis(me, adj, comp, roots, bins=24):
             if u in comp:
                 nd = d + (me.vertices[u].co - me.vertices[v].co).length
                 if nd < dist.get(u, 1e9): dist[u] = nd; heapq.heappush(h, (nd, u))
+    return dist
+
+
+def tube_axis(me, adj, comp, roots, bins=24):
+    """Axis polyline of a tube-like vertex set (a tail): edge-path distance from the root vertices, binned, the
+    centroid of each bin. Returns (points, {vertex: arc fraction 0-1})."""
+    dist = path_distance(me, adj, comp, roots)
     dmax = max(dist.values())
     groups = [[] for _ in range(bins)]
     for v, d in dist.items(): groups[min(bins - 1, int(d / dmax * bins))].append(me.vertices[v].co)

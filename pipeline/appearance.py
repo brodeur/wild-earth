@@ -1241,12 +1241,17 @@ def feature_check(glb: Path, app: dict, params: dict | None = None) -> dict:
         # joins the horns overstates it, so it is only the fallback); with no colour described, the longest protrusion
         cand = [p for p in prot if want and float(de2000(np.array([p["lab"]]), np.array(want)).min()) <= 2 * MATCH_DE and p["len_m"] > 2 * wm / 120]
         by = "voxel protrusion in the horn colour"
-        if want and not cand:
-            cand, by = coloured_pieces(P, C, R, I, np.array(want)), "piece in the horn colour"
+        hl, sh = _mid(horns.get("length_m")), _mid(feats.get("shoulder_m"))
+        # ... or only a nub that would read as no horn (2026-11-12: the same goat built square, its horns plain to see,
+        # gave one protrusion of 1.5 cm, which kept the pieces from being looked at): then the longer of the two
+        nub = bool(cand) and bool(hl and sh) and cand[0]["len_m"] / wm < 0.3 * hl / sh
+        if want and (not cand or nub):
+            pieces = coloured_pieces(P, C, R, I, np.array(want))
+            if pieces and (not cand or pieces[0]["len_m"] > cand[0]["len_m"]):
+                cand, by = pieces, "piece in the horn colour"
         if not want:
             cand, by = prot, "voxel protrusion"
         best = cand[0]["len_m"] if cand else 0.0
-        hl, sh = _mid(horns.get("length_m")), _mid(feats.get("shoulder_m"))
         rel = round(best / wm, 3)
         meas["horns"] = {"len_m": best, "of_withers": rel, "by": by}
         if hl and sh:

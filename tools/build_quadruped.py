@@ -19,7 +19,8 @@
 #     nose to tail along y, so the thresholds below are fractions of the body's length (the cougar build's, which were
 #     tuned on a Meshy mesh of about that size);
 #   - the tail: the piece behind a cut at the rump holding the farthest point and nothing wide (under 4% of the length
-#     from the midline, or 45% of the body's half-width), traced along its axis by edge distance; none if no such piece is found before the hind legs
+#     from the midline, or 45% of the body's half-width) that reaches further along its surface from where it joins the
+#     body than that join's half-width (a rump's rear face does not), traced along its axis by edge distance; none if no such piece is found before the hind legs
 #     (a hippo's stub, a tail lying against the legs), and then no TAIL part;
 #   - the feet: the vertices within 1.5% of the length of the floor, split fore and hind by the largest gap in y; the
 #     legs: what lies below a cut just under the belly line between the feet, by quadrant, pivots at the cut (elbow and
@@ -172,6 +173,12 @@ far = max(V, key=lambda v: v.co.y).index
 # squirrel's or a wildebeest's bushy tail)
 # (the body's width from its rear half: a moose's antlers doubled it, and the hindquarters passed for a tail)
 xs = sorted(abs(v.co.x) for v in V if v.co.y > 0); TAIL_W = max(0.08, 0.45 * xs[int(0.97 * (len(xs) - 1))])
+# ... and reaches, along its surface, at least as far from where it joins the body as that join's half-width (see
+# the loop). The 21 served sources' first candidates (2026-11-12): 14 tails read 3.99 (badger) to 40.7 (giraffe), a
+# hippo's stub 1.98; the mountain goat's rump face 0.74 and the coyote's tail lying fused to its rump and legs 0.67
+# (after the voxel remesh no tube is left of it), and for those two the cut moves on.
+TAIL_REACH = 1.0
+TAIL_DEBUG = '--debug-tail' in argv
 tail, yc = [], 0.3
 while yc < 0.95:
     comps = A.components(adj, [v.index for v in V if v.co.y > yc])
@@ -179,7 +186,18 @@ while yc < 0.95:
     # and not standing on the floor: a hind leg stepped back behind the rump (a moose, 2026-11-06) reaches it; the
     # library's tails end 0.15 or more above it
     foot = min(V[i].co.z for i in c) < 0.03
-    if max(abs(V[i].co.x) for i in c) < TAIL_W and len(c) < 0.2 * len(V) and not foot: tail = c; break
+    if max(abs(V[i].co.x) for i in c) < TAIL_W and len(c) < 0.2 * len(V) and not foot:
+        # and it leaves the body at one place: along its surface it runs further from where it joins the rest than
+        # that join is wide. The rear face of a rump standing square to the cut is narrow too, but it joins the body
+        # all round its edge and no point of it is far from that edge (a mountain goat set square, 2026-11-12: the
+        # rump's rear face passed for an 18 cm tail)
+        ri = [i for i in c if any(V[u].co.y <= yc for u in adj[i])]
+        if ri:
+            mid_ = sum((V[i].co for i in ri), Vector()) / len(ri)
+            join = max((V[i].co - mid_).length for i in ri)
+            reach = max(A.path_distance(me, adj, c, ri).values())
+            if TAIL_DEBUG: print('DEBUG tail candidate cut %.2f, %d vertices, reach %.3f join %.3f ratio %.2f' % (yc, len(c), reach, join, reach / max(join, 1e-9)))
+            if reach > TAIL_REACH * join: tail = c; break
     yc += 0.01
 tailset = set(tail)
 TA, tfrac = ([], {})
@@ -361,4 +379,5 @@ if TA: rig['tail'] = to3l(TA[0]); rig['tail_tip'] = to3l(TIP)
 A.write_glb(OUT, tiers, 'wild-earth tools/build_quadruped.py (Blender)',
             f'{common} generated with Meshy (meshy.ai), task {TASK}, for Wild Earth; CC BY-SA 4.0; scaled, coloured from its texture, decimated',
             extras={'species': SPECIES, 'withers_m': WITHERS, 'size_by': SIZE_BY, 'mass_kg': MASS, 'meshy_task': TASK, 'colour': COLOR_SRC, 'build': 'tools/build_quadruped.py',
+                    'source_mesh': os.path.basename(GLB),   # model_straight.glb: a turned head set straight (pipeline/straighten.py)
                     'rig': rig, 'parts': 'BODY 0, LEG_A 1 (left fore, right hind), LEG_B 2, TAIL 3 (inner half), TAIL_TIP 8 (outer half, child of TAIL), HEAD 6'})
