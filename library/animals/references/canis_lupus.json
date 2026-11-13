@@ -1,0 +1,3076 @@
+{
+ "format": 2,
+ "code": "canis_lupus",
+ "scientific": "Canis lupus",
+ "plan": "quadruped",
+ "retrieved": "2026-11-12",
+ "by": "pipeline/reference_photos.py",
+ "licences": "CC0, CC BY or CC BY-SA only, each photo's own",
+ "chosen": "inat_12445801",
+ "candidates": [
+  {
+   "source": "inaturalist",
+   "id": "inat_12445801",
+   "licence": "CC BY-SA 4.0",
+   "author": "Tony Rebelo",
+   "attribution": "(c) Tony Rebelo, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/9194991",
+   "photo_page": "https://www.inaturalist.org/photos/12445801",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/12445801/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/12445801/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_12445801/photo.jpg",
+   "score": {
+    "total": 0.539,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.477,
+    "band_px": 4.45,
+    "clear": 0.962,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.692,
+    "stance": 0.917,
+    "spread": 6.3,
+    "lean": 16.2,
+    "belly_gap": 0.733,
+    "leg_zone": 0.203,
+    "leans": [
+     -19.4,
+     -13.1
+    ],
+    "lifts": [
+     0.002,
+     0.008
+    ],
+    "plain": 0.56,
+    "colour": 1.0,
+    "box": [
+     0.238,
+     0.198,
+     0.752,
+     0.719
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true
+   },
+   "file_large": "pipeline/_cache/references/canis_lupus/inat_12445801_large/photo.jpg",
+   "file_crop": "pipeline/_cache/references/canis_lupus/inat_12445801_crop/reference.png"
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_4909114",
+   "licence": "CC BY 4.0",
+   "author": "Desiree L. Narango",
+   "attribution": "(c) Desiree L. Narango, some rights reserved (CC BY)",
+   "page": "http://www.inaturalist.org/observations/4126404",
+   "photo_page": "https://www.inaturalist.org/photos/4909114",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/4909114/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/4909114/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_4909114/photo.jpg",
+   "score": {
+    "total": 0.513,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.995,
+    "band_px": 1.82,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.531,
+    "side": 0.738,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 12.1,
+    "lean": 5.0,
+    "belly_gap": 0.528,
+    "leg_zone": 0.493,
+    "leans": [
+     -2.4,
+     9.7,
+     3.1,
+     7.0
+    ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.039,
+     0.034
+    ],
+    "plain": 0.82,
+    "colour": 0.998,
+    "box": [
+     0.286,
+     0.228,
+     0.694,
+     0.818
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_214572955",
+   "licence": "CC BY 4.0",
+   "author": "Afsar Nayakkan",
+   "attribution": "(c) Afsar Nayakkan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/126460638",
+   "photo_page": "https://www.inaturalist.org/photos/214572955",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/214572955/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/214572955/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_214572955/photo.jpg",
+   "score": {
+    "total": 0.475,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.106,
+    "band_px": 3.76,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.735,
+    "spread": 23.3,
+    "lean": 4.2,
+    "belly_gap": 0.55,
+    "leg_zone": 0.306,
+    "leans": [
+     -3.9,
+     11.7,
+     -4.6,
+     -11.6,
+     -7.5,
+     -0.5
+    ],
+    "lifts": [
+     0.026,
+     0.044,
+     0.044,
+     0.044,
+     0.026,
+     0.0
+    ],
+    "plain": 0.3,
+    "colour": 0.992,
+    "box": [
+     0.246,
+     0.154,
+     0.748,
+     0.79
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_79735426",
+   "licence": "CC BY-SA 4.0",
+   "author": "Musicaline",
+   "attribution": "Musicaline, CC BY-SA 4.0, via Wikimedia Commons (File:Loup gris commun DSCF1575.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Loup_gris_commun_DSCF1575.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Loup_gris_commun_DSCF1575.jpg/500px-Loup_gris_commun_DSCF1575.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Loup_gris_commun_DSCF1575.jpg/1280px-Loup_gris_commun_DSCF1575.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_79735426/photo.jpg",
+   "score": {
+    "total": 0.412,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.087,
+    "band_px": 3.31,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.422,
+    "side": 0.968,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 10.8,
+    "lean": 9.4,
+    "belly_gap": 0.81,
+    "leg_zone": 0.398,
+    "leans": [
+     9.4,
+     0.6,
+     11.4
+    ],
+    "lifts": [
+     0.029,
+     0.0,
+     0.019
+    ],
+    "plain": 0.195,
+    "colour": 1.0,
+    "box": [
+     0.498,
+     0.24,
+     0.946,
+     0.859
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_222711800",
+   "licence": "CC BY 4.0",
+   "author": "Pavel Smirnov",
+   "attribution": "(c) Pavel Smirnov, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/130916975",
+   "photo_page": "https://www.inaturalist.org/photos/222711800",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/222711800/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/222711800/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_222711800/photo.jpg",
+   "score": {
+    "total": 0.4,
+    "whole": 1.0,
+    "single": 0.988,
+    "aspect": 1.446,
+    "band_px": 4.26,
+    "clear": 0.978,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.763,
+    "spread": 5.9,
+    "lean": 18.6,
+    "belly_gap": 0.823,
+    "leg_zone": 0.307,
+    "leans": [
+     15.6,
+     21.5
+    ],
+    "lifts": [
+     0.0,
+     0.0
+    ],
+    "plain": 0.143,
+    "colour": 0.922,
+    "box": [
+     0.242,
+     0.253,
+     0.722,
+     0.843
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_415517164",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/233808797",
+   "photo_page": "https://www.inaturalist.org/photos/415517164",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/415517164/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/415517164/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_415517164/photo.jpg",
+   "score": {
+    "total": 0.216,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.404,
+    "band_px": 2.47,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.264,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.605,
+    "spread": 25.9,
+    "lean": 4.7,
+    "belly_gap": 0.677,
+    "leg_zone": 0.328,
+    "leans": [
+     4.7,
+     -21.2,
+     -4.7
+    ],
+    "lifts": [
+     0.047,
+     0.02,
+     0.006
+    ],
+    "plain": 0.129,
+    "colour": 1.0,
+    "box": [
+     0.266,
+     0.445,
+     0.676,
+     0.964
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_1758498",
+   "licence": "CC BY-SA 3.0",
+   "author": "Chris Muiden at Dutch Wikipedia",
+   "attribution": "Chris Muiden at Dutch Wikipedia, CC BY-SA 3.0, via Wikimedia Commons (File:Canis lupus 265b.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Canis_lupus_265b.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Canis_lupus_265b.jpg/500px-Canis_lupus_265b.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Canis_lupus_265b.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_1758498/photo.jpg",
+   "score": {
+    "total": 0.093,
+    "whole": 0.618,
+    "single": 1.0,
+    "aspect": 0.965,
+    "band_px": 4.21,
+    "clear": 0.982,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.663,
+    "legs": 1.0,
+    "stance": 0.632,
+    "spread": 22.1,
+    "lean": 17.4,
+    "belly_gap": 0.674,
+    "leg_zone": 0.343,
+    "leans": [
+     28.5,
+     6.4
+    ],
+    "lifts": [
+     0.064,
+     0.0
+    ],
+    "plain": 0.47,
+    "colour": 0.999,
+    "box": [
+     0.128,
+     0.005,
+     0.848,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_57461912",
+   "licence": "CC0 1.0",
+   "author": "Guy McGrane",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/36356289",
+   "photo_page": "https://www.inaturalist.org/photos/57461912",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/57461912/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/57461912/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_57461912/photo.jpg",
+   "score": {
+    "total": 0.277,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.193,
+    "band_px": 3.11,
+    "clear": 1.0,
+    "size": 0.363,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 14.1,
+    "lean": 13.9,
+    "belly_gap": 0.75,
+    "leg_zone": 0.312,
+    "leans": [
+     -21.0,
+     -6.9
+    ],
+    "lifts": [
+     0.0,
+     0.046
+    ],
+    "plain": 0.53,
+    "colour": 0.996,
+    "box": [
+     0.214,
+     0.456,
+     0.474,
+     0.747
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_197917324",
+   "licence": "CC BY 4.0",
+   "author": "ajott",
+   "attribution": "(c) ajott, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/117208148",
+   "photo_page": "https://www.inaturalist.org/photos/197917324",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/197917324/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/197917324/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_197917324/photo.jpg",
+   "score": {
+    "total": 0.203,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.357,
+    "band_px": 1.63,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 0.876,
+    "head_end": 0.598,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.369,
+    "spread": 28.6,
+    "lean": 16.9,
+    "belly_gap": 0.728,
+    "leg_zone": 0.435,
+    "leans": [
+     2.6,
+     31.2
+    ],
+    "lifts": [
+     0.068,
+     0.0
+    ],
+    "plain": 0.568,
+    "colour": 1.0,
+    "box": [
+     0.166,
+     0.251,
+     0.728,
+     0.83
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_95523086",
+   "licence": "CC BY-SA 4.0",
+   "author": "User:Mas3cf",
+   "attribution": "User:Mas3cf, CC BY-SA 4.0, via Wikimedia Commons (File:Eurasian wolf 2.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Eurasian_wolf_2.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Eurasian_wolf_2.jpg/500px-Eurasian_wolf_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Eurasian_wolf_2.jpg/1280px-Eurasian_wolf_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_95523086/photo.jpg",
+   "score": {
+    "total": 0.175,
+    "whole": 1.0,
+    "single": 0.999,
+    "aspect": 0.881,
+    "band_px": 2.48,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.301,
+    "side": 0.452,
+    "legs": 1.0,
+    "stance": 0.824,
+    "spread": 16.1,
+    "lean": 5.3,
+    "belly_gap": 0.55,
+    "leg_zone": 0.364,
+    "leans": [
+     5.6,
+     5.1,
+     3.9,
+     20.0
+    ],
+    "lifts": [
+     0.064,
+     0.067,
+     0.064,
+     0.0
+    ],
+    "plain": 0.443,
+    "colour": 1.0,
+    "box": [
+     0.2,
+     0.127,
+     0.776,
+     0.972
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_6367395",
+   "licence": "CC0 1.0",
+   "author": "Robbie Hannawacker",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/5165451",
+   "photo_page": "https://www.inaturalist.org/photos/6367395",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/6367395/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/6367395/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_6367395/photo.jpg",
+   "score": {
+    "total": 0.125,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.871,
+    "band_px": 3.0,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.068,
+    "side": 0.427,
+    "legs": 1.0,
+    "stance": 0.875,
+    "spread": 9.0,
+    "lean": 4.5,
+    "belly_gap": 0.543,
+    "leg_zone": 0.358,
+    "leans": [
+     0.0,
+     9.0
+    ],
+    "lifts": [
+     0.0,
+     0.07
+    ],
+    "plain": 0.249,
+    "colour": 1.0,
+    "box": [
+     0.406,
+     0.279,
+     0.73,
+     0.838
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_57462004",
+   "licence": "CC0 1.0",
+   "author": "Guy McGrane",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/36356289",
+   "photo_page": "https://www.inaturalist.org/photos/57462004",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/57462004/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/57462004/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_57462004/photo.jpg",
+   "score": {
+    "total": 0.096,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.914,
+    "band_px": 2.86,
+    "clear": 1.0,
+    "size": 0.44,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.68,
+    "spread": 23.3,
+    "lean": 13.2,
+    "belly_gap": 0.798,
+    "leg_zone": 0.35,
+    "leans": [
+     1.6,
+     24.9
+    ],
+    "lifts": [
+     0.005,
+     0.066
+    ],
+    "plain": 0.303,
+    "colour": 0.985,
+    "box": [
+     0.472,
+     0.472,
+     0.782,
+     0.688
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_466801529",
+   "licence": "CC BY 4.0",
+   "author": "\u0645\u0648\u0633\u06cc \u0645\u0632\u06cc\u0646\u0627\u0646\u06cc\u0627\u0646 Mousa Mazinanian",
+   "attribution": "(c) \u0645\u0648\u0633\u06cc \u0645\u0632\u06cc\u0646\u0627\u0646\u06cc\u0627\u0646 Mousa Mazinanian, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/259983332",
+   "photo_page": "https://www.inaturalist.org/photos/466801529",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/466801529/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/466801529/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_466801529/photo.jpg",
+   "score": {
+    "total": 0.092,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.223,
+    "band_px": 2.38,
+    "clear": 1.0,
+    "size": 0.354,
+    "solid": 1.0,
+    "head_end": 0.971,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.411,
+    "spread": 24.3,
+    "lean": 3.2,
+    "belly_gap": 0.733,
+    "leg_zone": 0.398,
+    "leans": [
+     3.2,
+     11.6,
+     -12.7
+    ],
+    "lifts": [
+     0.078,
+     0.078,
+     0.0
+    ],
+    "plain": 0.279,
+    "colour": 1.0,
+    "box": [
+     0.502,
+     0.42,
+     0.754,
+     0.709
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_69415813",
+   "licence": "CC BY-SA 4.0",
+   "author": "WP Hundshaupten",
+   "attribution": "WP Hundshaupten, CC BY-SA 4.0, via Wikimedia Commons (File:Wolf Wildpark Hundshaupten.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Wolf_Wildpark_Hundshaupten.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/Wolf_Wildpark_Hundshaupten.jpg/500px-Wolf_Wildpark_Hundshaupten.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/Wolf_Wildpark_Hundshaupten.jpg/1280px-Wolf_Wildpark_Hundshaupten.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_69415813/photo.jpg",
+   "score": {
+    "total": 0.053,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.192,
+    "band_px": 2.81,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.187,
+    "spread": 32.6,
+    "lean": 0.8,
+    "belly_gap": 0.815,
+    "leg_zone": 0.469,
+    "leans": [
+     -21.5,
+     0.8,
+     11.1
+    ],
+    "lifts": [
+     0.065,
+     0.005,
+     0.081
+    ],
+    "plain": 0.135,
+    "colour": 0.989,
+    "box": [
+     0.21,
+     0.21,
+     0.682,
+     0.805
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_114277535",
+   "licence": "CC BY 4.0",
+   "author": "\u0415\u043b\u0435\u043d\u0430 \u041f\u0430\u0442\u0435\u0440\u0438\u043a\u0438\u043d\u0430",
+   "attribution": "(c) \u0415\u043b\u0435\u043d\u0430 \u041f\u0430\u0442\u0435\u0440\u0438\u043a\u0438\u043d\u0430, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/70311661",
+   "photo_page": "https://www.inaturalist.org/photos/114277535",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/114277535/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/114277535/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_114277535/photo.jpg",
+   "score": {
+    "total": 0.052,
+    "whole": 1.0,
+    "single": 0.998,
+    "aspect": 0.979,
+    "band_px": 2.58,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.73,
+    "side": 0.698,
+    "legs": 1.0,
+    "stance": 0.092,
+    "spread": 2.0,
+    "lean": 18.9,
+    "belly_gap": 0.879,
+    "leg_zone": 0.317,
+    "leans": [
+     -19.9,
+     -17.9
+    ],
+    "lifts": [
+     0.0,
+     0.13
+    ],
+    "plain": 0.863,
+    "colour": 0.999,
+    "box": [
+     0.282,
+     0.016,
+     0.944,
+     0.917
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_86435813",
+   "licence": "CC BY-SA 4.0",
+   "author": "Ruslantrend",
+   "attribution": "Ruslantrend, CC BY-SA 4.0, via Wikimedia Commons (File:\u0412\u043e\u043b\u043a. \u0422\u0430\u0448\u043a\u0435\u043d\u0442\u0441\u043a\u0438\u0439 \u0437\u043e\u043e\u043f\u0430\u0440\u043a.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:%D0%92%D0%BE%D0%BB%D0%BA._%D0%A2%D0%B0%D1%88%D0%BA%D0%B5%D0%BD%D1%82%D1%81%D0%BA%D0%B8%D0%B9_%D0%B7%D0%BE%D0%BE%D0%BF%D0%B0%D1%80%D0%BA.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/%D0%92%D0%BE%D0%BB%D0%BA._%D0%A2%D0%B0%D1%88%D0%BA%D0%B5%D0%BD%D1%82%D1%81%D0%BA%D0%B8%D0%B9_%D0%B7%D0%BE%D0%BE%D0%BF%D0%B0%D1%80%D0%BA.jpg/500px-%D0%92%D0%BE%D0%BB%D0%BA._%D0%A2%D0%B0%D1%88%D0%BA%D0%B5%D0%BD%D1%82%D1%81%D0%BA%D0%B8%D0%B9_%D0%B7%D0%BE%D0%BE%D0%BF%D0%B0%D1%80%D0%BA.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/%D0%92%D0%BE%D0%BB%D0%BA._%D0%A2%D0%B0%D1%88%D0%BA%D0%B5%D0%BD%D1%82%D1%81%D0%BA%D0%B8%D0%B9_%D0%B7%D0%BE%D0%BE%D0%BF%D0%B0%D1%80%D0%BA.jpg/1280px-%D0%92%D0%BE%D0%BB%D0%BA._%D0%A2%D0%B0%D1%88%D0%BA%D0%B5%D0%BD%D1%82%D1%81%D0%BA%D0%B8%D0%B9_%D0%B7%D0%BE%D0%BE%D0%BF%D0%B0%D1%80%D0%BA.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_86435813/photo.jpg",
+   "score": {
+    "total": 0.014,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.714,
+    "band_px": 2.0,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.036,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 12.6,
+    "lean": 3.1,
+    "belly_gap": 0.638,
+    "leg_zone": 0.475,
+    "leans": [
+     -9.4,
+     3.2
+    ],
+    "lifts": [
+     0.0,
+     0.015
+    ],
+    "plain": 0.593,
+    "colour": 1.0,
+    "box": [
+     0.456,
+     0.246,
+     0.746,
+     0.968
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_86168754",
+   "licence": "CC BY-SA 4.0",
+   "author": "Theo van Hilst",
+   "attribution": "Theo van Hilst, CC BY-SA 4.0, via Wikimedia Commons (File:Theo&pokino.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Theo%26pokino.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/Theo%26pokino.jpg/500px-Theo%26pokino.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/Theo%26pokino.jpg/1280px-Theo%26pokino.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_86168754/photo.jpg",
+   "score": {
+    "total": 0.005,
+    "whole": 1.0,
+    "single": 0.967,
+    "aspect": 0.762,
+    "band_px": 9.98,
+    "clear": 0.501,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.156,
+    "legs": 0.875,
+    "stance": 0.337,
+    "spread": 5.3,
+    "lean": 14.8,
+    "belly_gap": 0.691,
+    "leg_zone": 0.225,
+    "leans": [
+     12.1,
+     17.4
+    ],
+    "lifts": [
+     0.113,
+     0.0
+    ],
+    "plain": 0.107,
+    "colour": 0.648,
+    "box": [
+     0.434,
+     0.241,
+     0.678,
+     0.717
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_214573047",
+   "licence": "CC BY 4.0",
+   "author": "Afsar Nayakkan",
+   "attribution": "(c) Afsar Nayakkan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/126460638",
+   "photo_page": "https://www.inaturalist.org/photos/214573047",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/214573047/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/214573047/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_214573047/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.625,
+    "aspect": 1.959,
+    "band_px": 1.77,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 42.0,
+    "lean": 11.4,
+    "belly_gap": 0.782,
+    "leg_zone": 0.4,
+    "leans": [
+     -26.1,
+     9.0,
+     13.9,
+     15.9
+    ],
+    "lifts": [
+     0.01,
+     0.024,
+     0.003,
+     0.003
+    ],
+    "plain": 0.309,
+    "colour": 0.95,
+    "box": [
+     0.01,
+     0.371,
+     0.582,
+     0.785
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_415517238",
+   "licence": "CC BY 4.0",
+   "author": "Matt Muir",
+   "attribution": "(c) Matt Muir, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/233808797",
+   "photo_page": "https://www.inaturalist.org/photos/415517238",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/415517238/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/415517238/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_415517238/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.597,
+    "aspect": 1.418,
+    "band_px": 1.79,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 40.5,
+    "lean": 13.6,
+    "belly_gap": 0.699,
+    "leg_zone": 0.427,
+    "leans": [
+     -7.0,
+     33.5,
+     7.4,
+     19.8
+    ],
+    "lifts": [
+     0.149,
+     0.156,
+     0.006,
+     0.04
+    ],
+    "plain": 0.124,
+    "colour": 0.866,
+    "box": [
+     0.144,
+     0.423,
+     0.558,
+     0.943
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_201621185",
+   "licence": "CC BY 4.0",
+   "author": "Laura Mae",
+   "attribution": "(c) Laura Mae, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/119281693",
+   "photo_page": "https://www.inaturalist.org/photos/201621185",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/201621185/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/201621185/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_201621185/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.277,
+    "band_px": 10.57,
+    "clear": 0.452,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.533,
+    "stance": 0.55,
+    "spread": 10.9,
+    "lean": 21.8,
+    "belly_gap": 0.814,
+    "leg_zone": 0.184,
+    "leans": [
+     27.2,
+     16.3
+    ],
+    "lifts": [
+     0.002,
+     0.035
+    ],
+    "plain": 0.201,
+    "colour": 0.918,
+    "box": [
+     0.3,
+     0.224,
+     1.0,
+     0.955
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_201621075",
+   "licence": "CC BY 4.0",
+   "author": "Laura Mae",
+   "attribution": "(c) Laura Mae, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/119281693",
+   "photo_page": "https://www.inaturalist.org/photos/201621075",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/201621075/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/201621075/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_201621075/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.667,
+    "band_px": 5.57,
+    "clear": 0.869,
+    "size": 0.064,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 0.207,
+    "spread": 18.5,
+    "lean": 14.6,
+    "belly_gap": 0.791,
+    "leg_zone": 0.272,
+    "leans": [
+     5.4,
+     23.9
+    ],
+    "lifts": [
+     0.0,
+     0.123
+    ],
+    "plain": 0.229,
+    "colour": 0.985,
+    "box": [
+     0.452,
+     0.413,
+     0.56,
+     0.629
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_468217911",
+   "licence": "CC BY 4.0",
+   "author": "gerardbertrand",
+   "attribution": "(c) gerardbertrand, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/260696914",
+   "photo_page": "https://www.inaturalist.org/photos/468217911",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/468217911/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/468217911/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_468217911/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.483,
+    "band_px": 2.11,
+    "clear": 1.0,
+    "size": 0.043,
+    "solid": 1.0,
+    "head_end": 0.826,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 33.1,
+    "lean": 15.0,
+    "belly_gap": 1.0,
+    "leg_zone": 0.37,
+    "leans": [
+     15.0,
+     -17.2,
+     15.9
+    ],
+    "lifts": [
+     0.146,
+     0.128,
+     0.008
+    ],
+    "plain": 0.467,
+    "colour": 1.0,
+    "box": [
+     0.392,
+     0.456,
+     0.603,
+     0.572
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_12445807",
+   "licence": "CC BY-SA 4.0",
+   "author": "Tony Rebelo",
+   "attribution": "(c) Tony Rebelo, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/9194991",
+   "photo_page": "https://www.inaturalist.org/photos/12445807",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/12445807/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/12445807/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_12445807/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.439,
+    "band_px": 4.78,
+    "clear": 0.935,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.54,
+    "legs": 0.032,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.208,
+    "leg_zone": 0.146,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.6,
+    "colour": 1.0,
+    "box": [
+     0.434,
+     0.456,
+     0.552,
+     0.58
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_33668114",
+   "licence": "CC BY 4.0",
+   "author": "Joshua Liverman",
+   "attribution": "(c) Joshua Liverman, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/21740212",
+   "photo_page": "https://www.inaturalist.org/photos/33668114",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/33668114/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/33668114/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_33668114/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.654,
+    "band_px": 1.97,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 4.7,
+    "lean": 0.0,
+    "belly_gap": 0.706,
+    "leg_zone": 0.5,
+    "leans": [
+     -1.6,
+     3.1,
+     0.0
+    ],
+    "lifts": [
+     0.0,
+     0.115,
+     0.231
+    ],
+    "plain": 0.252,
+    "colour": 0.961,
+    "box": [
+     0.616,
+     0.646,
+     0.702,
+     0.724
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_600792391",
+   "licence": "CC BY 4.0",
+   "author": "Norma Malinowski",
+   "attribution": "(c) Norma Malinowski, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/331211928",
+   "photo_page": "https://www.inaturalist.org/photos/600792391",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/600792391/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/600792391/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_600792391/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.648,
+    "band_px": 2.48,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.239,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 13.8,
+    "lean": 4.0,
+    "belly_gap": 0.609,
+    "leg_zone": 0.279,
+    "leans": [
+     -8.8,
+     -4.0,
+     5.0
+    ],
+    "lifts": [
+     0.0,
+     0.004,
+     0.024
+    ],
+    "plain": 0.133,
+    "colour": 0.993,
+    "box": [
+     0.248,
+     0.268,
+     0.675,
+     0.762
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_115108025",
+   "licence": "CC BY 4.0",
+   "author": "Jan Ebr &amp; Ivana Ebrov\u00e1",
+   "attribution": "(c) Jan Ebr &amp; Ivana Ebrov\u00e1, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/70771570",
+   "photo_page": "https://www.inaturalist.org/photos/115108025",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/115108025/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/115108025/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_115108025/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.206,
+    "band_px": 10.0,
+    "clear": 0.5,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.458,
+    "stance": 0.0,
+    "spread": 68.5,
+    "lean": 1.0,
+    "belly_gap": 0.656,
+    "leg_zone": 0.175,
+    "leans": [
+     -35.2,
+     33.3
+    ],
+    "lifts": [
+     0.0,
+     0.0
+    ],
+    "plain": 0.707,
+    "colour": 0.995,
+    "box": [
+     0.162,
+     0.18,
+     0.618,
+     0.746
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_30162205",
+   "licence": "CC BY 4.0",
+   "author": "Laura Mae",
+   "attribution": "(c) Laura Mae, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/19592594",
+   "photo_page": "https://www.inaturalist.org/photos/30162205",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/30162205/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/30162205/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_30162205/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.966,
+    "aspect": 0.643,
+    "band_px": 3.79,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.875,
+    "side": 0.0,
+    "legs": 0.492,
+    "stance": 0.863,
+    "spread": 14.0,
+    "lean": 7.0,
+    "belly_gap": 0.533,
+    "leg_zone": 0.179,
+    "leans": [
+     0.0,
+     -14.0
+    ],
+    "lifts": [
+     0.071,
+     0.0
+    ],
+    "plain": 0.455,
+    "colour": 1.0,
+    "box": [
+     0.518,
+     0.48,
+     0.554,
+     0.555
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_30162212",
+   "licence": "CC BY 4.0",
+   "author": "Laura Mae",
+   "attribution": "(c) Laura Mae, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/19592594",
+   "photo_page": "https://www.inaturalist.org/photos/30162212",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/30162212/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/30162212/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_30162212/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.854,
+    "band_px": 4.37,
+    "clear": 0.969,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 44.8,
+    "lean": 22.4,
+    "belly_gap": 0.792,
+    "leg_zone": 0.258,
+    "leans": [
+     -44.8,
+     0.0
+    ],
+    "lifts": [
+     0.007,
+     0.028
+    ],
+    "plain": 0.562,
+    "colour": 1.0,
+    "box": [
+     0.428,
+     0.611,
+     0.606,
+     0.739
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_158758334",
+   "licence": "CC BY-SA 4.0",
+   "author": "Vihansith Kulatunga",
+   "attribution": "(c) Vihansith Kulatunga, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/95617403",
+   "photo_page": "https://www.inaturalist.org/photos/158758334",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/158758334/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/158758334/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_158758334/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.088,
+    "band_px": 1.63,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 0.743,
+    "head_end": 0.128,
+    "side": 0.969,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 41.7,
+    "lean": 2.5,
+    "belly_gap": 0.671,
+    "leg_zone": 0.325,
+    "leans": [
+     -27.0,
+     14.7,
+     2.5
+    ],
+    "lifts": [
+     0.018,
+     0.0,
+     0.029
+    ],
+    "plain": 0.419,
+    "colour": 0.965,
+    "box": [
+     0.368,
+     0.288,
+     0.74,
+     0.802
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_466801550",
+   "licence": "CC BY 4.0",
+   "author": "\u0645\u0648\u0633\u06cc \u0645\u0632\u06cc\u0646\u0627\u0646\u06cc\u0627\u0646 Mousa Mazinanian",
+   "attribution": "(c) \u0645\u0648\u0633\u06cc \u0645\u0632\u06cc\u0646\u0627\u0646\u06cc\u0627\u0646 Mousa Mazinanian, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/259983332",
+   "photo_page": "https://www.inaturalist.org/photos/466801550",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/466801550/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/466801550/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_466801550/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.65,
+    "aspect": 0.714,
+    "band_px": 33.6,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.027,
+    "legs": 0.029,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.25,
+    "leg_zone": 0.143,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.964,
+    "colour": 1.0,
+    "box": [
+     0.662,
+     0.674,
+     0.672,
+     0.695
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_592378640",
+   "licence": "CC BY 4.0",
+   "author": "RJ Baltierra",
+   "attribution": "(c) RJ Baltierra, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/327019603",
+   "photo_page": "https://www.inaturalist.org/photos/592378640",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/592378640/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/592378640/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_592378640/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.602,
+    "band_px": 3.94,
+    "clear": 1.0,
+    "size": 0.712,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 56.6,
+    "lean": 22.9,
+    "belly_gap": 0.697,
+    "leg_zone": 0.403,
+    "leans": [
+     -22.9,
+     21.8,
+     -34.8
+    ],
+    "lifts": [
+     0.0,
+     0.076,
+     0.034
+    ],
+    "plain": 0.262,
+    "colour": 1.0,
+    "box": [
+     0.412,
+     0.348,
+     0.79,
+     0.703
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_592378726",
+   "licence": "CC BY 4.0",
+   "author": "RJ Baltierra",
+   "attribution": "(c) RJ Baltierra, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/327019603",
+   "photo_page": "https://www.inaturalist.org/photos/592378726",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/592378726/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/592378726/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_592378726/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.182,
+    "band_px": 3.71,
+    "clear": 1.0,
+    "size": 0.928,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 61.4,
+    "lean": 13.7,
+    "belly_gap": 0.827,
+    "leg_zone": 0.253,
+    "leans": [
+     -44.4,
+     17.0
+    ],
+    "lifts": [
+     0.081,
+     0.0
+    ],
+    "plain": 0.26,
+    "colour": 1.0,
+    "box": [
+     0.414,
+     0.375,
+     0.846,
+     0.673
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_69204556",
+   "licence": "CC BY 4.0",
+   "author": "Blair Dudeck",
+   "attribution": "(c) Blair Dudeck, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/43624582",
+   "photo_page": "https://www.inaturalist.org/photos/69204556",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/69204556/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/69204556/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_69204556/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.779,
+    "band_px": 4.26,
+    "clear": 0.979,
+    "size": 0.832,
+    "solid": 1.0,
+    "head_end": 0.829,
+    "side": 0.199,
+    "legs": 0.107,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 24.9,
+    "belly_gap": 0.641,
+    "leg_zone": 0.206,
+    "leans": [
+     24.9
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.516,
+    "colour": 0.995,
+    "box": [
+     0.366,
+     0.312,
+     0.684,
+     0.72
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_114277546",
+   "licence": "CC BY 4.0",
+   "author": "\u0415\u043b\u0435\u043d\u0430 \u041f\u0430\u0442\u0435\u0440\u0438\u043a\u0438\u043d\u0430",
+   "attribution": "(c) \u0415\u043b\u0435\u043d\u0430 \u041f\u0430\u0442\u0435\u0440\u0438\u043a\u0438\u043d\u0430, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/70311661",
+   "photo_page": "https://www.inaturalist.org/photos/114277546",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/114277546/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/114277546/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_114277546/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.418,
+    "band_px": 4.05,
+    "clear": 0.996,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.049,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.879,
+    "colour": 0.999,
+    "box": [
+     0.084,
+     0.189,
+     0.946,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_555242892",
+   "licence": "CC BY 4.0",
+   "author": "Gabriel",
+   "attribution": "(c) Gabriel, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/307804640",
+   "photo_page": "https://www.inaturalist.org/photos/555242892",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/555242892/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/555242892/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_555242892/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.914,
+    "aspect": 0.843,
+    "band_px": 7.4,
+    "clear": 0.716,
+    "size": 0.459,
+    "solid": 0.736,
+    "head_end": 0.0,
+    "side": 0.357,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 6.8,
+    "belly_gap": 0.842,
+    "leg_zone": 0.532,
+    "leans": [
+     6.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.18,
+    "colour": 1.0,
+    "box": [
+     0.312,
+     0.41,
+     0.627,
+     0.69
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_52746014",
+   "licence": "CC BY-SA 4.0",
+   "author": "Graham Winterflood",
+   "attribution": "(c) Graham Winterflood, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/33576376",
+   "photo_page": "https://www.inaturalist.org/photos/52746014",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/52746014/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/52746014/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_52746014/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.529,
+    "band_px": 2.73,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.718,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.205,
+    "colour": 0.743,
+    "box": [
+     0.342,
+     0.123,
+     0.63,
+     0.88
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_132754714",
+   "licence": "CC0 1.0",
+   "author": "Allan Harris",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/80969487",
+   "photo_page": "https://www.inaturalist.org/photos/132754714",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/132754714/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/132754714/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_132754714/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 0.999,
+    "aspect": 0.376,
+    "band_px": 13.12,
+    "clear": 0.24,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.253,
+    "colour": 0.573,
+    "box": [
+     0.49,
+     0.266,
+     0.833,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_180208331",
+   "licence": "CC BY 4.0",
+   "author": "Surabhi Srivastava",
+   "attribution": "(c) Surabhi Srivastava, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/107178642",
+   "photo_page": "https://www.inaturalist.org/photos/180208331",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/180208331/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/180208331/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_180208331/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.58,
+    "band_px": 3.13,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 0.301,
+    "spread": 7.6,
+    "lean": 0.6,
+    "belly_gap": 0.525,
+    "leg_zone": 0.293,
+    "leans": [
+     -2.9,
+     2.1,
+     -5.5,
+     1.6
+    ],
+    "lifts": [
+     0.115,
+     0.006,
+     0.0,
+     0.063
+    ],
+    "plain": 0.27,
+    "colour": 0.99,
+    "box": [
+     0.284,
+     0.321,
+     0.486,
+     0.782
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_180208334",
+   "licence": "CC BY 4.0",
+   "author": "Surabhi Srivastava",
+   "attribution": "(c) Surabhi Srivastava, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/107178642",
+   "photo_page": "https://www.inaturalist.org/photos/180208334",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/180208334/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/180208334/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_180208334/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.999,
+    "aspect": 0.565,
+    "band_px": 6.66,
+    "clear": 0.778,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 0.925,
+    "spread": 6.9,
+    "lean": 3.9,
+    "belly_gap": 0.576,
+    "leg_zone": 0.401,
+    "leans": [
+     0.4,
+     7.3
+    ],
+    "lifts": [
+     0.066,
+     0.0
+    ],
+    "plain": 0.281,
+    "colour": 0.958,
+    "box": [
+     0.314,
+     0.145,
+     0.672,
+     0.913
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_699450092",
+   "licence": "CC BY 4.0",
+   "author": "Donsky",
+   "attribution": "(c) Donsky, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/382216141",
+   "photo_page": "https://www.inaturalist.org/photos/699450092",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/699450092/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/699450092/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_699450092/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.502,
+    "band_px": 9.3,
+    "clear": 0.559,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.056,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.754,
+    "colour": 0.983,
+    "box": [
+     0.0,
+     0.228,
+     0.772,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_699450106",
+   "licence": "CC BY 4.0",
+   "author": "Donsky",
+   "attribution": "(c) Donsky, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/382216141",
+   "photo_page": "https://www.inaturalist.org/photos/699450106",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/699450106/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/699450106/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_699450106/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.461,
+    "band_px": 3.19,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.776,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 34.8,
+    "lean": 6.8,
+    "belly_gap": 0.653,
+    "leg_zone": 0.282,
+    "leans": [
+     -10.6,
+     24.2
+    ],
+    "lifts": [
+     0.0,
+     0.142
+    ],
+    "plain": 0.185,
+    "colour": 0.918,
+    "box": [
+     0.0,
+     0.312,
+     0.596,
+     0.925
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_4565267",
+   "licence": "CC BY 4.0",
+   "author": "Nathan Odgers",
+   "attribution": "(c) Nathan Odgers, some rights reserved (CC BY)",
+   "page": "http://www.inaturalist.org/observations/3888688",
+   "photo_page": "https://www.inaturalist.org/photos/4565267",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/4565267/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/4565267/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_4565267/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.875,
+    "band_px": 1.97,
+    "clear": 1.0,
+    "size": 0.894,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.438,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 6.9,
+    "lean": 17.4,
+    "belly_gap": 0.792,
+    "leg_zone": 0.523,
+    "leans": [
+     -12.4,
+     -19.3,
+     -17.4
+    ],
+    "lifts": [
+     0.0,
+     0.145,
+     0.217
+    ],
+    "plain": 0.224,
+    "colour": 0.891,
+    "box": [
+     0.618,
+     0.443,
+     0.884,
+     0.866
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_57011849",
+   "licence": "CC BY 4.0",
+   "author": "\u0413\u0435\u043e\u0440\u0433\u0438\u0439 \u0412\u0438\u043d\u043e\u0433\u0440\u0430\u0434\u043e\u0432 (Georgy Vinogradov)",
+   "attribution": "(c) \u0413\u0435\u043e\u0440\u0433\u0438\u0439 \u0412\u0438\u043d\u043e\u0433\u0440\u0430\u0434\u043e\u0432 (Georgy Vinogradov), some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/36094930",
+   "photo_page": "https://www.inaturalist.org/photos/57011849",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/57011849/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/57011849/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_57011849/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 3.656,
+    "band_px": 1.99,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.136,
+    "colour": 0.998,
+    "box": [
+     0.259,
+     0.472,
+     0.71,
+     0.673
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_57012009",
+   "licence": "CC BY 4.0",
+   "author": "\u0413\u0435\u043e\u0440\u0433\u0438\u0439 \u0412\u0438\u043d\u043e\u0433\u0440\u0430\u0434\u043e\u0432 (Georgy Vinogradov)",
+   "attribution": "(c) \u0413\u0435\u043e\u0440\u0433\u0438\u0439 \u0412\u0438\u043d\u043e\u0433\u0440\u0430\u0434\u043e\u0432 (Georgy Vinogradov), some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/36094930",
+   "photo_page": "https://www.inaturalist.org/photos/57012009",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/57012009/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/57012009/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_57012009/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.904,
+    "band_px": 21.81,
+    "clear": 0.0,
+    "size": 0.64,
+    "solid": 1.0,
+    "head_end": 0.326,
+    "side": 0.509,
+    "legs": 0.1,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 26.6,
+    "belly_gap": 0.485,
+    "leg_zone": 0.2,
+    "leans": [
+     -26.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.25,
+    "colour": 1.0,
+    "box": [
+     0.22,
+     0.253,
+     0.464,
+     0.613
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_477150712",
+   "licence": "CC BY 4.0",
+   "author": "Roberto Daniel Avila",
+   "attribution": "(c) Roberto Daniel Avila, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/265626476",
+   "photo_page": "https://www.inaturalist.org/photos/477150712",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/477150712/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/477150712/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_477150712/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.187,
+    "band_px": 5.7,
+    "clear": 0.858,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 36.9,
+    "belly_gap": 0.789,
+    "leg_zone": 0.263,
+    "leans": [
+     36.9
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.205,
+    "colour": 1.0,
+    "box": [
+     0.093,
+     0.3,
+     0.755,
+     0.718
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_477150749",
+   "licence": "CC BY 4.0",
+   "author": "Roberto Daniel Avila",
+   "attribution": "(c) Roberto Daniel Avila, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/265626476",
+   "photo_page": "https://www.inaturalist.org/photos/477150749",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/477150749/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/477150749/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/canis_lupus/inat_477150749/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.749,
+    "band_px": 2.34,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.58,
+    "side": 0.123,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.9,
+    "belly_gap": 0.797,
+    "leg_zone": 0.304,
+    "leans": [
+     -0.9
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.183,
+    "colour": 0.97,
+    "box": [
+     0.139,
+     0.19,
+     0.776,
+     0.828
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_3300056",
+   "licence": "CC BY 2.5",
+   "author": "Christian Mehlf\u00fchrer, User:Chmehl",
+   "attribution": "Christian Mehlf\u00fchrer, User:Chmehl, CC BY 2.5, via Wikimedia Commons (File:MC Timberwolf.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:MC_Timberwolf.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/MC_Timberwolf.jpg/500px-MC_Timberwolf.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/MC_Timberwolf.jpg/1280px-MC_Timberwolf.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_3300056/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.03,
+    "band_px": 8.85,
+    "clear": 0.596,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.825,
+    "legs": 0.1,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 1.8,
+    "belly_gap": 0.747,
+    "leg_zone": 0.2,
+    "leans": [
+     -1.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.192,
+    "colour": 1.0,
+    "box": [
+     0.104,
+     0.0,
+     1.0,
+     0.87
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_27610616",
+   "licence": "CC BY-SA 3.0",
+   "author": "Cl\u00e9ment Bucco-Lechat",
+   "attribution": "Cl\u00e9ment Bucco-Lechat, CC BY-SA 3.0, via Wikimedia Commons (File:Juraparc 06-07-2013 - Wolf resting in the sun.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Juraparc_06-07-2013_-_Wolf_resting_in_the_sun.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Juraparc_06-07-2013_-_Wolf_resting_in_the_sun.jpg/500px-Juraparc_06-07-2013_-_Wolf_resting_in_the_sun.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Juraparc_06-07-2013_-_Wolf_resting_in_the_sun.jpg/1280px-Juraparc_06-07-2013_-_Wolf_resting_in_the_sun.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_27610616/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.976,
+    "aspect": 2.454,
+    "band_px": 3.83,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 69.6,
+    "belly_gap": 0.594,
+    "leg_zone": 0.431,
+    "leans": [
+     -69.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.135,
+    "colour": 0.999,
+    "box": [
+     0.118,
+     0.311,
+     0.756,
+     0.704
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_111490308",
+   "licence": "CC BY-SA 4.0",
+   "author": "Musicaline",
+   "attribution": "Musicaline, CC BY-SA 4.0, via Wikimedia Commons (File:Loups communs DSCF1607.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Loups_communs_DSCF1607.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/63/Loups_communs_DSCF1607.jpg/500px-Loups_communs_DSCF1607.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/63/Loups_communs_DSCF1607.jpg/1280px-Loups_communs_DSCF1607.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_111490308/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.57,
+    "aspect": 0.703,
+    "band_px": 3.32,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.006,
+    "legs": 0.708,
+    "stance": 0.305,
+    "spread": 31.9,
+    "lean": 14.3,
+    "belly_gap": 0.418,
+    "leg_zone": 0.205,
+    "leans": [
+     14.3,
+     -11.0,
+     20.9
+    ],
+    "lifts": [
+     0.056,
+     0.0,
+     0.056
+    ],
+    "plain": 0.127,
+    "colour": 0.992,
+    "box": [
+     0.166,
+     0.183,
+     0.44,
+     0.766
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_38480628",
+   "licence": "CC BY 2.0",
+   "author": "[1]",
+   "attribution": "[1], CC BY 2.0, via Wikimedia Commons (File:European grey wolf in Prague zoo.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:European_grey_wolf_in_Prague_zoo.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/European_grey_wolf_in_Prague_zoo.jpg/500px-European_grey_wolf_in_Prague_zoo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/European_grey_wolf_in_Prague_zoo.jpg/1280px-European_grey_wolf_in_Prague_zoo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_38480628/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.585,
+    "band_px": 3.95,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.327,
+    "side": 0.0,
+    "legs": 0.758,
+    "stance": 1.0,
+    "spread": 10.2,
+    "lean": 3.8,
+    "belly_gap": 0.415,
+    "leg_zone": 0.211,
+    "leans": [
+     -7.2,
+     -0.3,
+     -7.2,
+     3.0
+    ],
+    "lifts": [
+     0.0,
+     0.005,
+     0.016,
+     0.019
+    ],
+    "plain": 0.36,
+    "colour": 0.999,
+    "box": [
+     0.258,
+     0.109,
+     0.796,
+     0.943
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_64236224",
+   "licence": "CC BY 2.0",
+   "author": "Becker1999 from Grove City, OH",
+   "attribution": "Becker1999 from Grove City, OH, CC BY 2.0, via Wikimedia Commons (File:Mexican Wolf (5506640483).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Mexican_Wolf_(5506640483).jpg",
+   "url_small": "https://upload.wikimedia.org/wikipedia/commons/1/12/Mexican_Wolf_%285506640483%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/1/12/Mexican_Wolf_%285506640483%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_64236224/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.999,
+    "aspect": 0.515,
+    "band_px": 2.0,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 0.737,
+    "spread": 11.1,
+    "lean": 6.7,
+    "belly_gap": 0.301,
+    "leg_zone": 0.273,
+    "leans": [
+     -1.2,
+     9.9,
+     6.7
+    ],
+    "lifts": [
+     0.081,
+     0.02,
+     0.0
+    ],
+    "plain": 0.727,
+    "colour": 0.998,
+    "box": [
+     0.116,
+     0.072,
+     0.963,
+     0.846
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_25009563",
+   "licence": "CC BY 2.5 dk",
+   "author": "Johannes Jansson",
+   "attribution": "Johannes Jansson, CC BY 2.5 dk, via Wikimedia Commons (File:Varg fotograferad pa Polar Zoo Norge (6).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Varg_fotograferad_pa_Polar_Zoo_Norge_(6).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/Varg_fotograferad_pa_Polar_Zoo_Norge_%286%29.jpg/500px-Varg_fotograferad_pa_Polar_Zoo_Norge_%286%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/Varg_fotograferad_pa_Polar_Zoo_Norge_%286%29.jpg/1280px-Varg_fotograferad_pa_Polar_Zoo_Norge_%286%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_25009563/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.552,
+    "band_px": 2.24,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.265,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 49.5,
+    "lean": 16.2,
+    "belly_gap": 0.775,
+    "leg_zone": 0.355,
+    "leans": [
+     -12.8,
+     33.7,
+     -1.2,
+     36.7
+    ],
+    "lifts": [
+     0.077,
+     0.044,
+     0.0,
+     0.0
+    ],
+    "plain": 0.182,
+    "colour": 0.98,
+    "box": [
+     0.116,
+     0.348,
+     0.684,
+     0.898
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_123601383",
+   "licence": "CC BY 2.0",
+   "author": "Toshihiro Gamo from Yokohama, Kanagawa, Japan",
+   "attribution": "Toshihiro Gamo from Yokohama, Kanagawa, Japan, CC BY 2.0, via Wikimedia Commons (File:\u30aa\u30aa\u30ab\u30df (Gray Wolf) (7917140448).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:%E3%82%AA%E3%82%AA%E3%82%AB%E3%83%9F_(Gray_Wolf)_(7917140448).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/%E3%82%AA%E3%82%AA%E3%82%AB%E3%83%9F_%28Gray_Wolf%29_%287917140448%29.jpg/500px-%E3%82%AA%E3%82%AA%E3%82%AB%E3%83%9F_%28Gray_Wolf%29_%287917140448%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/%E3%82%AA%E3%82%AA%E3%82%AB%E3%83%9F_%28Gray_Wolf%29_%287917140448%29.jpg/1280px-%E3%82%AA%E3%82%AA%E3%82%AB%E3%83%9F_%28Gray_Wolf%29_%287917140448%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_123601383/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.155,
+    "band_px": 2.81,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 76.8,
+    "lean": 28.0,
+    "belly_gap": 0.787,
+    "leg_zone": 0.299,
+    "leans": [
+     -31.0,
+     -28.0,
+     45.8
+    ],
+    "lifts": [
+     0.125,
+     0.003,
+     0.117
+    ],
+    "plain": 0.198,
+    "colour": 0.985,
+    "box": [
+     0.246,
+     0.072,
+     0.856,
+     0.865
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_136608832",
+   "licence": "CC BY-SA 4.0",
+   "author": "Triplec85",
+   "attribution": "Triplec85, CC BY-SA 4.0, via Wikimedia Commons (File:2023-08-25 W\u00f6lfe - Canis lupus in Wildpark Bad Mergentheim 01.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:2023-08-25_W%C3%B6lfe_-_Canis_lupus_in_Wildpark_Bad_Mergentheim_01.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/2023-08-25_W%C3%B6lfe_-_Canis_lupus_in_Wildpark_Bad_Mergentheim_01.jpg/500px-2023-08-25_W%C3%B6lfe_-_Canis_lupus_in_Wildpark_Bad_Mergentheim_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/2023-08-25_W%C3%B6lfe_-_Canis_lupus_in_Wildpark_Bad_Mergentheim_01.jpg/1280px-2023-08-25_W%C3%B6lfe_-_Canis_lupus_in_Wildpark_Bad_Mergentheim_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_136608832/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.649,
+    "band_px": 2.85,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 0.716,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 64.0,
+    "belly_gap": 0.853,
+    "leg_zone": 0.447,
+    "leans": [
+     64.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.135,
+    "colour": 0.998,
+    "box": [
+     0.424,
+     0.648,
+     0.612,
+     0.8
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_123601501",
+   "licence": "CC BY 2.0",
+   "author": "Toshihiro Gamo from Yokohama, Kanagawa, Japan",
+   "attribution": "Toshihiro Gamo from Yokohama, Kanagawa, Japan, CC BY 2.0, via Wikimedia Commons (File:\u30aa\u30aa\u30ab\u30df (Gray Wolf) (7917135960).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:%E3%82%AA%E3%82%AA%E3%82%AB%E3%83%9F_(Gray_Wolf)_(7917135960).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/%E3%82%AA%E3%82%AA%E3%82%AB%E3%83%9F_%28Gray_Wolf%29_%287917135960%29.jpg/500px-%E3%82%AA%E3%82%AA%E3%82%AB%E3%83%9F_%28Gray_Wolf%29_%287917135960%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/%E3%82%AA%E3%82%AA%E3%82%AB%E3%83%9F_%28Gray_Wolf%29_%287917135960%29.jpg/1280px-%E3%82%AA%E3%82%AA%E3%82%AB%E3%83%9F_%28Gray_Wolf%29_%287917135960%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_123601501/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.599,
+    "band_px": 7.07,
+    "clear": 0.744,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 48.7,
+    "belly_gap": 0.184,
+    "leg_zone": 0.247,
+    "leans": [
+     48.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.262,
+    "colour": 0.938,
+    "box": [
+     0.076,
+     0.027,
+     0.912,
+     0.957
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_47121619",
+   "licence": "CC BY-SA 2.0",
+   "author": "Eric Kilby from Somerville, MA, USA",
+   "attribution": "Eric Kilby from Somerville, MA, USA, CC BY-SA 2.0, via Wikimedia Commons (File:The Wolf That Cried Boy (4377025204).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:The_Wolf_That_Cried_Boy_(4377025204).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/The_Wolf_That_Cried_Boy_%284377025204%29.jpg/500px-The_Wolf_That_Cried_Boy_%284377025204%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/The_Wolf_That_Cried_Boy_%284377025204%29.jpg/1280px-The_Wolf_That_Cried_Boy_%284377025204%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_47121619/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 0.998,
+    "aspect": 0.901,
+    "band_px": 5.22,
+    "clear": 0.898,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.502,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 1.6,
+    "lean": 9.3,
+    "belly_gap": 0.578,
+    "leg_zone": 0.343,
+    "leans": [
+     10.1,
+     8.5
+    ],
+    "lifts": [
+     0.0,
+     0.0
+    ],
+    "plain": 0.256,
+    "colour": 1.0,
+    "box": [
+     0.0,
+     0.03,
+     0.58,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_47121186",
+   "licence": "CC BY-SA 2.0",
+   "author": "Eric Kilby from Somerville, MA, USA",
+   "attribution": "Eric Kilby from Somerville, MA, USA, CC BY-SA 2.0, via Wikimedia Commons (File:Mexican Wolf Pack (12033414114).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Mexican_Wolf_Pack_(12033414114).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/Mexican_Wolf_Pack_%2812033414114%29.jpg/500px-Mexican_Wolf_Pack_%2812033414114%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/Mexican_Wolf_Pack_%2812033414114%29.jpg/1280px-Mexican_Wolf_Pack_%2812033414114%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_47121186/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.611,
+    "aspect": 1.421,
+    "band_px": 4.91,
+    "clear": 0.925,
+    "size": 0.485,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 45.7,
+    "lean": 31.4,
+    "belly_gap": 0.62,
+    "leg_zone": 0.346,
+    "leans": [
+     -8.5,
+     -54.2
+    ],
+    "lifts": [
+     0.0,
+     0.037
+    ],
+    "plain": 0.135,
+    "colour": 1.0,
+    "box": [
+     0.39,
+     0.474,
+     0.694,
+     0.796
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_176438455",
+   "licence": "CC BY 4.0",
+   "author": "Rafa\u0142 Wyszy\u0144ski",
+   "attribution": "Rafa\u0142 Wyszy\u0144ski, CC BY 4.0, via Wikimedia Commons (File:RWY2972.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:RWY2972.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/RWY2972.jpg/500px-RWY2972.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/RWY2972.jpg/1280px-RWY2972.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/canis_lupus/commons_176438455/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.991,
+    "band_px": 5.2,
+    "clear": 0.9,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.222,
+    "legs": 0.032,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 24.6,
+    "belly_gap": 0.161,
+    "leg_zone": 0.146,
+    "leans": [
+     -24.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.126,
+    "colour": 0.999,
+    "box": [
+     0.51,
+     0.222,
+     0.93,
+     0.859
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  }
+ ]
+}

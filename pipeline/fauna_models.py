@@ -32,9 +32,18 @@ in it is per species:
             the slot gets one more preview (a fresh seed) before it is left a stand-in. A snake's build runs on the
             untextured preview first (the gate), so a mesh it cannot use costs no refine; a paid preview no refine was
             made from is tried before a new one;
+  pose      a four-legged animal's preview is measured before its refine is paid (pipeline/pose_gate.py, 2026-11-12:
+            the head's turn, the spine's bend, each foot pair's stagger, four feet down): a preview that does not stand
+            square is a failed attempt (20 credits, not 30, and no turned head built into a model);
   check     the built model's colours against the described appearance (pipeline/appearance.py check): a mismatch is
             re-refined once from the same preview (10 credits, the mesh kept) and the better of the two is kept;
             --recolour does the same for the library's models (--codes to name them, else every one that fails);
+  likeness  a four-legged model against photographs of its species (pipeline/likeness.py, 2026-11-12): recognised when
+            its own species' photos are the nearest of every species' in the reference store, as a learned eye sees
+            them, and it is as near them as nine in ten of them are to each other. A coat can wear every described
+            colour and still be another animal's (the generated coyote read as a black-backed jackal); a model that
+            fails is re-refined once with the species' most typical photo as the texture reference (10 credits) and
+            the better of the two kept;
   photo     the second rung (2026-11-06, iteration 7): a species whose text model fails (the judge's verdict in
             models.json, the feature check's geometry: horns, tail length; or the build's leg gate after its two previews)
             is tried once from its reference photo (pipeline/reference_photos.py): Meshy's image-to-3D from the photo cropped
@@ -45,7 +54,7 @@ in it is per species:
             author, page) go into the job's folder (reference.jpg / reference.json) and into models.json. --redo runs it
             for the species named; the judge records its verdict on the new model with --judge;
   accept    the acceptance rule (iteration 10; acceptance(), the section "model acceptance as a rule"): built, the build's
-            gate, the appearance check with the thresholds fitted to the recorded verdicts; a recorded verdict (an
+            gate, the appearance check with the thresholds fitted to the recorded verdicts, and the likeness; a recorded verdict (an
             override, the judge's) overrides it as an explicit stage, the rule's decision kept beside it; model_for
             serves by it; recorded in models.json `acceptance` on every register, rebuild, re-texture and verdict;
   record    library/animals/models.json: per species the GLB, the jobs, credits spent, attempts; and the run's ledger
@@ -416,6 +425,46 @@ def colour_check(code: str) -> dict:
     return check(glb, app)
 
 
+def pose_check(job: Path) -> dict:
+    """The pose gate on a job's mesh (pipeline/pose_gate.py): {ok, why, head_turn, spine_bend, stagger_fore,
+    stagger_hind, feet}; a mesh that cannot be read fails."""
+    from . import pose_gate
+    try:
+        g = pose_gate.gate(Path(job) / "model.glb")
+    except Exception as ex:   # an unreadable mesh is no animal standing square
+        return {"ok": False, "why": [f"the mesh could not be measured ({type(ex).__name__}: {str(ex)[:80]})"]}
+    return {k: g.get(k) for k in ("ok", "why", "head_turn", "spine_bend", "stagger_fore", "stagger_hind", "feet")}
+
+
+def likeness_check(code: str, tile_id: str | None = None, fetch: bool = False) -> dict:
+    """A four-legged model's likeness to photographs of its species (pipeline/likeness.py likeness): {ok, why, seen,
+    recognition, coat}; ok None when it cannot be judged (not four-legged, no reference photos, the embedding network
+    not on disk). fetch: find the species' photos and fetch the network when they are missing (a paid run does; the
+    acceptance rule, run offline and in the tests, does not)."""
+    from . import likeness as lk
+    from . import reference_photos as rp
+    e = registry().get("species", {}).get(code) or {}
+    if e.get("kind", "quadruped") != "quadruped":
+        return {"ok": None, "why": ["not a four-legged model"]}
+    try:
+        if fetch and not (rp.STORE / f"{code}.json").exists():
+            rp.find(code, tile=tile_id, log=lambda *_: None)
+        if not (rp.STORE / f"{code}.json").exists():
+            return {"ok": None, "why": ["no reference photos of the species in the store"]}
+        if not fetch and not lk.ready():
+            return {"ok": None, "why": ["the embedding network is not on disk (a paid run fetches it)"]}
+        return lk.likeness(code)
+    except Exception as ex:   # a store without its cached photos, an unreadable source: not judged, never a crash in the rule
+        return {"ok": None, "why": [f"not judged ({type(ex).__name__}: {str(ex)[:80]})"]}
+
+
+def _likeness_brief(r: dict) -> dict:
+    rec = r.get("recognition") or {}
+    return {"ok": r.get("ok"), "why": r.get("why") or [], **{k: rec.get(k) for k in ("own", "floor", "rival", "rival_nearness", "margin", "photos", "of") if k in rec},
+            **({"coat": [o["words"] for o in ((r.get("coat") or {}).get("off") or [])[:4]]} if (r.get("coat") or {}).get("off") else {}),
+            **({"seen": r["seen"]} if r.get("seen") else {})}
+
+
 def _model_files(code: str) -> list[Path]:
     return [p for p in (ASSETS / f"{code}.glb", ASSETS / f"{code}_clips.json") if p.exists()]
 
@@ -724,7 +773,14 @@ def photo_rung(code: str, tile_id: str, mode: str, slot: dict | None = None) -> 
     kind, arch = _kind_arch(code, slot)
     rec = {"at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "rung": "photo", "mode": mode, "credits": 0}
     used = {(h.get("reference") or {}).get("id") for h in (registry().get("species", {}).get(code) or {}).get("photo", [])}
-    refs = rp.ranked(code, skip=used, n=1, use="image" if mode == "image" else "texture")
+    prefer = None
+    if mode == "texture" and kind == "quadruped":   # the coat to copy is the species' most usual one (likeness.typical)
+        try:
+            from . import likeness as lk
+            prefer = lk.typical(code) if lk.ready() else None
+        except Exception:
+            prefer = None
+    refs = rp.ranked(code, skip=used, n=1, use="image" if mode == "image" else "texture", prefer=prefer)
     ref = refs[0] if refs else None
     if not ref or not ref.get("file_crop"):
         rec["error"] = "no reference photo left"; return rec
@@ -733,6 +789,7 @@ def photo_rung(code: str, tile_id: str, mode: str, slot: dict | None = None) -> 
     have = (ASSETS / f"{code}.glb").exists()
     before = colour_check(code) if have else {"ok": False, "score": None, "fails": ["no model"]}
     rec["before"] = {k: before.get(k) for k in ("ok", "score", "fails")}
+    like_before = likeness_check(code) if have and kind == "quadruped" else {"ok": None}
     maint = "agent (Claude) for Aaron Brodeur, world pipeline"
     if mode == "image":
         job = _meshy("generate", "--species", code, "--mode", "image", "--image", str(img), "--ai-model", "latest",
@@ -766,6 +823,15 @@ def photo_rung(code: str, tile_id: str, mode: str, slot: dict | None = None) -> 
     judged_out = ((registry().get("species", {}).get(code) or {}).get("judge") or {}).get("verdict") == "rejected"
     better = ok and (not have or judged_out or after.get("ok") or nf(after) < nf(before) or
                      (nf(after) == nf(before) and (after.get("score") or 0) > (before.get("score") or 0)))
+    # the likeness decides first where it was judged on both: a model its species' photos do not recognise is replaced
+    # by one they do, and one they recognise is never replaced by one they do not
+    like_after = likeness_check(code) if ok and kind == "quadruped" else {"ok": None}
+    if like_before.get("ok") is not None and like_after.get("ok") is not None:
+        rec["likeness"] = {"before": _likeness_brief(like_before), "after": _likeness_brief(like_after)}
+        if like_after["ok"] != like_before["ok"]:
+            better = bool(like_after["ok"])
+        elif not like_after["ok"]:   # neither recognised: the nearer its own species against its rival
+            better = ((like_after.get("recognition") or {}).get("margin") or -9) > ((like_before.get("recognition") or {}).get("margin") or -9)
     rec["kept"] = "new" if better else "old"
     if not better:
         for f in _model_files(code):
@@ -929,6 +995,9 @@ def judge(code: str, verdict: str, why: str) -> None:
 #   check       the appearance check (pipeline/appearance.py check: the described colours by region, the defining
 #               features: horns, tail, rings, a pale patch) with the thresholds fitted to the recorded verdicts
 #               (library/animals/check_fit.json params);
+#   likeness    a four-legged model whose species has reference photos in the store (2026-11-12, pipeline/likeness.py):
+#               its own species' photos are the nearest of every species' and it reaches their own floor; not judged
+#               (and so passing) where there are no photos or the embedding network is not on disk;
 #   provenance  recorded, not deciding: the rung the model came from (text, or a photo used as image-to-3D input or as a
 #               refine's texture reference) and whether today's photo rule (reference_photos.usable_for) still takes
 #               that photo for that use. Measured on the 39 recorded verdicts (fit_acceptance) it decides nothing for a
@@ -936,7 +1005,7 @@ def judge(code: str, verdict: str, why: str) -> None:
 #               its stance, which cannot bind a texture, and it would refuse the accepted pronghorn, whose image-to-3D
 #               mesh passed the gate and the check from a photo refused because grass hides the legs. The gate and the
 #               check judge the product; the photo rule judges which photo to try next (`due`).
-# The rule's decision is accepted when model, gate and check pass. A recorded verdict stays as an explicit override
+# The rule's decision is accepted when model, gate, check and likeness pass. A recorded verdict stays as an explicit override
 # stage with its reason, the rule's own decision kept beside it (`agrees`): first an `override` entry (a recorded serve
 # decision, e.g. iteration 5's "kept because no better came"), then the judge's verdict when it is not stale and names
 # this model (or none), then a `verdicts` entry naming this model or "current". model_for serves by the override when
@@ -944,7 +1013,7 @@ def judge(code: str, verdict: str, why: str) -> None:
 # model's geometry from a usable photo (image-to-3D, 30) or text (preview and refine, 30), its texture from a photo
 # (a texture reference, 10) or the text with the check's correction (10); an accepted model whose image-to-3D photo
 # today's rule refuses, when the rule has a usable photo no mesh was made from (30).
-ACCEPT_FORMAT = 1
+ACCEPT_FORMAT = 2   # 2: the likeness stage (2026-11-12)
 CHECK_FIT = ROOT / "library" / "animals" / "check_fit.json"
 BUILD_TOOL = {"snake": "build_snake.py", "reptile": "build_reptile.py", "bird": "build_bird.py", "quadruped": "build_quadruped.py"}
 
@@ -1102,7 +1171,7 @@ def due(code: str, e: dict, rule: dict, prov: dict) -> dict | None:
             return {"job": "text preview + refine", "credits": COST["preview"] + COST["refine"],
                     "why": "geometry, and no usable photo left: " + "; ".join(st["check"].get("geometry") or [st["gate"].get("why") or "the gate"])}
         tex = free("texture")
-        fails = "; ".join(st["check"].get("fails") or [])
+        fails = "; ".join((st["check"].get("fails") or []) + ["likeness: " + f for f in ((st.get("likeness") or {}).get("fails") or [])])
         if tex:
             return {"job": "refine with the photo as texture reference", "photo": tex[0], "credits": COST["refine"], "why": "texture: " + fails}
         return {"job": "refine with the check's correction" + ("" if store else " (or find reference photos first: no credits)"),
@@ -1139,6 +1208,14 @@ def acceptance(code: str, e: dict | None = None, params: dict | None = None) -> 
             stages["check"] = {"ok": True, "why": "no described appearance"}
     else:
         stages["check"] = {"ok": False, "why": "no model"}
+    if have and e.get("kind", "quadruped") == "quadruped":
+        lk = likeness_check(code)
+        if lk.get("ok") is None:
+            stages["likeness"] = {"ok": True, "judged": False, "why": "; ".join(lk.get("why") or [])}
+        else:
+            b = _likeness_brief(lk)
+            stages["likeness"] = {"ok": bool(lk["ok"]), "judged": True, "fails": b.pop("why"), **{k: v for k, v in b.items() if k != "ok"},
+                                  "by": lk.get("by")}
     prov = provenance(code, job)
     stages["provenance"] = {**prov, "decides": False}
     fails = [f"{k}: {'; '.join(v.get('fails') or []) or v.get('why') or 'fails'}" for k, v in stages.items() if k != "provenance" and not v["ok"]]
@@ -1179,10 +1256,25 @@ def served_by_rule(code: str, e: dict) -> bool:
     return acceptance(code, e)["rule"]["decision"] == "accepted"
 
 
+def _judged_likeness(k: dict, job: Path | None) -> dict | None:
+    """The likeness of a model with a recorded verdict, from its job's generated source (None when it cannot be judged
+    offline: not four-legged, no source on disk, no photos, no embedding network)."""
+    from . import likeness as lk
+    from . import reference_photos as rp
+    if k["entry"].get("kind", "quadruped") != "quadruped" or not lk.ready() or not (rp.STORE / f"{k['code']}.json").exists():
+        return None
+    try:
+        src = lk.source_at(job)
+        return lk.likeness(k["code"], source=src) if src else None
+    except Exception:
+        return None
+
+
 def fit_acceptance(log=print) -> dict:
-    """The rule measured against the recorded verdicts (appearance.known_verdicts: 39 models): its confusion in sample and
-    leave-one-out (the check's thresholds refitted without the model: check_fit.json flagged_loo; the other stages fit
-    nothing), and the provenance stage's variants that were not adopted."""
+    """The rule measured against the recorded verdicts (appearance.known_verdicts: 39 models at iteration 8, 41 on
+    2026-11-12): its confusion in sample and leave-one-out (the check's thresholds refitted without the model:
+    check_fit.json flagged_loo; the other stages fit nothing; the likeness stage, 2026-11-12, is run on each judged
+    job's generated source where it can be), and the provenance stage's variants that were not adopted."""
     from . import appearance as ap
     from . import reference_photos as rp
     loo_of = {}
@@ -1208,10 +1300,13 @@ def fit_acceptance(log=print) -> dict:
             refused_any = bool(cand and rp.usable(cand["score"], store.get("plan", "quadruped")))
         except (OSError, ValueError, KeyError, TypeError):
             refused_any = False
-        flag = not c.get("ok")
+        like = _judged_likeness(k, job)   # the likeness stage fits nothing to the verdicts: the same in and out of sample
+        unlike = like is not None and like.get("ok") is False
+        flag = (not c.get("ok")) or unlike
         rows.append({"code": k["code"], "model": k["model"], "verdict": k["verdict"], "by": k["by"],
                      "rule": "rejected" if flag else "accepted", "check_fails": c.get("fails") or [],
-                     "rule_loo": "rejected" if loo_of.get((k["code"], k["model"]), flag) else "accepted",
+                     **({"likeness": _likeness_brief(like)} if like is not None and like.get("ok") is not None else {}),
+                     "rule_loo": "rejected" if (loo_of.get((k["code"], k["model"]), not c.get("ok")) or unlike) else "accepted",
                      "provenance": {x: prov.get(x) for x in ("rung", "mode", "photo", "use", "photo_usable", "photo_why_not") if x in prov},
                      "_v_use": flag or refused, "_v_any": flag or refused_any})
     import numpy as np
@@ -1223,11 +1318,12 @@ def fit_acceptance(log=print) -> dict:
     for r in rows:
         r.pop("_v_use"); r.pop("_v_any")
     return {"date": dt.date.today().isoformat(), "by": "pipeline/fauna_models.py fit_acceptance", "models": len(rows),
+            "likeness_judged": sum(1 for r in rows if "likeness" in r),
             "rejected": int(y.sum()), "accepted": int((~y).sum()),
             "rule": {**rule, "balanced_accuracy": ba(rule)}, "loo": {**loo, "balanced_accuracy": ba(loo)},
             "not_adopted": {"provenance by use (image-to-3D photo must pass USABLE, a texture reference whole, size, clear, body)": {**v_use, "balanced_accuracy": ba(v_use)},
                             "provenance, every USABLE score whatever the use": {**v_any, "balanced_accuracy": ba(v_any)}},
-            "disagreements": [{k: r[k] for k in ("code", "model", "verdict", "by", "rule", "check_fails")} for r in rows if r["rule"] != r["verdict"]],
+            "disagreements": [{k: r[k] for k in ("code", "model", "verdict", "by", "rule", "check_fails", "likeness") if k in r} for r in rows if r["rule"] != r["verdict"]],
             "per_model": rows}
 
 
@@ -1235,7 +1331,7 @@ def fit_acceptance(log=print) -> dict:
 def _served_before(code: str, e: dict) -> bool:
     """What was served before this run: the recorded acceptance, else the rule before iteration 10 (drawn unless the
     judge rejected it)."""
-    if (e.get("acceptance") or {}).get("format") == ACCEPT_FORMAT:
+    if "served" in (e.get("acceptance") or {}):   # (whatever its format: what was drawn is what the record says)
         return bool(e["acceptance"].get("served"))
     have = (ASSETS / f"{code}.glb").exists() and (e.get("kind", "quadruped") != "quadruped" or (ASSETS / f"{code}_clips.json").exists())
     return have and (e.get("judge") or {}).get("verdict") != "rejected"
@@ -1323,6 +1419,12 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
                 if not pv:
                     row["jobs"].append({"mode": "preview", "ok": False}); continue
                 row["jobs"].append({"mode": "preview", "dir": str(pv.relative_to(ROOT))})
+            if not (snk or bird or rept):   # a four-legged animal: the pose gate, before the refine is paid
+                pg = pose_check(pv)
+                row.setdefault("pose", []).append({"preview": str(pv.relative_to(ROOT)), **pg})
+                print(f"{code}: preview {pv.name} {'stands square' if pg['ok'] else 'fails the pose gate: ' + '; '.join(pg.get('why') or [])}", flush=True)
+                if not pg["ok"]:
+                    continue
             if snk:   # the gate: the build on the untextured preview, before the refine is paid
                 ok, log = gate(code, pv, tile_id)
                 row.setdefault("gate", []).append({"preview": str(pv.relative_to(ROOT)), "ok": ok, "log": log.splitlines()[-3:]})
@@ -1357,6 +1459,15 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
                 fresh = registry()   # (merged into a fresh read, as register)
                 fresh["species"][code]["colour_check"] = reg["species"][code]["colour_check"] = row["colour_check"]
                 REGISTRY.write_text(json.dumps(fresh, indent=1) + "\n")
+                if not (snk or bird or rept):   # the likeness: photographs of the species, found now if the store has none
+                    lk = likeness_check(code, tile_id, fetch=True)
+                    row["likeness"] = _likeness_brief(lk)
+                    print(f"{code}: likeness {'not judged' if lk.get('ok') is None else 'passes' if lk['ok'] else 'fails'}: {'; '.join(lk.get('why') or [])}", flush=True)
+                    bal = balance()
+                    if lk.get("ok") is False and bal is not None and bal - COST["refine"] >= reserve and spent + COST["refine"] <= budget:
+                        rec = photo_rung(code, tile_id, "texture", s)   # the species' most typical photo as the texture reference
+                        spent += rec.get("credits", 0); row["credits"] += rec.get("credits", 0)
+                        row["likeness_refine"] = {k: rec.get(k) for k in ("job", "kept", "likeness", "error", "reference")}
                 row["acceptance"] = (record_acceptance(code) or {}).get("rule", {}).get("decision")
                 break
         # the second rung (iteration 7): no model after the gate, or a model whose geometry fails the feature check, is

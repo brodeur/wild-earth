@@ -148,7 +148,9 @@ class Library(unittest.TestCase):
             glb = ROOT / e["glb"]
             clips = ROOT / "client" / "assets" / "fauna" / f"{code}_clips.json"
             had = glb.exists() and (e.get("kind", "quadruped") != "quadruped" or clips.exists()) and (e.get("judge") or {}).get("verdict") != "rejected"
-            if had:
+            # (2026-11-12: but a model its species' photographs do not recognise is not drawn: the likeness stage)
+            unlike = (((e.get("acceptance") or {}).get("rule") or {}).get("stages") or {}).get("likeness", {}).get("ok") is False
+            if had and not unlike:
                 self.assertIsNotNone(fm.model_for(code), code)
 
     def test_lamar_models_are_served(self):

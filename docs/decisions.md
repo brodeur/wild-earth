@@ -9679,3 +9679,61 @@ Aaron chose "check, then merge". The check, on the home tile at 10:00 with the c
 Not checked still: two browsers as host and mirror, a phone-class GPU, the fur at speed, the gaits in the world after
 the swing bound (lineup only). The weak list in docs/avatar-realism.md stands: the big ungulates' short stride and the
 giraffe's walk come from rig legs that are short for the body, and merge with this.
+
+## 2026-11-12: Two gates before credits: the pose of a preview, the likeness of a model to photographs (pipeline/pose_gate.py, pipeline/likeness.py, pipeline/fauna_models.py; docs/avatar-realism.md "The gates before credits")
+
+Aaron chose "Build the gate". The coyote had passed every check and was not a coyote; the lion's first two previews
+and both of the coyote's had been judged by eye.
+
+- **The pose gate** (`pipeline/pose_gate.py`, written by a subagent to a brief and checked by me on its top-down
+  pictures and its tests). From a job's mesh: the head's turn against the trunk's centreline, the spine's bend, each
+  foot pair's stagger, four feet down. The body's axis is the line between the foot pairs' midpoints (a turned head
+  or a tail cannot skew it); each slice's centre is the middle of its width (an area mean wandered 1 to 2.5 degrees
+  between sampling seeds on a hollow shell); the trunk is taken between the upper legs and the mid-back's height (a
+  moose's antler read as a 14 degree bend without it). Limits 9.5 degrees, 3.5 degrees, 1.0 leg length, each in a gap
+  of the library's numbers below the known bad cases. The coyote's previews read 25.1 and 32.5 degrees (the 25 "by
+  eye" in yesterday's note was the second); the lion's 2.1.
+- **Half the library's heads are turned** (the sources of 11 of the 21 four-legged species' served models read over
+  9.5 degrees, 8 over 12.5, 5 over 20; the wolf 25.1; measured by me with the gate, 2026-11-12). Not acted on here:
+  no model was pulled for its pose, and the rule is applied to new previews only (`fauna_models.run`, before the
+  refine). The limit for the head is the weak call: 9.5 refuses about half of previews, 12.5 about four in ten.
+  Straightening the head in the build is the better answer and is the next step in the weak list.
+- **The likeness, first try: colour by body region. Measured and not adopted as the verdict.** Regions cut by one rule
+  from a photo's mask and a render's silhouette (belly line, back / flank / underside bands, legs, ends), CIELAB
+  medians against the flank, a cloud per species in its own spreads, a photo left out against every cloud: 42 % named
+  among seven species (chance 14 %), and the coyote's verdict flipped when a seventeenth measure joined. Kept as the
+  words beside a verdict (`coat`), nothing more.
+- **The likeness, adopted: recognition by a learned embedding.** DINOv2 small (Apache-2.0), the ONNX export
+  Xenova/dinov2-small (88 MB, SHA-256 pinned, git-ignored cache, run as data by OpenCV DNN). Aaron approved the
+  download when asked. Pictures are the animal alone on grey (the photo by the photo rule's mask, the model by its
+  silhouette), 224 px, the class token at unit length; a species' portrait is its photos' mean. A model is recognised
+  when its own species is the nearest of every species in the store and it reaches the floor nine in ten of the
+  species' own photos reach. No threshold is fitted to our verdicts.
+  - Photos, one left out: 169 of 188 on their own species, 12 species (90 %; chance 8 %); the wolf's 7 of 15.
+  - Served models with photos: 8 of 9 pass. The coyote fails: jackal 0.776, coyote 0.746. The wolf passes by 0.04.
+  - Recorded verdicts it can run on: agrees with 9 of 13; the four it does not see are two shape refusals (other
+    stages' work) and two grizzly coats (a cream blotch; a near-black coat, which stays nearer the grizzly's photos,
+    0.80, than the black bear's, 0.69).
+- **The model pictured is the generated source** (`render_source`: the job's textured mesh, drawn far faces first,
+  each face its texture's colour under a plain sky), so the gate can run on a refine before anything is built; the
+  built model's vertex colours are the fallback.
+- **In the rule** (`fauna_models.acceptance`, record format 2): a `likeness` stage after the check, for four-legged
+  models; not judged (and passing) without photos or without the weights on disk, so a clean checkout and the tests
+  never reach the network. `due` names a refine with a photo as the texture reference; `photo_rung` now takes the
+  species' most typical photo for a texture (`likeness.typical`) and keeps the model its species' photos recognise.
+  `fit_acceptance` runs the stage on each judged job's source.
+- **The coyote** has its by-eye rejection recorded as the judge's verdict (it was one, yesterday) and is refused by the
+  rule as well; the library's other 34 models are served as before (`--accept`: 0 changed). The hero index's `hold` is
+  written from the acceptance record (`tools/hero_model.py --holds`).
+- **Photos fetched** (CC0, CC BY, CC BY-SA; `library/animals/references/`): coyote, wolf, bison, mountain lion, and
+  for telling kin apart the black-backed jackal, the red fox and the black bear, beside the five the store had. `reference_photos.find`
+  takes a body plan and a count for a species the library has no card of.
+- **Weak calls, written down**: the head limit (above); the floor at the photos' tenth percentile (a model as good as
+  a typical photo passes, one as odd as the oddest tenth does not; with 7 photos, the badger's floor is 0.28 and
+  refuses nothing); recognition among the store's species only (the store must hold a new species' kin); the wolf's
+  thin margin; the photo sets' quality (dogs among the wolves, a photo of a screen among the coyotes: one fence drops
+  the far ones from the coat cloud, nothing drops them from the portrait).
+- **A process audit on the way**, at Aaron's request (notes folder, process-audit-2026-11-12.md): six hung `claude
+  plugin list` processes from Figma, a five-day-old headless Chrome and orphaned scratch servers stopped. My own photo
+  fetch had been taking six cores; it runs on one thread now.
+

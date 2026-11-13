@@ -27,7 +27,7 @@ keeps what it had.
 
 | stage | what it does | tool | gate |
 |---|---|---|---|
-| 1. Source | a generated mesh with a painted coat, standing square | `tools/meshy_generate.py`, `pipeline/fauna_models.py` (30 credits: preview 20 + 2K refine 10, or image-to-3D 30) | the model acceptance rule and the judge, as today |
+| 1. Source | a generated mesh with a painted coat, standing square | `tools/meshy_generate.py`, `pipeline/fauna_models.py` (30 credits: preview 20 + 2K refine 10, or image-to-3D 30) | the pose gate on the preview, before the refine is paid (`pipeline/pose_gate.py`); the model acceptance rule, which now ends in the likeness to photographs of the species (`pipeline/likeness.py`); see "The gates before credits" |
 | 2. Game tiers | the reduced tiers, the 20-joint skeleton fitted from geometry, the far tier's baked cycles | `tools/build_quadruped.py`, `tools/rig_quadruped.py`, `tools/bake_gait.mjs` | as today; these stay as the far tier and as the fallback |
 | 3. Hero tier | the source's surface on a clean 20,000-triangle mesh with new UVs, colour, normal and occlusion maps baked from the dense source, weights computed on the hero mesh itself, a tail chain, ear joints, a hair-length factor per vertex, two more LODs | `tools/hero_model.py` (Blender, headless) | alignment residual; eight pose tests (inverted faces, edge stretch, skin spanning the legs, trunk volume); bytes under 3 MB a species |
 | 4. On screen | hero LODs in the species' shared pool, the full hero with fur shells for the player's body, one draw a tier, lazy, with a switch | `client/src/hero.js`, `animalMaterial({hero})` | sampler and attribute counts read from the GL programs; frame cost by shell count; texture bytes |
@@ -140,7 +140,8 @@ What the run taught, each fixed as a rule: the described colours were misread ("
 tail); a furry mesh sized by mass came out a third too small, so a curated shoulder height now wins; the ear finder
 took a tip near the nose. And what it could not fix: a generator that will not always give a level, forward head (the
 coyote's is turned about 25 degrees in the source and it shows), and a painted coat more saturated than the animal.
-The pose is the gate to tighten: reject at the 20-credit preview, never at the refine.
+The pose is the gate to tighten: reject at the 20-credit preview, never at the refine (done the same day: "The gates
+before credits", below).
 
 On the home tile the hand-built lion is a faceted shape and the pipeline's is a cougar (`home_lion_before_after.jpg`,
 `home_lion_light_matched.jpg`, `lineup_lion_gaits.jpg`).
@@ -161,8 +162,65 @@ there, and the film's uneven time stamps are the machine's.
 **The coyote is built but held back.** Its generated coat is not a coyote's: a grey back with a black saddle and
 rufous legs, nearer a jackal, on a head turned in the source. The pipeline's colour check passed it; anyone who knows
 the animal would not. So the hero index can hold a species (`hold`, with the reason; the hand-built model draws), and
-the gate that let it through is the thing to fix: a likeness check against reference photographs of the species, not
-only against a description's colour words.
+the gate that let it through was the thing to fix: a likeness check against reference photographs of the species, not
+only against a description's colour words. That check now exists and refuses this coyote by measure (next section);
+the hold is written from the acceptance rule's record (`tools/hero_model.py --holds`), no longer by hand.
+
+## The gates before credits: pose and likeness (2026-11-12)
+
+Two rules now stand between the generator and the game, both for every four-legged species and neither written per
+species. Neither spends credits to run.
+
+**The pose gate** (`pipeline/pose_gate.py`, on a preview's mesh, before its 10-credit refine). Seen from above, the
+trunk's centreline is traced between the hind and the fore feet; the gate measures the head's turn from that line,
+the bend between the trunk's two halves, how far apart along the body each pair of feet stands (a stride), and that
+four feet are down. Limits: head 9.5 degrees, spine 3.5 degrees, stagger 1.0 leg length. Synthetic box animals with a
+known turn, bend and stride read within 1 degree and 0.03 leg lengths (`tests/test_pose_gate.py`).
+
+- It gets the known cases right: the coyote's two previews fail (head 25.1 and 32.5 degrees, spine 7.2 and 4.4) and
+  the lion's passes (2.1 and 1.0).
+- It also says something nobody had measured: **11 of the 21 four-legged species the game serves have a head turned
+  more than 9.5 degrees** in their source (8 more than 12.5; 5 more than 20: the wildebeest 36.0, the coyote 32.5,
+  the wolf 25.1, the wild dog 22.5, the mountain goat 22.2). Checked by eye on top-down pictures: those heads are
+  turned. They were accepted because a side view hides it. So about half of the generator's previews would be refused
+  at 9.5 degrees (at 12.5, the next gap in the library's numbers, about four in ten), which puts a species at about
+  50 credits, not 30, until the build can straighten a head (the weak list, item 1).
+
+**The likeness** (`pipeline/likeness.py`, on a refine's textured model, and as the last stage of the model acceptance
+rule). The model is pictured side-on from both sides in its own colours under a plain sky, cut out and set on grey;
+the species' openly licensed reference photos (the photo rule's, those it scores whole, clear and side-on) are cut out
+by their masks the same way. A network trained to tell pictures apart (DINOv2, small) gives each picture an
+embedding. A model is recognised when its own species' photos are the nearest of every species' in the store and it is
+as near them as nine in ten of them are to each other. Nothing in it is fitted to our verdicts.
+
+- **Can it name an animal at all?** Each photo was left out in turn and set against every species: 169 of 188 photos
+  of 12 species land on their own (90 %; chance is 8 %). Six of the 19 misses are wolf photos taken for coyotes; the
+  wolf's own photos are the weak set (7 of 15 land on the wolf).
+- **The coyote fails, for the reason a person gave.** It is nearer the photos of the black-backed jackal (0.776) than
+  the coyote's own (0.746), on both sides. The other eight served models with photos pass, each nearest its own
+  species by 0.13 to 0.35 (the grizzly's second is the black bear), except the wolf, which is nearest its own by 0.04
+  with the jackal second.
+  `likeness_hero_five.jpg` in the captures shows the five hero species beside their species' photos.
+- **Against the 13 recorded verdicts it can be run on, it agrees with 9.** It refuses the mountain goat with an ibex's
+  horns and brown patches and the coyote, and passes every accepted model. The four it does not see: two refused for
+  their shape (a pronghorn with an impala's horns, a legless badger), which the build's gate and the feature check
+  own, and two grizzly coats (a stark cream blotch, a near-black coat): a wrong patch on the right animal is not what
+  it measures.
+- **What was tried first and kept only as words.** Colour by body region (the trunk, and the back, underside, legs and
+  ends against the flank, in CIELAB, each in the photos' own spreads) named a left-out photo's species 42 % of the
+  time among seven species, and its verdict on the coyote flipped when one measure was added. It cannot decide. It
+  stays as the description beside a verdict ("the trunk 13 yellower than the photos'", the lion), for a texture
+  prompt or a person.
+- **In the pipeline.** A paid run measures each preview's pose before the refine, and each built model's likeness
+  after it; a model its species' photos do not recognise is re-refined once with the species' most typical photo as
+  the texture reference (10 credits) and the better of the two kept. The acceptance rule records the likeness stage
+  (`models.json`); a species with no photos in the store, or a checkout without the network's weights, is not judged
+  and not refused.
+
+Limits, plainly: the photo sets are small (7 to 26 readable photos a species) and uneven (iNaturalist's wolf includes
+dogs); between close kin the margins are a few hundredths; a model is told only from the species whose photos are in
+the store (12 on 2026-11-12, among them the wolf, coyote, jackal, red fox and black bear), so a new species needs its kin's photos
+fetched with its own; the picture is the generated source's, not the hero's graded map.
 
 **The hero answers the light as the old models do.** The first home captures looked too bright, so both paths were
 given the same flat grey and the pixels read, in sun, under trees, at 9 and at 17 and in the misty arrival: they agree
@@ -202,8 +260,12 @@ standing in the scene's light.
    bobcat, black bear, fox, otter and the rabbits were hand-built or reduced from previews Meshy has since deleted (it
    keeps output three days). Each needs a new generation (30 to 50 credits, so about 300 for the eight) and the loader
    wrapper. The deer is the hard one: it plays hero clips on its own skeleton, not the engine's. The rabbits need the
-   hero tool to handle the lagomorph rig. Before spending: a pose gate at the preview that measures the head's turn and
-   the legs' spread instead of trusting the eye.
+   hero tool to handle the lagomorph rig. Both gates now stand before the spending (above), and the pose gate
+   changes the sum: half the generator's previews have a turned head, so a species is nearer 50 credits than 30 and
+   the 347 credits above the reserve are six or seven species, not eight. **Straightening a turned head in the build**
+   (the turn is measured; turning the neck and head back about the neck's base is a rule, not a re-roll) would let
+   the gate pass a head it can fix and refuse only a bent spine or a stride. It would also fix the wolf, whose head is
+   turned 25 degrees in the game today.
 2. **The neck and the jaw.** One neck joint is why the cats cannot groom and the deer cannot scratch, and why a head
    turned far looks like a roll. No jaw is why there is no yawn, no real chewing and no carrying
    ([behaviour-rig.md](behaviour-rig.md) item 3). A neck chain of three and a jaw, added the way the ears were.
@@ -233,6 +295,13 @@ that failed once on a loaded machine (load 17) and passed on the next run.
 
 ## Licences
 
+- The likeness gate's reference photos are CC0, CC BY or CC BY-SA only (iNaturalist research grade and Wikimedia
+  Commons), each with its licence, author and page in `library/animals/references/<code>.json`. The photos themselves
+  stay in the git-ignored cache and are never shipped; nothing of them enters a model unless a refine copies a coat
+  from one, and then the job records it, as before.
+- The embedding network is DINOv2 small (Apache-2.0; Oquab et al. 2023), the ONNX export Xenova/dinov2-small from
+  Hugging Face (88 MB), pinned by SHA-256 in `pipeline/likeness.py`, kept in the git-ignored cache and run as data by
+  OpenCV, as the photo rule's two segmenters are. Aaron approved the download on 2026-11-12. Nothing of it ships.
 - Generated models are the account holder's under Meshy's paid-plan terms and ship under the project's CC BY-SA, as
   before; the hero tier is derived from the same jobs and records the source task in `extras.hero`.
 - Meshy's own rigging is for humanoids only; the animal shape models (SMAL and its relatives) are licensed for

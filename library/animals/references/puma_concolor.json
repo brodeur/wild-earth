@@ -1,0 +1,3348 @@
+{
+ "format": 2,
+ "code": "puma_concolor",
+ "scientific": "Puma concolor",
+ "plan": "quadruped",
+ "retrieved": "2026-11-12",
+ "by": "pipeline/reference_photos.py",
+ "licences": "CC0, CC BY or CC BY-SA only, each photo's own",
+ "chosen": "commons_190623445",
+ "candidates": [
+  {
+   "source": "wikimedia commons",
+   "id": "commons_190623445",
+   "licence": "CC BY 4.0",
+   "author": "TonyredgraaveMPCNGR3.5",
+   "attribution": "TonyredgraaveMPCNGR3.5, CC BY 4.0, via Wikimedia Commons (File:Craneo de Puma-Vista lateral Izquierda.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Craneo_de_Puma-Vista_lateral_Izquierda.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Craneo_de_Puma-Vista_lateral_Izquierda.jpg/500px-Craneo_de_Puma-Vista_lateral_Izquierda.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Craneo_de_Puma-Vista_lateral_Izquierda.jpg/1280px-Craneo_de_Puma-Vista_lateral_Izquierda.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_190623445/photo.jpg",
+   "score": {
+    "total": 0.234,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.926,
+    "band_px": 3.14,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.5,
+    "stance": 0.887,
+    "spread": 1.5,
+    "lean": 0.8,
+    "belly_gap": 0.824,
+    "leg_zone": 0.18,
+    "leans": [
+     -1.5,
+     0.0
+    ],
+    "lifts": [
+     0.005,
+     0.069
+    ],
+    "plain": 0.622,
+    "colour": 1.0,
+    "box": [
+     0.018,
+     0.087,
+     0.854,
+     0.785
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true
+   },
+   "file_large": "pipeline/_cache/references/puma_concolor/commons_190623445_large/photo.jpg",
+   "file_crop": "pipeline/_cache/references/puma_concolor/commons_190623445_crop/reference.png"
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_419995125",
+   "licence": "CC0 1.0",
+   "author": "Paulo Mascaretti",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/236102428",
+   "photo_page": "https://www.inaturalist.org/photos/419995125",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/419995125/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/419995125/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_419995125/photo.jpg",
+   "score": {
+    "total": 0.207,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.072,
+    "band_px": 1.77,
+    "clear": 1.0,
+    "size": 0.619,
+    "solid": 1.0,
+    "head_end": 0.834,
+    "side": 1.0,
+    "legs": 0.542,
+    "stance": 0.897,
+    "spread": 15.1,
+    "lean": 16.6,
+    "belly_gap": 0.86,
+    "leg_zone": 0.185,
+    "leans": [
+     9.0,
+     24.1
+    ],
+    "lifts": [
+     0.011,
+     0.04
+    ],
+    "plain": 0.198,
+    "colour": 1.0,
+    "box": [
+     0.037,
+     0.454,
+     0.392,
+     0.592
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_175684650",
+   "licence": "CC BY 4.0",
+   "author": "Lightning Star Sky / Skyler Noah Wall",
+   "attribution": "(c) Lightning Star Sky / Skyler Noah Wall, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/104798988",
+   "photo_page": "https://www.inaturalist.org/photos/175684650",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/175684650/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/175684650/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_175684650/photo.jpg",
+   "score": {
+    "total": 0.087,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.541,
+    "band_px": 3.02,
+    "clear": 1.0,
+    "size": 0.478,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.542,
+    "spread": 25.9,
+    "lean": 16.6,
+    "belly_gap": 0.769,
+    "leg_zone": 0.366,
+    "leans": [
+     -3.6,
+     -29.5
+    ],
+    "lifts": [
+     0.013,
+     0.001
+    ],
+    "plain": 0.358,
+    "colour": 0.985,
+    "box": [
+     0.306,
+     0.414,
+     0.568,
+     0.733
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_4833289",
+   "licence": "CC BY-SA 4.0",
+   "author": "Judy Gallagher",
+   "attribution": "(c) Judy Gallagher, some rights reserved (CC BY-SA)",
+   "page": "http://www.inaturalist.org/observations/4075815",
+   "photo_page": "https://www.inaturalist.org/photos/4833289",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/4833289/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/4833289/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_4833289/photo.jpg",
+   "score": {
+    "total": 0.04,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.755,
+    "band_px": 2.87,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.138,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 6.9,
+    "lean": 7.8,
+    "belly_gap": 0.369,
+    "leg_zone": 0.426,
+    "leans": [
+     -11.2,
+     -4.3
+    ],
+    "lifts": [
+     0.025,
+     0.003
+    ],
+    "plain": 0.154,
+    "colour": 0.999,
+    "box": [
+     0.302,
+     0.204,
+     0.654,
+     0.904
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_434572484",
+   "licence": "CC0 1.0",
+   "author": "Paulo Mascaretti",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/243691357",
+   "photo_page": "https://www.inaturalist.org/photos/434572484",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/434572484/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/434572484/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_434572484/photo.jpg",
+   "score": {
+    "total": 0.019,
+    "whole": 1.0,
+    "single": 0.585,
+    "aspect": 1.931,
+    "band_px": 4.38,
+    "clear": 0.968,
+    "size": 0.76,
+    "solid": 1.0,
+    "head_end": 0.066,
+    "side": 1.0,
+    "legs": 0.692,
+    "stance": 0.142,
+    "spread": 29.3,
+    "lean": 14.0,
+    "belly_gap": 0.705,
+    "leg_zone": 0.203,
+    "leans": [
+     -23.2,
+     6.1,
+     -14.0
+    ],
+    "lifts": [
+     0.089,
+     0.0,
+     0.099
+    ],
+    "plain": 0.135,
+    "colour": 1.0,
+    "box": [
+     0.124,
+     0.3,
+     0.514,
+     0.604
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_616561393",
+   "licence": "CC BY 4.0",
+   "author": "Colin Croft",
+   "attribution": "(c) Colin Croft, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/338986322",
+   "photo_page": "https://www.inaturalist.org/photos/616561393",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/616561393/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/616561393/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_616561393/photo.jpg",
+   "score": {
+    "total": 0.006,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.805,
+    "band_px": 7.08,
+    "clear": 0.743,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.263,
+    "legs": 0.758,
+    "stance": 0.119,
+    "spread": 33.7,
+    "lean": 8.2,
+    "belly_gap": 0.488,
+    "leg_zone": 0.211,
+    "leans": [
+     3.7,
+     0.2,
+     33.9,
+     12.8
+    ],
+    "lifts": [
+     0.082,
+     0.0,
+     0.079,
+     0.06
+    ],
+    "plain": 0.177,
+    "colour": 0.997,
+    "box": [
+     0.214,
+     0.168,
+     0.726,
+     0.872
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_10820975",
+   "licence": "CC BY 4.0",
+   "author": "Bobby McCabe",
+   "attribution": "(c) Bobby McCabe, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/8170860",
+   "photo_page": "https://www.inaturalist.org/photos/10820975",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/10820975/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/10820975/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_10820975/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.996,
+    "aspect": 0.996,
+    "band_px": 10.04,
+    "clear": 0.497,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.422,
+    "side": 0.741,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 47.8,
+    "belly_gap": 0.731,
+    "leg_zone": 0.255,
+    "leans": [
+     -47.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.22,
+    "colour": 0.732,
+    "box": [
+     0.164,
+     0.117,
+     0.712,
+     0.943
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_10821010",
+   "licence": "CC BY 4.0",
+   "author": "Bobby McCabe",
+   "attribution": "(c) Bobby McCabe, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/8170860",
+   "photo_page": "https://www.inaturalist.org/photos/10821010",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/10821010/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/10821010/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_10821010/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.995,
+    "aspect": 2.328,
+    "band_px": 10.41,
+    "clear": 0.466,
+    "size": 1.0,
+    "solid": 0.695,
+    "head_end": 0.501,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 68.4,
+    "lean": 4.7,
+    "belly_gap": 0.818,
+    "leg_zone": 0.402,
+    "leans": [
+     -44.7,
+     -4.9,
+     14.3,
+     23.7
+    ],
+    "lifts": [
+     0.042,
+     0.026,
+     0.0,
+     0.011
+    ],
+    "plain": 0.511,
+    "colour": 0.951,
+    "box": [
+     0.014,
+     0.325,
+     0.894,
+     0.829
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_353725746",
+   "licence": "CC BY 4.0",
+   "author": "Colin Croft",
+   "attribution": "(c) Colin Croft, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/200482816",
+   "photo_page": "https://www.inaturalist.org/photos/353725746",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/353725746/medium.png",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/353725746/large.png",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_353725746/photo.png",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.852,
+    "band_px": 10.83,
+    "clear": 0.431,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.795,
+    "colour": 1.0,
+    "box": [
+     0.12,
+     0.207,
+     0.872,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_187431857",
+   "licence": "CC BY 4.0",
+   "author": "Colin Croft",
+   "attribution": "(c) Colin Croft, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/111058237",
+   "photo_page": "https://www.inaturalist.org/photos/187431857",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/187431857/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/187431857/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_187431857/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.172,
+    "band_px": 5.17,
+    "clear": 0.903,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.035,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.849,
+    "colour": 1.0,
+    "box": [
+     0.098,
+     0.053,
+     0.888,
+     0.949
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_471959813",
+   "licence": "CC BY 4.0",
+   "author": "Jared Shorma",
+   "attribution": "(c) Jared Shorma, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/262783318",
+   "photo_page": "https://www.inaturalist.org/photos/471959813",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/471959813/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/471959813/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_471959813/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.762,
+    "band_px": 3.17,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 1.4,
+    "belly_gap": 0.801,
+    "leg_zone": 0.402,
+    "leans": [
+     -1.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.265,
+    "colour": 1.0,
+    "box": [
+     0.112,
+     0.333,
+     0.778,
+     0.837
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_471959871",
+   "licence": "CC BY 4.0",
+   "author": "Jared Shorma",
+   "attribution": "(c) Jared Shorma, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/262783318",
+   "photo_page": "https://www.inaturalist.org/photos/471959871",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/471959871/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/471959871/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_471959871/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.619,
+    "band_px": 38.91,
+    "clear": 0.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.595,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.779,
+    "colour": 1.0,
+    "box": [
+     0.132,
+     0.285,
+     1.0,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_419995101",
+   "licence": "CC0 1.0",
+   "author": "Paulo Mascaretti",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/236102428",
+   "photo_page": "https://www.inaturalist.org/photos/419995101",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/419995101/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/419995101/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_419995101/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.976,
+    "band_px": 3.53,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.689,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 34.1,
+    "belly_gap": 0.775,
+    "leg_zone": 0.454,
+    "leans": [
+     34.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.198,
+    "colour": 1.0,
+    "box": [
+     0.596,
+     0.267,
+     0.996,
+     0.883
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_14677893",
+   "licence": "CC BY 4.0",
+   "author": "Mike Johanning",
+   "attribution": "(c) Mike Johanning, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/10541042",
+   "photo_page": "https://www.inaturalist.org/photos/14677893",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/14677893/medium.png",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/14677893/large.png",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_14677893/photo.png",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.25,
+    "band_px": 36.48,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.81,
+    "colour": 1.0,
+    "box": [
+     0.44,
+     0.566,
+     0.45,
+     0.58
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_14677897",
+   "licence": "CC BY 4.0",
+   "author": "Mike Johanning",
+   "attribution": "(c) Mike Johanning, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/10541042",
+   "photo_page": "https://www.inaturalist.org/photos/14677897",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/14677897/medium.png",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/14677897/large.png",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_14677897/photo.png",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.985,
+    "aspect": 3.4,
+    "band_px": 11.9,
+    "clear": 0.342,
+    "size": 0.288,
+    "solid": 1.0,
+    "head_end": 0.968,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 57.9,
+    "belly_gap": 0.817,
+    "leg_zone": 0.449,
+    "leans": [
+     57.9
+    ],
+    "lifts": [
+     0.024
+    ],
+    "plain": 0.826,
+    "colour": 1.0,
+    "box": [
+     0.396,
+     0.484,
+     0.668,
+     0.626
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_58167568",
+   "licence": "CC0 1.0",
+   "author": "Braden J. Judson",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/36764643",
+   "photo_page": "https://www.inaturalist.org/photos/58167568",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/58167568/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/58167568/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_58167568/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.89,
+    "band_px": 5.07,
+    "clear": 0.911,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.475,
+    "legs": 0.833,
+    "stance": 0.0,
+    "spread": 69.4,
+    "lean": 0.2,
+    "belly_gap": 0.53,
+    "leg_zone": 0.22,
+    "leans": [
+     34.5,
+     -34.9
+    ],
+    "lifts": [
+     0.033,
+     0.0
+    ],
+    "plain": 0.198,
+    "colour": 0.998,
+    "box": [
+     0.29,
+     0.165,
+     0.662,
+     0.793
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_482774432",
+   "licence": "CC BY 4.0",
+   "author": "Josh Noseworthy",
+   "attribution": "(c) Josh Noseworthy, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/268571967",
+   "photo_page": "https://www.inaturalist.org/photos/482774432",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/482774432/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/482774432/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_482774432/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.316,
+    "band_px": 2.51,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.458,
+    "side": 0.575,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 53.0,
+    "lean": 6.6,
+    "belly_gap": 0.215,
+    "leg_zone": 0.24,
+    "leans": [
+     -25.5,
+     -11.3,
+     7.7,
+     27.5,
+     -6.6
+    ],
+    "lifts": [
+     0.056,
+     0.113,
+     0.04,
+     0.0,
+     0.068
+    ],
+    "plain": 0.489,
+    "colour": 1.0,
+    "box": [
+     0.171,
+     0.312,
+     0.884,
+     0.666
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_154176654",
+   "licence": "CC BY 4.0",
+   "author": "Jorge Herreros de Lartundo",
+   "attribution": "(c) Jorge Herreros de Lartundo, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/93058789",
+   "photo_page": "https://www.inaturalist.org/photos/154176654",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/154176654/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/154176654/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_154176654/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.736,
+    "band_px": 7.55,
+    "clear": 0.704,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.742,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 8.8,
+    "belly_gap": 0.649,
+    "leg_zone": 0.393,
+    "leans": [
+     -8.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.274,
+    "colour": 0.988,
+    "box": [
+     0.188,
+     0.231,
+     0.674,
+     0.652
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_434572567",
+   "licence": "CC0 1.0",
+   "author": "Paulo Mascaretti",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/243691357",
+   "photo_page": "https://www.inaturalist.org/photos/434572567",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/434572567/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/434572567/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_434572567/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 3.092,
+    "band_px": 2.94,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.145,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 57.8,
+    "lean": 33.8,
+    "belly_gap": 0.692,
+    "leg_zone": 0.277,
+    "leans": [
+     48.0,
+     -9.8,
+     33.8
+    ],
+    "lifts": [
+     0.059,
+     0.05,
+     0.008
+    ],
+    "plain": 0.15,
+    "colour": 1.0,
+    "box": [
+     0.118,
+     0.354,
+     0.854,
+     0.712
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_138056660",
+   "licence": "CC BY 4.0",
+   "author": "Stella",
+   "attribution": "(c) Stella, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/84023792",
+   "photo_page": "https://www.inaturalist.org/photos/138056660",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/138056660/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/138056660/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_138056660/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.336,
+    "band_px": 2.78,
+    "clear": 1.0,
+    "size": 0.918,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.866,
+    "colour": 1.0,
+    "box": [
+     0.352,
+     0.276,
+     0.734,
+     0.706
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_138056703",
+   "licence": "CC BY 4.0",
+   "author": "Stella",
+   "attribution": "(c) Stella, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/84023792",
+   "photo_page": "https://www.inaturalist.org/photos/138056703",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/138056703/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/138056703/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_138056703/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.528,
+    "band_px": 3.07,
+    "clear": 1.0,
+    "size": 0.752,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.862,
+    "colour": 0.999,
+    "box": [
+     0.446,
+     0.3,
+     0.834,
+     0.682
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_368726962",
+   "licence": "CC BY 4.0",
+   "author": "Sam Kieschnick",
+   "attribution": "(c) Sam Kieschnick, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/208403128",
+   "photo_page": "https://www.inaturalist.org/photos/368726962",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/368726962/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/368726962/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_368726962/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 0.647,
+    "band_px": 4.03,
+    "clear": 0.998,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 11.4,
+    "belly_gap": 0.184,
+    "leg_zone": 0.459,
+    "leans": [
+     -11.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.215,
+    "colour": 1.0,
+    "box": [
+     0.144,
+     0.202,
+     0.832,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_368726988",
+   "licence": "CC BY 4.0",
+   "author": "Sam Kieschnick",
+   "attribution": "(c) Sam Kieschnick, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/208403128",
+   "photo_page": "https://www.inaturalist.org/photos/368726988",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/368726988/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/368726988/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_368726988/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 0.629,
+    "band_px": 5.05,
+    "clear": 0.913,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.007,
+    "side": 0.0,
+    "legs": 0.121,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 7.8,
+    "belly_gap": 0.495,
+    "leg_zone": 0.217,
+    "leans": [
+     7.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.182,
+    "colour": 1.0,
+    "box": [
+     0.283,
+     0.0,
+     1.0,
+     0.856
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_154176429",
+   "licence": "CC BY 4.0",
+   "author": "Jorge Herreros de Lartundo",
+   "attribution": "(c) Jorge Herreros de Lartundo, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/93058774",
+   "photo_page": "https://www.inaturalist.org/photos/154176429",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/154176429/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/154176429/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_154176429/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.58,
+    "band_px": 2.63,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.36,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 3.8,
+    "belly_gap": 0.733,
+    "leg_zone": 0.241,
+    "leans": [
+     -3.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.175,
+    "colour": 0.998,
+    "box": [
+     0.472,
+     0.318,
+     0.66,
+     0.805
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_177875898",
+   "licence": "CC BY-SA 4.0",
+   "author": "Oscar Alejandro Morales Ju\u00e1rez",
+   "attribution": "(c) Oscar Alejandro Morales Ju\u00e1rez, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/105943003",
+   "photo_page": "https://www.inaturalist.org/photos/177875898",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/177875898/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/177875898/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_177875898/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.775,
+    "band_px": 2.86,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.006,
+    "side": 0.167,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 39.9,
+    "belly_gap": 0.277,
+    "leg_zone": 0.374,
+    "leans": [
+     -39.9
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.214,
+    "colour": 0.975,
+    "box": [
+     0.24,
+     0.256,
+     0.662,
+     0.71
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_177876263",
+   "licence": "CC BY-SA 4.0",
+   "author": "Oscar Alejandro Morales Ju\u00e1rez",
+   "attribution": "(c) Oscar Alejandro Morales Ju\u00e1rez, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/105943003",
+   "photo_page": "https://www.inaturalist.org/photos/177876263",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/177876263/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/177876263/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_177876263/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 3.076,
+    "band_px": 2.82,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.123,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 52.1,
+    "belly_gap": 0.832,
+    "leg_zone": 0.557,
+    "leans": [
+     52.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.182,
+    "colour": 0.999,
+    "box": [
+     0.09,
+     0.429,
+     0.896,
+     0.779
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_737230378",
+   "licence": "CC BY 4.0",
+   "author": "Marcello Mastroianni Albuquerque Ara\u00fajo",
+   "attribution": "(c) Marcello Mastroianni Albuquerque Ara\u00fajo, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/401655803",
+   "photo_page": "https://www.inaturalist.org/photos/737230378",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/737230378/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/737230378/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_737230378/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_737230492",
+   "licence": "CC BY 4.0",
+   "author": "Marcello Mastroianni Albuquerque Ara\u00fajo",
+   "attribution": "(c) Marcello Mastroianni Albuquerque Ara\u00fajo, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/401655803",
+   "photo_page": "https://www.inaturalist.org/photos/737230492",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/737230492/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/737230492/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_737230492/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 0.732,
+    "band_px": 2.84,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.052,
+    "side": 0.079,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 18.6,
+    "belly_gap": 0.889,
+    "leg_zone": 0.443,
+    "leans": [
+     -18.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.203,
+    "colour": 0.986,
+    "box": [
+     0.0,
+     0.508,
+     0.48,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_485985363",
+   "licence": "CC BY 4.0",
+   "author": "Emily Turteltaub Nelson",
+   "attribution": "(c) Emily Turteltaub Nelson, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/270243472",
+   "photo_page": "https://www.inaturalist.org/photos/485985363",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/485985363/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/485985363/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_485985363/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.556,
+    "band_px": 3.69,
+    "clear": 1.0,
+    "size": 0.544,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 53.5,
+    "lean": 1.2,
+    "belly_gap": 0.778,
+    "leg_zone": 0.324,
+    "leans": [
+     -48.1,
+     1.2,
+     5.4
+    ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.148
+    ],
+    "plain": 0.246,
+    "colour": 1.0,
+    "box": [
+     0.344,
+     0.291,
+     0.68,
+     0.616
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_32909113",
+   "licence": "CC BY 4.0",
+   "author": "Gustavo Masuzzo",
+   "attribution": "(c) Gustavo Masuzzo, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/21283470",
+   "photo_page": "https://www.inaturalist.org/photos/32909113",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/32909113/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/32909113/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_32909113/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.425,
+    "band_px": 2.1,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 18.0,
+    "belly_gap": 0.222,
+    "leg_zone": 0.479,
+    "leans": [
+     -18.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.512,
+    "colour": 1.0,
+    "box": [
+     0.568,
+     0.081,
+     0.816,
+     0.958
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_184929991",
+   "licence": "CC BY 4.0",
+   "author": "Nicolas Olejnik",
+   "attribution": "(c) Nicolas Olejnik, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/109698302",
+   "photo_page": "https://www.inaturalist.org/photos/184929991",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/184929991/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/184929991/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_184929991/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.974,
+    "aspect": 1.325,
+    "band_px": 9.26,
+    "clear": 0.561,
+    "size": 0.021,
+    "solid": 1.0,
+    "head_end": 0.598,
+    "side": 1.0,
+    "legs": 0.4,
+    "stance": 0.0,
+    "spread": 111.8,
+    "lean": 4.4,
+    "belly_gap": 0.704,
+    "leg_zone": 0.168,
+    "leans": [
+     -60.3,
+     51.5
+    ],
+    "lifts": [
+     0.013,
+     0.026
+    ],
+    "plain": 0.353,
+    "colour": 1.0,
+    "box": [
+     0.26,
+     0.381,
+     0.464,
+     0.587
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_17286291",
+   "licence": "CC0 1.0",
+   "author": "Santa Monica Mountains National Recreation Area",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/12055800",
+   "photo_page": "https://www.inaturalist.org/photos/17286291",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/17286291/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/17286291/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_17286291/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.989,
+    "aspect": 1.607,
+    "band_px": 18.73,
+    "clear": 0.0,
+    "size": 0.636,
+    "solid": 1.0,
+    "head_end": 0.329,
+    "side": 1.0,
+    "legs": 0.103,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.5,
+    "belly_gap": 0.722,
+    "leg_zone": 0.202,
+    "leans": [
+     -0.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.262,
+    "colour": 1.0,
+    "box": [
+     0.4,
+     0.269,
+     0.67,
+     0.628
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_154176625",
+   "licence": "CC BY 4.0",
+   "author": "Jorge Herreros de Lartundo",
+   "attribution": "(c) Jorge Herreros de Lartundo, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/93058784",
+   "photo_page": "https://www.inaturalist.org/photos/154176625",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/154176625/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/154176625/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_154176625/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.898,
+    "aspect": 1.443,
+    "band_px": 4.53,
+    "clear": 0.956,
+    "size": 0.581,
+    "solid": 1.0,
+    "head_end": 0.118,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 41.5,
+    "belly_gap": 0.872,
+    "leg_zone": 0.352,
+    "leans": [
+     41.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.292,
+    "colour": 1.0,
+    "box": [
+     0.402,
+     0.354,
+     0.734,
+     0.7
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_57969724",
+   "licence": "CC BY 4.0",
+   "author": "Colin Croft",
+   "attribution": "(c) Colin Croft, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/36654475",
+   "photo_page": "https://www.inaturalist.org/photos/57969724",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/57969724/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/57969724/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_57969724/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.52,
+    "band_px": 2.84,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.526,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.348,
+    "leg_zone": 0.441,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.126,
+    "colour": 1.0,
+    "box": [
+     0.123,
+     0.078,
+     0.833,
+     0.948
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_57969725",
+   "licence": "CC BY 4.0",
+   "author": "Colin Croft",
+   "attribution": "(c) Colin Croft, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/36654475",
+   "photo_page": "https://www.inaturalist.org/photos/57969725",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/57969725/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/57969725/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_57969725/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.66,
+    "band_px": 3.13,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.632,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 6.1,
+    "belly_gap": 0.5,
+    "leg_zone": 0.698,
+    "leans": [
+     6.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.115,
+    "colour": 1.0,
+    "box": [
+     0.139,
+     0.08,
+     0.877,
+     0.932
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_102117655",
+   "licence": "CC BY 4.0",
+   "author": "Lexi Amico",
+   "attribution": "(c) Lexi Amico, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/63610210",
+   "photo_page": "https://www.inaturalist.org/photos/102117655",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/102117655/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/102117655/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_102117655/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.977,
+    "band_px": 1.57,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.18,
+    "legs": 0.054,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.152,
+    "leg_zone": 0.163,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.845,
+    "colour": 1.0,
+    "box": [
+     0.452,
+     0.422,
+     0.536,
+     0.571
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_245447330",
+   "licence": "CC0 1.0",
+   "author": "Dillon Alexander",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/143132749",
+   "photo_page": "https://www.inaturalist.org/photos/245447330",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/245447330/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/245447330/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_245447330/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.776,
+    "aspect": 0.657,
+    "band_px": 18.9,
+    "clear": 0.0,
+    "size": 0.624,
+    "solid": 1.0,
+    "head_end": 0.112,
+    "side": 0.0,
+    "legs": 0.067,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 3.4,
+    "belly_gap": 0.617,
+    "leg_zone": 0.174,
+    "leans": [
+     -3.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.202,
+    "colour": 1.0,
+    "box": [
+     0.301,
+     0.162,
+     0.613,
+     0.518
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_616561391",
+   "licence": "CC BY 4.0",
+   "author": "Colin Croft",
+   "attribution": "(c) Colin Croft, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/338986322",
+   "photo_page": "https://www.inaturalist.org/photos/616561391",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/616561391/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/616561391/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_616561391/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.577,
+    "band_px": 3.05,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
+    "legs": 0.45,
+    "stance": 1.0,
+    "spread": 10.6,
+    "lean": 7.5,
+    "belly_gap": 0.405,
+    "leg_zone": 0.174,
+    "leans": [
+     7.5,
+     11.6,
+     1.0
+    ],
+    "lifts": [
+     0.017,
+     0.001,
+     0.003
+    ],
+    "plain": 0.18,
+    "colour": 0.989,
+    "box": [
+     0.226,
+     0.048,
+     0.816,
+     0.918
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_300794670",
+   "licence": "CC BY 4.0",
+   "author": "Colin Croft",
+   "attribution": "(c) Colin Croft, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/173221723",
+   "photo_page": "https://www.inaturalist.org/photos/300794670",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/300794670/medium.png",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/300794670/large.png",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_300794670/photo.png",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.028,
+    "band_px": 7.18,
+    "clear": 0.735,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 58.6,
+    "belly_gap": 0.764,
+    "leg_zone": 0.397,
+    "leans": [
+     58.6
+    ],
+    "lifts": [
+     0.001
+    ],
+    "plain": 0.213,
+    "colour": 1.0,
+    "box": [
+     0.142,
+     0.222,
+     0.86,
+     0.74
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_137036739",
+   "licence": "CC BY 4.0",
+   "author": "Colin Croft",
+   "attribution": "(c) Colin Croft, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/83439416",
+   "photo_page": "https://www.inaturalist.org/photos/137036739",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/137036739/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/137036739/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_137036739/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.299,
+    "single": 1.0,
+    "aspect": 0.971,
+    "band_px": 2.92,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.677,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 26.9,
+    "belly_gap": 0.784,
+    "leg_zone": 0.285,
+    "leans": [
+     26.9
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.205,
+    "colour": 0.992,
+    "box": [
+     0.0,
+     0.176,
+     0.464,
+     0.9
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_459584970",
+   "licence": "CC BY 4.0",
+   "author": "Colin Croft",
+   "attribution": "(c) Colin Croft, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/256342509",
+   "photo_page": "https://www.inaturalist.org/photos/459584970",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/459584970/medium.png",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/459584970/large.png",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/puma_concolor/inat_459584970/photo.png",
+   "score": {
+    "total": 0.0,
+    "whole": 0.049,
+    "single": 1.0,
+    "aspect": 0.535,
+    "band_px": 2.99,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 10.2,
+    "belly_gap": 0.591,
+    "leg_zone": 0.423,
+    "leans": [
+     10.2
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.178,
+    "colour": 0.996,
+    "box": [
+     0.239,
+     0.096,
+     0.779,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_60684070",
+   "licence": "CC BY-SA 3.0",
+   "author": "Luis Miguel Bugallo S\u00e1nchez (Lmbuga)",
+   "attribution": "Luis Miguel Bugallo S\u00e1nchez (Lmbuga), CC BY-SA 3.0, via Wikimedia Commons (File:Puma concolor stanleyana - Texas Park - Lanzarote -PC08 (cropped).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Puma_concolor_stanleyana_-_Texas_Park_-_Lanzarote_-PC08_(cropped).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/26/Puma_concolor_stanleyana_-_Texas_Park_-_Lanzarote_-PC08_%28cropped%29.jpg/500px-Puma_concolor_stanleyana_-_Texas_Park_-_Lanzarote_-PC08_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/26/Puma_concolor_stanleyana_-_Texas_Park_-_Lanzarote_-PC08_%28cropped%29.jpg/1280px-Puma_concolor_stanleyana_-_Texas_Park_-_Lanzarote_-PC08_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_60684070/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.999,
+    "aspect": 1.121,
+    "band_px": 3.37,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 14.8,
+    "lean": 49.2,
+    "belly_gap": 0.618,
+    "leg_zone": 0.284,
+    "leans": [
+     -41.8,
+     -56.6
+    ],
+    "lifts": [
+     0.0,
+     0.088
+    ],
+    "plain": 0.156,
+    "colour": 0.989,
+    "box": [
+     0.136,
+     0.073,
+     0.898,
+     0.934
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_16675589",
+   "licence": "CC BY-SA 3.0",
+   "author": "Luis Miguel Bugallo S\u00e1nchez (Lmbuga)",
+   "attribution": "Luis Miguel Bugallo S\u00e1nchez (Lmbuga), CC BY-SA 3.0, via Wikimedia Commons (File:Puma concolor stanleyana - Texas Park - Lanzarote -PC06.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Puma_concolor_stanleyana_-_Texas_Park_-_Lanzarote_-PC06.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Puma_concolor_stanleyana_-_Texas_Park_-_Lanzarote_-PC06.jpg/500px-Puma_concolor_stanleyana_-_Texas_Park_-_Lanzarote_-PC06.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Puma_concolor_stanleyana_-_Texas_Park_-_Lanzarote_-PC06.jpg/1280px-Puma_concolor_stanleyana_-_Texas_Park_-_Lanzarote_-PC06.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_16675589/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.025,
+    "band_px": 2.57,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.812,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 29.7,
+    "lean": 15.8,
+    "belly_gap": 0.774,
+    "leg_zone": 0.339,
+    "leans": [
+     -8.2,
+     -5.0,
+     -34.7,
+     -23.5
+    ],
+    "lifts": [
+     0.0,
+     0.05,
+     0.124,
+     0.165
+    ],
+    "plain": 0.175,
+    "colour": 0.979,
+    "box": [
+     0.328,
+     0.168,
+     0.824,
+     0.895
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_90128513",
+   "licence": "CC BY-SA 4.0",
+   "author": "Shahzaib Damn Cruze",
+   "attribution": "Shahzaib Damn Cruze, CC BY-SA 4.0, via Wikimedia Commons (File:Puma (Puma concolor) - 20191228.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Puma_(Puma_concolor)_-_20191228.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/Puma_%28Puma_concolor%29_-_20191228.jpg/500px-Puma_%28Puma_concolor%29_-_20191228.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/Puma_%28Puma_concolor%29_-_20191228.jpg/1280px-Puma_%28Puma_concolor%29_-_20191228.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_90128513/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.147,
+    "band_px": 5.37,
+    "clear": 0.886,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.752,
+    "colour": 1.0,
+    "box": [
+     0.154,
+     0.057,
+     0.87,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_91291279",
+   "licence": "CC BY-SA 3.0",
+   "author": "Elaine R. Wilson",
+   "attribution": "Elaine R. Wilson, CC BY-SA 3.0, via Wikimedia Commons (File:Mountain Lion (C).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Mountain_Lion_(C).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Mountain_Lion_%28C%29.jpg/500px-Mountain_Lion_%28C%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Mountain_Lion_%28C%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_91291279/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.611,
+    "band_px": 1.71,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.408,
+    "stance": 0.0,
+    "spread": 68.2,
+    "lean": 18.4,
+    "belly_gap": 0.629,
+    "leg_zone": 0.169,
+    "leans": [
+     -52.5,
+     15.7
+    ],
+    "lifts": [
+     0.004,
+     0.05
+    ],
+    "plain": 0.793,
+    "colour": 1.0,
+    "box": [
+     0.124,
+     0.18,
+     0.746,
+     0.76
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_118477427",
+   "licence": "CC BY 2.0",
+   "author": "Carlos",
+   "attribution": "Carlos, CC BY 2.0, via Wikimedia Commons (File:Puma - 49044464307.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Puma_-_49044464307.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Puma_-_49044464307.jpg/500px-Puma_-_49044464307.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Puma_-_49044464307.jpg/1280px-Puma_-_49044464307.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_118477427/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.865,
+    "single": 1.0,
+    "aspect": 0.67,
+    "band_px": 6.35,
+    "clear": 0.804,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.698,
+    "side": 0.0,
+    "legs": 0.04,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 40.5,
+    "belly_gap": 0.294,
+    "leg_zone": 0.152,
+    "leans": [
+     40.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.6,
+    "colour": 1.0,
+    "box": [
+     0.041,
+     0.033,
+     1.0,
+     0.986
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_10745962",
+   "licence": "CC BY 2.0",
+   "author": "Bas Lammers",
+   "attribution": "Bas Lammers, CC BY 2.0, via Wikimedia Commons (File:Puma face.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Puma_face.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Puma_face.jpg/500px-Puma_face.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Puma_face.jpg/1280px-Puma_face.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_10745962/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.105,
+    "band_px": 9.88,
+    "clear": 0.51,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.051,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 6.9,
+    "belly_gap": 0.469,
+    "leg_zone": 0.161,
+    "leans": [
+     6.9
+    ],
+    "lifts": [
+     0.001
+    ],
+    "plain": 0.397,
+    "colour": 0.999,
+    "box": [
+     0.0,
+     0.0,
+     0.65,
+     0.883
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_117030208",
+   "licence": "CC BY-SA 4.0",
+   "author": "Stanglavine",
+   "attribution": "Stanglavine, CC BY-SA 4.0, via Wikimedia Commons (File:On\u00e7a-parda em Cascavel (1).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:On%C3%A7a-parda_em_Cascavel_(1).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/On%C3%A7a-parda_em_Cascavel_%281%29.jpg/500px-On%C3%A7a-parda_em_Cascavel_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/On%C3%A7a-parda_em_Cascavel_%281%29.jpg/1280px-On%C3%A7a-parda_em_Cascavel_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_117030208/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.383,
+    "aspect": 0.414,
+    "band_px": 10.28,
+    "clear": 0.477,
+    "size": 1.0,
+    "solid": 0.431,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.85,
+    "stance": 0.675,
+    "spread": 2.9,
+    "lean": 1.1,
+    "belly_gap": 0.723,
+    "leg_zone": 0.222,
+    "leans": [
+     1.5,
+     -1.0,
+     -1.3,
+     -1.4
+    ],
+    "lifts": [
+     0.0,
+     0.025,
+     0.056,
+     0.086
+    ],
+    "plain": 0.101,
+    "colour": 0.999,
+    "box": [
+     0.51,
+     0.331,
+     0.674,
+     0.944
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "solid"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_58888908",
+   "licence": "CC BY-SA 4.0",
+   "author": "Humbsmauro Mauro",
+   "attribution": "Humbsmauro Mauro, CC BY-SA 4.0, via Wikimedia Commons (File:On\u00e7a em Vassununga.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:On%C3%A7a_em_Vassununga.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f1/On%C3%A7a_em_Vassununga.jpg/500px-On%C3%A7a_em_Vassununga.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f1/On%C3%A7a_em_Vassununga.jpg/1280px-On%C3%A7a_em_Vassununga.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_58888908/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_131680231",
+   "licence": "CC BY 4.0",
+   "author": "Unknown authorUnknown author",
+   "attribution": "Unknown authorUnknown author, CC BY 4.0, via Wikimedia Commons (File:Gendarmeria-puso-a-resguardo-un-ejemplar-de-puma-concolor.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Gendarmeria-puso-a-resguardo-un-ejemplar-de-puma-concolor.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/Gendarmeria-puso-a-resguardo-un-ejemplar-de-puma-concolor.jpg/500px-Gendarmeria-puso-a-resguardo-un-ejemplar-de-puma-concolor.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/1/17/Gendarmeria-puso-a-resguardo-un-ejemplar-de-puma-concolor.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_131680231/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.203,
+    "band_px": 5.53,
+    "clear": 0.872,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 18.9,
+    "belly_gap": 0.803,
+    "leg_zone": 0.256,
+    "leans": [
+     -18.9
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.322,
+    "colour": 0.958,
+    "box": [
+     0.05,
+     0.0,
+     0.952,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_90528014",
+   "licence": "CC BY-SA 4.0",
+   "author": "Dinorah Noemi Rayas, Emmanuel Taboada Cob\u00edan y Juan Pablo Esparza Carlos",
+   "attribution": "Dinorah Noemi Rayas, Emmanuel Taboada Cob\u00edan y Juan Pablo Esparza Carlos, CC BY-SA 4.0, via Wikimedia Commons (File:Puma en la Estaci\u00f3n Cient\u00edfica Las Joyas.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Puma_en_la_Estaci%C3%B3n_Cient%C3%ADfica_Las_Joyas.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/Puma_en_la_Estaci%C3%B3n_Cient%C3%ADfica_Las_Joyas.jpg/500px-Puma_en_la_Estaci%C3%B3n_Cient%C3%ADfica_Las_Joyas.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/4/46/Puma_en_la_Estaci%C3%B3n_Cient%C3%ADfica_Las_Joyas.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_90528014/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.966,
+    "aspect": 0.793,
+    "band_px": 8.47,
+    "clear": 0.628,
+    "size": 1.0,
+    "solid": 0.047,
+    "head_end": 0.0,
+    "side": 0.232,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 51.4,
+    "lean": 2.3,
+    "belly_gap": 0.623,
+    "leg_zone": 0.356,
+    "leans": [
+     -18.6,
+     -2.3,
+     32.8
+    ],
+    "lifts": [
+     0.175,
+     0.084,
+     0.0
+    ],
+    "plain": 0.294,
+    "colour": 1.0,
+    "box": [
+     0.098,
+     0.146,
+     0.534,
+     0.916
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance",
+     "solid"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_190623444",
+   "licence": "CC BY 4.0",
+   "author": "TonyredgraaveMPCNGR3.5",
+   "attribution": "TonyredgraaveMPCNGR3.5, CC BY 4.0, via Wikimedia Commons (File:Craneo de Puma-Vista dorsal.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Craneo_de_Puma-Vista_dorsal.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/Craneo_de_Puma-Vista_dorsal.jpg/500px-Craneo_de_Puma-Vista_dorsal.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/Craneo_de_Puma-Vista_dorsal.jpg/1280px-Craneo_de_Puma-Vista_dorsal.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_190623444/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.363,
+    "band_px": 2.16,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 83.9,
+    "lean": 16.9,
+    "belly_gap": 0.553,
+    "leg_zone": 0.248,
+    "leans": [
+     58.9,
+     -25.0
+    ],
+    "lifts": [
+     0.004,
+     0.022
+    ],
+    "plain": 0.892,
+    "colour": 1.0,
+    "box": [
+     0.168,
+     0.184,
+     0.904,
+     0.949
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_84774100",
+   "licence": "CC BY 2.0",
+   "author": "James St. John",
+   "attribution": "James St. John, CC BY 2.0, via Wikimedia Commons (File:Puma concolor (mountain lion) (southern Colorado, USA) 3 (49188593543).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Puma_concolor_(mountain_lion)_(southern_Colorado,_USA)_3_(49188593543).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Puma_concolor_%28mountain_lion%29_%28southern_Colorado%2C_USA%29_3_%2849188593543%29.jpg/500px-Puma_concolor_%28mountain_lion%29_%28southern_Colorado%2C_USA%29_3_%2849188593543%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Puma_concolor_%28mountain_lion%29_%28southern_Colorado%2C_USA%29_3_%2849188593543%29.jpg/1280px-Puma_concolor_%28mountain_lion%29_%28southern_Colorado%2C_USA%29_3_%2849188593543%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_84774100/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.97,
+    "aspect": 1.218,
+    "band_px": 9.96,
+    "clear": 0.503,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 6.6,
+    "belly_gap": 0.601,
+    "leg_zone": 0.269,
+    "leans": [
+     6.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.246,
+    "colour": 1.0,
+    "box": [
+     0.016,
+     0.132,
+     0.486,
+     0.654
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_77130",
+   "licence": "CC BY-SA 3.0",
+   "author": "",
+   "attribution": "unknown, CC BY-SA 3.0, via Wikimedia Commons (File:MountainLion.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:MountainLion.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/MountainLion.jpg/500px-MountainLion.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/5/58/MountainLion.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_77130/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.498,
+    "single": 1.0,
+    "aspect": 1.202,
+    "band_px": 3.1,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.131,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 1.4,
+    "belly_gap": 0.477,
+    "leg_zone": 0.225,
+    "leans": [
+     -1.4
+    ],
+    "lifts": [
+     0.003
+    ],
+    "plain": 0.212,
+    "colour": 1.0,
+    "box": [
+     0.0,
+     0.023,
+     0.87,
+     0.964
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_190623442",
+   "licence": "CC BY 4.0",
+   "author": "TonyredgraaveMPCNGR3.5",
+   "attribution": "TonyredgraaveMPCNGR3.5, CC BY 4.0, via Wikimedia Commons (File:Craneo de Puma-Vista frontal.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Craneo_de_Puma-Vista_frontal.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Craneo_de_Puma-Vista_frontal.jpg/500px-Craneo_de_Puma-Vista_frontal.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Craneo_de_Puma-Vista_frontal.jpg/1280px-Craneo_de_Puma-Vista_frontal.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_190623442/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.176,
+    "band_px": 4.08,
+    "clear": 0.993,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.094,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 1.4,
+    "belly_gap": 0.9,
+    "leg_zone": 0.195,
+    "leans": [
+     -1.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.721,
+    "colour": 0.999,
+    "box": [
+     0.038,
+     0.236,
+     0.746,
+     0.736
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_164385918",
+   "licence": "CC0",
+   "author": "TonyredgraaveMPCNGR3.5",
+   "attribution": "TonyredgraaveMPCNGR3.5, CC0, via Wikimedia Commons (File:Vista lateral izquierda de cr\u00e1neo De ejemplar juvenil de Puma (Puma concolor).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Vista_lateral_izquierda_de_cr%C3%A1neo_De_ejemplar_juvenil_de_Puma_(Puma_concolor).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Vista_lateral_izquierda_de_cr%C3%A1neo_De_ejemplar_juvenil_de_Puma_%28Puma_concolor%29.jpg/500px-Vista_lateral_izquierda_de_cr%C3%A1neo_De_ejemplar_juvenil_de_Puma_%28Puma_concolor%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Vista_lateral_izquierda_de_cr%C3%A1neo_De_ejemplar_juvenil_de_Puma_%28Puma_concolor%29.jpg/1280px-Vista_lateral_izquierda_de_cr%C3%A1neo_De_ejemplar_juvenil_de_Puma_%28Puma_concolor%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_164385918/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.503,
+    "band_px": 1.63,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.035,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 5.8,
+    "belly_gap": 0.084,
+    "leg_zone": 0.148,
+    "leans": [
+     -5.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.605,
+    "colour": 1.0,
+    "box": [
+     0.262,
+     0.139,
+     0.71,
+     0.669
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_22460388",
+   "licence": "CC BY-SA 3.0",
+   "author": "CHUCAO",
+   "attribution": "CHUCAO, CC BY-SA 3.0, via Wikimedia Commons (File:Puma concolor cabrerae.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Puma_concolor_cabrerae.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Puma_concolor_cabrerae.jpg/500px-Puma_concolor_cabrerae.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Puma_concolor_cabrerae.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_22460388/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.822,
+    "band_px": 5.79,
+    "clear": 0.851,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 4.9,
+    "lean": 24.6,
+    "belly_gap": 0.881,
+    "leg_zone": 0.404,
+    "leans": [
+     27.0,
+     22.1
+    ],
+    "lifts": [
+     0.0,
+     0.178
+    ],
+    "plain": 0.151,
+    "colour": 0.998,
+    "box": [
+     0.024,
+     0.186,
+     0.848,
+     0.818
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_127941473",
+   "licence": "CC BY-SA 3.0",
+   "author": "Kokosdieb",
+   "attribution": "Kokosdieb, CC BY-SA 3.0, via Wikimedia Commons (File:Mapa v\u00fdskytu pumy americk\u00e9 (2010).png)",
+   "page": "https://commons.wikimedia.org/wiki/File:Mapa_v%C3%BDskytu_pumy_americk%C3%A9_(2010).png",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/Mapa_v%C3%BDskytu_pumy_americk%C3%A9_%282010%29.png/500px-Mapa_v%C3%BDskytu_pumy_americk%C3%A9_%282010%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/3/35/Mapa_v%C3%BDskytu_pumy_americk%C3%A9_%282010%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_127941473/photo.png",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.625,
+    "band_px": 5.31,
+    "clear": 0.891,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.429,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 8.5,
+    "belly_gap": 0.78,
+    "leg_zone": 0.499,
+    "leans": [
+     -8.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.675,
+    "colour": 0.988,
+    "box": [
+     0.093,
+     0.104,
+     0.904,
+     0.973
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_79998675",
+   "licence": "CC BY-SA 4.0",
+   "author": "Ferna.mf",
+   "attribution": "Ferna.mf, CC BY-SA 4.0, via Wikimedia Commons (File:Parque Nacional Torres del Paine - XII Region de Magallanes y La Antartica Chilena - Pumas.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Parque_Nacional_Torres_del_Paine_-_XII_Region_de_Magallanes_y_La_Antartica_Chilena_-_Pumas.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/75/Parque_Nacional_Torres_del_Paine_-_XII_Region_de_Magallanes_y_La_Antartica_Chilena_-_Pumas.jpg/500px-Parque_Nacional_Torres_del_Paine_-_XII_Region_de_Magallanes_y_La_Antartica_Chilena_-_Pumas.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/75/Parque_Nacional_Torres_del_Paine_-_XII_Region_de_Magallanes_y_La_Antartica_Chilena_-_Pumas.jpg/1280px-Parque_Nacional_Torres_del_Paine_-_XII_Region_de_Magallanes_y_La_Antartica_Chilena_-_Pumas.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_79998675/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.083,
+    "band_px": 26.97,
+    "clear": 0.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.345,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.128,
+    "colour": 0.849,
+    "box": [
+     0.0,
+     0.03,
+     0.602,
+     0.862
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_69197079",
+   "licence": "CC BY 2.0",
+   "author": "California Department of Fish and Wildlife from Sacramento, CA, USA",
+   "attribution": "California Department of Fish and Wildlife from Sacramento, CA, USA, CC BY 2.0, via Wikimedia Commons (File:Lion 8 (39345500422).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lion_8_(39345500422).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Lion_8_%2839345500422%29.jpg/500px-Lion_8_%2839345500422%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Lion_8_%2839345500422%29.jpg/1280px-Lion_8_%2839345500422%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_69197079/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.076,
+    "single": 0.988,
+    "aspect": 1.231,
+    "band_px": 17.67,
+    "clear": 0.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.088,
+    "side": 1.0,
+    "legs": 0.442,
+    "stance": 0.0,
+    "spread": 57.5,
+    "lean": 8.1,
+    "belly_gap": 0.565,
+    "leg_zone": 0.173,
+    "leans": [
+     -20.6,
+     36.9
+    ],
+    "lifts": [
+     0.0,
+     0.0
+    ],
+    "plain": 0.086,
+    "colour": 1.0,
+    "box": [
+     0.038,
+     0.029,
+     0.934,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_65202412",
+   "licence": "CC BY-SA 4.0",
+   "author": "\u63ac\u8336",
+   "attribution": "\u63ac\u8336, CC BY-SA 4.0, via Wikimedia Commons (File:Puma concolor in Akita Omoriyama Zoo 20170326.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Puma_concolor_in_Akita_Omoriyama_Zoo_20170326.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3b/Puma_concolor_in_Akita_Omoriyama_Zoo_20170326.jpg/500px-Puma_concolor_in_Akita_Omoriyama_Zoo_20170326.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3b/Puma_concolor_in_Akita_Omoriyama_Zoo_20170326.jpg/1280px-Puma_concolor_in_Akita_Omoriyama_Zoo_20170326.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_65202412/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.764,
+    "band_px": 4.94,
+    "clear": 0.922,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.636,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 1.6,
+    "belly_gap": 0.701,
+    "leg_zone": 0.323,
+    "leans": [
+     -1.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.159,
+    "colour": 0.999,
+    "box": [
+     0.056,
+     0.299,
+     0.984,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_105436222",
+   "licence": "CC BY-SA 4.0",
+   "author": "Richard Hatakeyama",
+   "attribution": "Richard Hatakeyama, CC BY-SA 4.0, via Wikimedia Commons (File:Puma (Puma concolor) at the Rio Doce state park 001.png)",
+   "page": "https://commons.wikimedia.org/wiki/File:Puma_(Puma_concolor)_at_the_Rio_Doce_state_park_001.png",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Puma_%28Puma_concolor%29_at_the_Rio_Doce_state_park_001.png/500px-Puma_%28Puma_concolor%29_at_the_Rio_Doce_state_park_001.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Puma_%28Puma_concolor%29_at_the_Rio_Doce_state_park_001.png/1280px-Puma_%28Puma_concolor%29_at_the_Rio_Doce_state_park_001.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_105436222/photo.png",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.981,
+    "band_px": 2.1,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.007,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 102.0,
+    "lean": 24.4,
+    "belly_gap": 0.643,
+    "leg_zone": 0.327,
+    "leans": [
+     -60.0,
+     16.4,
+     42.0,
+     27.7,
+     24.4
+    ],
+    "lifts": [
+     0.061,
+     0.0,
+     0.014,
+     0.075,
+     0.154
+    ],
+    "plain": 0.178,
+    "colour": 0.994,
+    "box": [
+     0.074,
+     0.338,
+     0.922,
+     0.916
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_117030206",
+   "licence": "CC BY-SA 4.0",
+   "author": "Stanglavine",
+   "attribution": "Stanglavine, CC BY-SA 4.0, via Wikimedia Commons (File:On\u00e7a-parda em Cascavel (2).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:On%C3%A7a-parda_em_Cascavel_(2).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/On%C3%A7a-parda_em_Cascavel_%282%29.jpg/500px-On%C3%A7a-parda_em_Cascavel_%282%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/On%C3%A7a-parda_em_Cascavel_%282%29.jpg/1280px-On%C3%A7a-parda_em_Cascavel_%282%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_117030206/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.523,
+    "aspect": 1.174,
+    "band_px": 8.98,
+    "clear": 0.585,
+    "size": 0.0,
+    "solid": 0.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.295,
+    "spread": 6.8,
+    "lean": 2.6,
+    "belly_gap": 0.812,
+    "leg_zone": 0.591,
+    "leans": [
+     -2.9,
+     -1.8,
+     -2.4,
+     -8.6
+    ],
+    "lifts": [
+     0.07,
+     0.041,
+     0.012,
+     0.113
+    ],
+    "plain": 0.142,
+    "colour": 0.997,
+    "box": [
+     0.508,
+     0.621,
+     0.67,
+     0.792
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance",
+     "solid"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_190623447",
+   "licence": "CC BY 4.0",
+   "author": "TonyredgraaveMPCNGR3.5",
+   "attribution": "TonyredgraaveMPCNGR3.5, CC BY 4.0, via Wikimedia Commons (File:Craneo de Puma-Vista lateral derecha.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Craneo_de_Puma-Vista_lateral_derecha.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Craneo_de_Puma-Vista_lateral_derecha.jpg/500px-Craneo_de_Puma-Vista_lateral_derecha.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Craneo_de_Puma-Vista_lateral_derecha.jpg/1280px-Craneo_de_Puma-Vista_lateral_derecha.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_190623447/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.995,
+    "aspect": 1.888,
+    "band_px": 7.85,
+    "clear": 0.679,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.005,
+    "legs": 0.417,
+    "stance": 0.0,
+    "spread": 85.6,
+    "lean": 0.0,
+    "belly_gap": 0.101,
+    "leg_zone": 0.17,
+    "leans": [
+     79.8,
+     -5.8,
+     0.0
+    ],
+    "lifts": [
+     0.0,
+     0.076,
+     0.0
+    ],
+    "plain": 0.776,
+    "colour": 0.986,
+    "box": [
+     0.044,
+     0.021,
+     0.788,
+     0.717
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_79998670",
+   "licence": "CC BY-SA 4.0",
+   "author": "Ferna.mf",
+   "attribution": "Ferna.mf, CC BY-SA 4.0, via Wikimedia Commons (File:Parque Nacional Torres del Paine - XII Region de Magallanes y La Antartica Chilena - Puma Concolor Atardecer.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Parque_Nacional_Torres_del_Paine_-_XII_Region_de_Magallanes_y_La_Antartica_Chilena_-_Puma_Concolor_Atardecer.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/01/Parque_Nacional_Torres_del_Paine_-_XII_Region_de_Magallanes_y_La_Antartica_Chilena_-_Puma_Concolor_Atardecer.jpg/500px-Parque_Nacional_Torres_del_Paine_-_XII_Region_de_Magallanes_y_La_Antartica_Chilena_-_Puma_Concolor_Atardecer.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/01/Parque_Nacional_Torres_del_Paine_-_XII_Region_de_Magallanes_y_La_Antartica_Chilena_-_Puma_Concolor_Atardecer.jpg/1280px-Parque_Nacional_Torres_del_Paine_-_XII_Region_de_Magallanes_y_La_Antartica_Chilena_-_Puma_Concolor_Atardecer.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/puma_concolor/commons_79998670/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.894,
+    "band_px": 10.46,
+    "clear": 0.462,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.926,
+    "side": 1.0,
+    "legs": 0.063,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 74.6,
+    "belly_gap": 0.428,
+    "leg_zone": 0.17,
+    "leans": [
+     -74.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.339,
+    "colour": 0.937,
+    "box": [
+     0.0,
+     0.231,
+     0.712,
+     0.793
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
+    ]
+   }
+  }
+ ]
+}

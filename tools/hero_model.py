@@ -509,7 +509,30 @@ def run_blender(mode, jobf, log):
         print(open(log).read()[-4000:]); raise SystemExit(f'blender {mode} failed (log {log})')
     print(f'INFO blender {mode}: {time.time() - t0:.0f} s')
 
+def holds(index):
+    """Every hero in the index is held (built, not shown: the hand-built model draws) while the library's acceptance
+    rule does not serve its species' model (library/animals/models.json `acceptance`: the build's gate, the appearance
+    check, the likeness to photographs, or a recorded verdict), with the rule's reason; released when it does."""
+    try: reg = json.load(open(ROOT / 'library' / 'animals' / 'models.json'))['species']
+    except (OSError, ValueError, KeyError): return index
+    for c, ent in index.get('species', {}).items():
+        a = (reg.get(c) or {}).get('acceptance') or {}
+        if a and not a.get('served'):
+            ov = a.get('override') or {}
+            why = '; '.join((a.get('rule') or {}).get('why') or []) or ov.get('why') or 'not served'
+            ent['hold'] = f"the acceptance rule does not serve this model ({a.get('at')}): {why}" + (f" [recorded verdict: {ov.get('why')}]" if ov.get('why') and ov.get('why') not in why else '')
+        else:
+            ent.pop('hold', None)
+    return index
+
+
 def main(argv):
+    if '--holds' in argv:   # the index's holds from the acceptance records alone (no build)
+        ip = ROOT / 'client' / 'assets' / 'hero' / 'index.json'
+        index = holds(json.load(open(ip)))
+        json.dump(index, open(ip, 'w'), indent=1)
+        for c, ent in index['species'].items(): print(c, 'HELD: ' + ent['hold'] if ent.get('hold') else 'shown')
+        return 0
     if not argv or argv[0] in ('-h', '--help'): print(open(__file__).read().split('import json')[0]); return 0
     code = argv[0]
     opt = lambda k, d=None: argv[argv.index(k) + 1] if k in argv else d
@@ -746,6 +769,7 @@ def main(argv):
     ent.update({'glb': gpath.name, 'triangles': tri_counts, 'joints': hj, 'ears': has_ears, 'tail': bool(tail), 'weights': win,
                 'bytes': stats['files'], 'maps': files})
     index['species'][code] = ent
+    holds(index)
     json.dump(index, open(ip, 'w'), indent=1)
 
     # verification renders and the sheet
