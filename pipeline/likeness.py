@@ -547,7 +547,9 @@ def _main_checkout() -> Path:
 
 
 def source_at(job: Path | str | None) -> Path | None:
-    """A job's generated model (model.glb), here or in the main checkout."""
+    """A job's generated model, here or in the main checkout, as a model is built from it: its model.glb, or the copy
+    beside it with a turned head set straight (pipeline/straighten.py source)."""
+    from . import straighten
     if not job:
         return None
     job = Path(job)
@@ -555,7 +557,7 @@ def source_at(job: Path | str | None) -> Path | None:
     for base in (ROOT, _main_checkout()):
         p = (base / rel / "model.glb") if not rel.is_absolute() else rel / "model.glb"
         if p.exists():
-            return p
+            return straighten.source(p.parent)
     return None
 
 

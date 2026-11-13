@@ -549,7 +549,10 @@ def main(argv):
     stats = {'species': code, 'source': str(job), 'game': str(game)}
 
     # 1. align
-    sjs, sbin = load_glb(job / 'model.glb'); sp = prim(sjs, sbin)
+    # the source as the game's model was built from it: a turned head set straight (pipeline/straighten.py)
+    sys.path.insert(0, str(ROOT)); from pipeline import straighten
+    source = straighten.source(job); stats['source_mesh'] = source.name
+    sjs, sbin = load_glb(source); sp = prim(sjs, sbin)
     S, idx, sinv = weld(sp['POSITION']); SN = sp['NORMAL'][idx]; SN /= np.maximum(np.linalg.norm(SN, axis=1, keepdims=True), 1e-12)
     gnode = {n['name']: n['mesh'] for n in gjs['nodes']}
     g0 = prim(gjs, gbin, gnode['lod0'])
@@ -557,7 +560,7 @@ def main(argv):
     stats['align'] = al; print('ALIGN', json.dumps(al))
 
     # 2-3. Blender build
-    jobd = {'source_glb': str(job / 'model.glb'), 'source_tex': str(job / 'texture_base_color.png'), 'matrix': M.tolist(), 'game_glb': str(game),
+    jobd = {'source_glb': str(source), 'source_tex': str(job / 'texture_base_color.png'), 'matrix': M.tolist(), 'game_glb': str(game),
             'work': str(work), 'tris': tris, 'bake_px': bake_px, 'ao_px': ao_px, 'withers_m': H, 'length_m': Lm}
     jobf = work / 'job.json'; json.dump(jobd, open(jobf, 'w'), indent=1)
     if '--skip-build' not in argv: run_blender('build', jobf, work / 'build.log')

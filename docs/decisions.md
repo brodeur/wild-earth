@@ -9737,3 +9737,53 @@ and both of the coyote's had been judged by eye.
   plugin list` processes from Figma, a five-day-old headless Chrome and orphaned scratch servers stopped. My own photo
   fetch had been taking six cores; it runs on one thread now.
 
+## 2026-11-12: A turned head is set straight in the mesh, and a body square to its axis, before anything is built (pipeline/straighten.py; the pose gate's head end on the solid; the build's tail rule; the horn check; branch claude/avatar-realism; not deployed)
+
+Aaron's answer to "Straighten turned heads in the build next?" was yes. The pose gate had found 11 of the 21 served
+four-legged sources with a head turned over 9.5 degrees, and refusing such previews would cost 20 credits each.
+
+- **One rule, on the source mesh, read by every consumer.** `pipeline/straighten.py source(job)` returns the job's
+  `model.glb`, or `model_straight.glb` written once beside it (with `straighten.json`: what was found). The quadruped
+  build (`fauna_models.build`), the hero build (`tools/hero_model.py`), the likeness picture (`likeness.source_at`) and
+  the pose check (`fauna_models.pose_check`) all read it. Only positions and normals change. Chosen over straightening
+  in the rig (the skeleton is fitted assuming a head on the midline, so its weights are already wrong on a turned
+  head) and over two implementations (Blender's build and the hero tool).
+- **The method**: a field over the mesh, 0 on the trunk and legs and 1 at the nose (the steady state of heat on the
+  welded mesh), so what hangs from the head goes with it and what touches the trunk stays; the neck and head's
+  centreline from above through the field's bands, weighted by the field's slope; one curve `a x^2 + b x^3` through
+  them; the curve laid straight on the trunk's line with its length kept. Tried and dropped on the way, each by
+  measure: the band middles used directly (headings swung 47 then -38 degrees on the moose, an edge in a hundred
+  stretched 4 to 13 times); the field seeded from the front 10 % slab (a turned head's slab is oblique, and the antlers
+  took different values left and right); a third and fourth term in the curve (on the test's lofted animal the stretch
+  rose from 1.18 to 1.66 and a bar along the head came out 17 degrees off, not 4).
+- **The head's end is found on the solid** (`pose_gate.head_end`): the part ahead of the fore feet filled on a grid of
+  0.5 % of the body's length, opened by a ball 2.5 % across, the front of the largest piece left. The moose's foremost
+  surface point was an antler tine. The gate's head turn is now measured to that end, so its numbers moved (bison 14.1
+  to 17.9, moose 6.5 to 10.3, wolf 25.1 to 26.2, cheetah 8.6 to 9.4) and its limit with them, 9.5 to 9.9, in the gap
+  9.4 (cheetah) to 10.3 (moose). By the new measure 12 of the 21 served sources were over the limit.
+- **Measured** (the 21 served sources; the library's 37 distinct meshes): 14 sources had a head turned over 3 degrees
+  (5.5 to 38.4) and all 14 read 0.1 to 2.3 afterwards; volume within 0.6 % and area within 0.7 %; an edge in a hundred
+  changed by a factor of 1.04 to 1.83; 28 of the 37 meshes pass the pose gate where 12 did; 20 of the 21 heads over
+  the limit were straightened (a moose from a photo was left at 3.4 and stays refused). Each of the 14 checked by eye
+  from above, the front and three-quarter.
+- **The body set square, found on the way.** The built wolf stood 16.7 degrees off the game's forward axis (the
+  mountain goat 12.0, the coyote 7.7): the generator's file had the whole animal turned and the build does not square
+  a text-to-3D mesh. `straighten` turns the mesh onto the nearest axis when the line from the hind feet to the fore
+  feet is over 2 degrees off (six of the 21; all now within 0.2).
+- **Two rules a square animal showed up, fixed as rules.** (1) `tools/build_quadruped.py`'s tail finder took the rear
+  face of the square goat's rump for a tail: a tail must now reach further along its surface from where it joins the
+  body than that join's half-width (14 tails 4.0 to 40.7, the hippo's stub 2.0, the goat's rump 0.74, the coyote's
+  fused tail 0.67; no other model's tail changed). (2) `appearance.feature_check` read the goat's horns as 1.5 cm
+  because one voxel nub kept it from the horn-coloured pieces: it looks at the pieces when the voxels find nothing or
+  only a nub that would read as no horn.
+- **Rebuilt**, no credits: the 14 game models and their clips, and the wolf's, bison's and coyote's hero tiers and
+  hero clips. `--accept`: 0 changes in what is served; the coyote is still refused by likeness (0.77 against the
+  jackal's 0.78). The bison's hero has ear joints now (found under the horns on the straight head).
+- **Limits written as limits** (`straighten.py`): untouched under 3 degrees (a call: nothing between 2.3 and 5.5 to
+  place it by); not tried over 45 degrees and refused when an edge in a hundred changes by over a factor of 2 (no
+  failing case is known: both only refuse what lies beyond what has been looked at, 38.4 degrees and 1.83).
+- **Not done**: a bent spine is still refused, not straightened (the wild dog is served with 6.3 degrees); the same
+  unbend along the trunk would do it. The build's tail finder still finds no tail on 7 of 21 quadrupeds. The rebuilt
+  models were not seen on a tile in the world, only in the lineup page (wolf, bison) and drawn from their files.
+- **Credits**: none spent. By the library's rate (28 of 37 meshes pass the gate) a species is about 37 credits, not
+  50, and the 347 above the reserve about nine species; that rate is from 37 meshes, a third of them from photos.
