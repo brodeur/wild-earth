@@ -482,8 +482,10 @@ def tile_centre(tile: str) -> tuple | None:
     return ((b[1] + b[3]) / 2, (b[0] + b[2]) / 2)
 
 
-def find(code: str, refresh: bool = False, log=print, tile: str | None = None) -> dict:
-    """The species' reference photos (module docstring), from the store unless refresh."""
+def find(code: str, refresh: bool = False, log=print, tile: str | None = None, plan: str | None = None, n: int = PER_SOURCE) -> dict:
+    """The species' reference photos (module docstring), from the store unless refresh. plan: the scoring's body plan for
+    a species the library has no model or trait card of (pipeline/likeness.py's comparison species); n: candidates asked
+    of each source."""
     sp = STORE / f"{code}.json"
     if sp.exists() and not refresh:
         try:
@@ -492,9 +494,9 @@ def find(code: str, refresh: bool = False, log=print, tile: str | None = None) -
             pass
     t = _traits(code)
     sci = t.get("scientific") or code.replace("_", " ").capitalize()
-    plan = plan_of(code)
+    plan = plan or plan_of(code)
     near = tile_centre(tile) if tile else None
-    cands = inaturalist(sci, PER_SOURCE + (12 if near else 0), near) + commons(sci)
+    cands = inaturalist(sci, n + (12 if near else 0), near) + commons(sci, n)
     described = described_colours(code, t)
     log(f"{code}: {len(cands)} openly licensed candidates ({sum(c['source'] == 'inaturalist' for c in cands)} iNaturalist, "
         f"{sum(c['source'] != 'inaturalist' for c in cands)} Commons)")
@@ -611,10 +613,11 @@ def judge_pick(code: str, photo_ids: str, why: str) -> dict:
     return c
 
 
-def ranked(code: str, skip: set | None = None, n: int = 2, use: str = "image") -> list[dict]:
+def ranked(code: str, skip: set | None = None, n: int = 2, use: str = "image", prefer: list | None = None) -> list[dict]:
     """The best n candidates usable for the use ('image': image-to-3D, every USABLE score; 'texture': a refine's texture
     reference, usable_for) not in skip (photo ids already used), each prepared (full size, cropped): the chosen one first,
-    then the rule's order (a judge's shortlist, where one was given with --pick, instead)."""
+    then the rule's order (a judge's shortlist, where one was given with --pick, instead). prefer: ids to try first, in
+    their order (pipeline/likeness.py typical: a texture reference is the species' most usual coat, not its best pose)."""
     d = find(code, log=lambda *_: None)
     out = []
     plan = d.get("plan", "quadruped")
@@ -623,7 +626,8 @@ def ranked(code: str, skip: set | None = None, n: int = 2, use: str = "image") -
     order = [c for c in d.get("candidates", []) if ok(c)]
     if d.get("shortlist"):
         order = [next(c for c in d["candidates"] if c["id"] == i) for i in d["shortlist"]]
-    for c in sorted(order, key=lambda c: c["id"] != d.get("chosen")):
+    first = {i: k for k, i in enumerate(prefer or [])}
+    for c in sorted(order, key=lambda c: (first.get(c["id"], len(first)), c["id"] != d.get("chosen"))):
         if len(out) >= n or (use == "image" and c["score"].get("total", 0) <= 0):
             break   # (a texture reference's total carries the pose scores it does not need)
         if skip and c["id"] in skip:

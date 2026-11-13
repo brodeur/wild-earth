@@ -1,0 +1,3139 @@
+{
+ "format": 2,
+ "code": "vulpes_vulpes",
+ "scientific": "Vulpes vulpes",
+ "plan": "quadruped",
+ "retrieved": "2026-11-12",
+ "by": "pipeline/reference_photos.py",
+ "licences": "CC0, CC BY or CC BY-SA only, each photo's own",
+ "chosen": "commons_23441752",
+ "candidates": [
+  {
+   "source": "wikimedia commons",
+   "id": "commons_23441752",
+   "licence": "CC BY-SA 3.0",
+   "author": "Juan Lacruz",
+   "attribution": "Juan Lacruz, CC BY-SA 3.0, via Wikimedia Commons (File:Vulpes vulpes 2.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Vulpes_vulpes_2.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Vulpes_vulpes_2.jpg/500px-Vulpes_vulpes_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Vulpes_vulpes_2.jpg/1280px-Vulpes_vulpes_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_23441752/photo.jpg",
+   "score": {
+    "total": 0.564,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.913,
+    "band_px": 3.54,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.863,
+    "spread": 7.0,
+    "lean": 6.7,
+    "belly_gap": 0.617,
+    "leg_zone": 0.347,
+    "leans": [
+     -1.1,
+     -6.7,
+     -8.1
+    ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.071
+    ],
+    "plain": 0.308,
+    "colour": 1.0,
+    "box": [
+     0.16,
+     0.171,
+     0.91,
+     0.76
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true
+   },
+   "file_large": "pipeline/_cache/references/vulpes_vulpes/commons_23441752_large/photo.jpg",
+   "file_crop": "pipeline/_cache/references/vulpes_vulpes/commons_23441752_crop/reference.png"
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_593398391",
+   "licence": "CC0 1.0",
+   "author": "Terry Brunholtz",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/327531235",
+   "photo_page": "https://www.inaturalist.org/photos/593398391",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/593398391/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/593398391/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_593398391/photo.jpg",
+   "score": {
+    "total": 0.255,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.554,
+    "band_px": 2.65,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.451,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.58,
+    "spread": 26.4,
+    "lean": 12.3,
+    "belly_gap": 0.581,
+    "leg_zone": 0.377,
+    "leans": [
+     12.3,
+     35.1,
+     8.7
+    ],
+    "lifts": [
+     0.002,
+     0.019,
+     0.002
+    ],
+    "plain": 0.213,
+    "colour": 0.999,
+    "box": [
+     0.116,
+     0.238,
+     0.688,
+     0.715
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_459151238",
+   "licence": "CC BY 4.0",
+   "author": "Rev. Lee A. Payne, Jr.",
+   "attribution": "(c) Rev. Lee A. Payne, Jr., some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/256126734",
+   "photo_page": "https://www.inaturalist.org/photos/459151238",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/459151238/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/459151238/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_459151238/photo.jpg",
+   "score": {
+    "total": 0.242,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.26,
+    "band_px": 2.97,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.396,
+    "spread": 20.9,
+    "lean": 23.1,
+    "belly_gap": 0.75,
+    "leg_zone": 0.355,
+    "leans": [
+     33.5,
+     12.6
+    ],
+    "lifts": [
+     0.012,
+     0.0
+    ],
+    "plain": 0.22,
+    "colour": 1.0,
+    "box": [
+     0.118,
+     0.162,
+     0.728,
+     0.889
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_558541533",
+   "licence": "CC BY 4.0",
+   "author": "Mickey Wu",
+   "attribution": "(c) Mickey Wu, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/309523400",
+   "photo_page": "https://www.inaturalist.org/photos/558541533",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/558541533/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/558541533/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_558541533/photo.jpg",
+   "score": {
+    "total": 0.091,
+    "whole": 0.822,
+    "single": 1.0,
+    "aspect": 1.977,
+    "band_px": 5.85,
+    "clear": 0.846,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.06,
+    "side": 1.0,
+    "legs": 0.642,
+    "stance": 0.381,
+    "spread": 30.3,
+    "lean": 15.2,
+    "belly_gap": 0.587,
+    "leg_zone": 0.197,
+    "leans": [
+     -30.3,
+     0.0
+    ],
+    "lifts": [
+     0.0,
+     0.038
+    ],
+    "plain": 0.734,
+    "colour": 1.0,
+    "box": [
+     0.478,
+     0.252,
+     1.0,
+     0.649
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_62915862",
+   "licence": "CC BY 4.0",
+   "author": "Mourad Harzallah",
+   "attribution": "(c) Mourad Harzallah, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/39644107",
+   "photo_page": "https://www.inaturalist.org/photos/62915862",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/62915862/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/62915862/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_62915862/photo.jpg",
+   "score": {
+    "total": 0.085,
+    "whole": 0.727,
+    "single": 1.0,
+    "aspect": 1.053,
+    "band_px": 4.56,
+    "clear": 0.953,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.01,
+    "side": 0.883,
+    "legs": 0.4,
+    "stance": 0.8,
+    "spread": 8.8,
+    "lean": 18.0,
+    "belly_gap": 0.468,
+    "leg_zone": 0.168,
+    "leans": [
+     25.7,
+     18.0,
+     16.9
+    ],
+    "lifts": [
+     0.017,
+     0.0,
+     0.022
+    ],
+    "plain": 0.184,
+    "colour": 0.998,
+    "box": [
+     0.108,
+     0.058,
+     0.86,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_613963002",
+   "licence": "CC BY 4.0",
+   "author": "Kristof Zyskowski",
+   "attribution": "(c) Kristof Zyskowski, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/337713510",
+   "photo_page": "https://www.inaturalist.org/photos/613963002",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/613963002/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/613963002/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_613963002/photo.jpg",
+   "score": {
+    "total": 0.054,
+    "whole": 0.278,
+    "single": 1.0,
+    "aspect": 1.594,
+    "band_px": 3.68,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.65,
+    "spread": 2.1,
+    "lean": 11.6,
+    "belly_gap": 0.809,
+    "leg_zone": 0.434,
+    "leans": [
+     10.5,
+     12.6
+    ],
+    "lifts": [
+     0.0,
+     0.088
+    ],
+    "plain": 0.188,
+    "colour": 1.0,
+    "box": [
+     0.2,
+     0.246,
+     1.0,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_176364754",
+   "licence": "CC BY 4.0",
+   "author": "Alexis Lours",
+   "attribution": "Alexis Lours, CC BY 4.0, via Wikimedia Commons (File:Red Fox drinking from a lake in Gennevilliers, France.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Red_Fox_drinking_from_a_lake_in_Gennevilliers,_France.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Red_Fox_drinking_from_a_lake_in_Gennevilliers%2C_France.jpg/500px-Red_Fox_drinking_from_a_lake_in_Gennevilliers%2C_France.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Red_Fox_drinking_from_a_lake_in_Gennevilliers%2C_France.jpg/1280px-Red_Fox_drinking_from_a_lake_in_Gennevilliers%2C_France.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_176364754/photo.jpg",
+   "score": {
+    "total": 0.028,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.071,
+    "band_px": 3.37,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.1,
+    "spread": 10.4,
+    "lean": 13.5,
+    "belly_gap": 0.914,
+    "leg_zone": 0.515,
+    "leans": [
+     -18.7,
+     -8.3
+    ],
+    "lifts": [
+     0.003,
+     0.132
+    ],
+    "plain": 0.14,
+    "colour": 0.999,
+    "box": [
+     0.09,
+     0.177,
+     0.732,
+     0.643
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_120827885",
+   "licence": "CC BY-SA 4.0",
+   "author": "JC Ferreira - Fotografia",
+   "attribution": "JC Ferreira - Fotografia, CC BY-SA 4.0, via Wikimedia Commons (File:Atentos.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Atentos.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Atentos.jpg/500px-Atentos.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Atentos.jpg/1280px-Atentos.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_120827885/photo.jpg",
+   "score": {
+    "total": 0.019,
+    "whole": 1.0,
+    "single": 0.989,
+    "aspect": 0.745,
+    "band_px": 6.4,
+    "clear": 0.8,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.578,
+    "side": 0.112,
+    "legs": 0.55,
+    "stance": 0.663,
+    "spread": 6.0,
+    "lean": 2.8,
+    "belly_gap": 0.564,
+    "leg_zone": 0.186,
+    "leans": [
+     5.8,
+     -0.2
+    ],
+    "lifts": [
+     0.087,
+     0.0
+    ],
+    "plain": 0.216,
+    "colour": 0.996,
+    "box": [
+     0.472,
+     0.024,
+     0.764,
+     0.613
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_206543593",
+   "licence": "CC BY-SA 4.0",
+   "author": "Kudaibergen Amirekul",
+   "attribution": "(c) Kudaibergen Amirekul, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/122018427",
+   "photo_page": "https://www.inaturalist.org/photos/206543593",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/206543593/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/206543593/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_206543593/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.233,
+    "band_px": 2.84,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 58.4,
+    "lean": 10.0,
+    "belly_gap": 0.51,
+    "leg_zone": 0.388,
+    "leans": [
+     -19.2,
+     39.2
+    ],
+    "lifts": [
+     0.047,
+     0.0
+    ],
+    "plain": 0.204,
+    "colour": 0.999,
+    "box": [
+     0.23,
+     0.141,
+     0.866,
+     0.913
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_206543449",
+   "licence": "CC BY-SA 4.0",
+   "author": "Kudaibergen Amirekul",
+   "attribution": "(c) Kudaibergen Amirekul, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/122018427",
+   "photo_page": "https://www.inaturalist.org/photos/206543449",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/206543449/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/206543449/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_206543449/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.43,
+    "single": 1.0,
+    "aspect": 1.667,
+    "band_px": 4.24,
+    "clear": 0.98,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.019,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.238,
+    "colour": 0.973,
+    "box": [
+     0.21,
+     0.141,
+     1.0,
+     0.85
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_21621926",
+   "licence": "CC BY 4.0",
+   "author": "Roman",
+   "attribution": "(c) Roman, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/14521146",
+   "photo_page": "https://www.inaturalist.org/photos/21621926",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/21621926/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/21621926/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_21621926/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.006,
+    "band_px": 15.92,
+    "clear": 0.007,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.034,
+    "side": 0.765,
+    "legs": 0.12,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 54.3,
+    "belly_gap": 0.578,
+    "leg_zone": 0.216,
+    "leans": [
+     54.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.266,
+    "colour": 0.966,
+    "box": [
+     0.14,
+     0.083,
+     0.81,
+     0.92
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_689693889",
+   "licence": "CC BY 4.0",
+   "author": "L\u00e9o Souillard",
+   "attribution": "(c) L\u00e9o Souillard, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/377175583",
+   "photo_page": "https://www.inaturalist.org/photos/689693889",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/689693889/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/689693889/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_689693889/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.042,
+    "band_px": 3.98,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.695,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.272,
+    "colour": 1.0,
+    "box": [
+     0.438,
+     0.165,
+     0.932,
+     0.877
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_689693903",
+   "licence": "CC BY 4.0",
+   "author": "L\u00e9o Souillard",
+   "attribution": "(c) L\u00e9o Souillard, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/377175583",
+   "photo_page": "https://www.inaturalist.org/photos/689693903",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/689693903/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/689693903/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_689693903/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.424,
+    "band_px": 2.62,
+    "clear": 1.0,
+    "size": 0.389,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 10.2,
+    "lean": 2.1,
+    "belly_gap": 0.795,
+    "leg_zone": 0.341,
+    "leans": [
+     6.7,
+     7.3,
+     -2.5,
+     -2.9
+    ],
+    "lifts": [
+     0.089,
+     0.18,
+     0.008,
+     0.079
+    ],
+    "plain": 0.219,
+    "colour": 1.0,
+    "box": [
+     0.288,
+     0.447,
+     0.57,
+     0.745
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_625838152",
+   "licence": "CC BY 4.0",
+   "author": "Stan Rullman",
+   "attribution": "(c) Stan Rullman, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/343552704",
+   "photo_page": "https://www.inaturalist.org/photos/625838152",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/625838152/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/625838152/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_625838152/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.955,
+    "band_px": 2.77,
+    "clear": 1.0,
+    "size": 0.354,
+    "solid": 1.0,
+    "head_end": 0.219,
+    "side": 0.637,
+    "legs": 0.056,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 39.8,
+    "belly_gap": 0.373,
+    "leg_zone": 0.165,
+    "leans": [
+     -39.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.885,
+    "colour": 0.999,
+    "box": [
+     0.21,
+     0.258,
+     0.464,
+     0.547
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_625838157",
+   "licence": "CC BY 4.0",
+   "author": "Stan Rullman",
+   "attribution": "(c) Stan Rullman, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/343552704",
+   "photo_page": "https://www.inaturalist.org/photos/625838157",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/625838157/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/625838157/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_625838157/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.148,
+    "band_px": 1.8,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.753,
+    "side": 1.0,
+    "legs": 0.059,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 37.5,
+    "belly_gap": 0.408,
+    "leg_zone": 0.167,
+    "leans": [
+     -37.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.527,
+    "colour": 0.999,
+    "box": [
+     0.646,
+     0.288,
+     0.77,
+     0.435
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_613962962",
+   "licence": "CC BY 4.0",
+   "author": "Kristof Zyskowski",
+   "attribution": "(c) Kristof Zyskowski, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/337713510",
+   "photo_page": "https://www.inaturalist.org/photos/613962962",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/613962962/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/613962962/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_613962962/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.714,
+    "band_px": 4.82,
+    "clear": 0.932,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.787,
+    "side": 0.036,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 8.0,
+    "belly_gap": 0.885,
+    "leg_zone": 0.44,
+    "leans": [
+     8.0
+    ],
+    "lifts": [
+     0.004
+    ],
+    "plain": 0.221,
+    "colour": 0.996,
+    "box": [
+     0.27,
+     0.147,
+     0.64,
+     0.925
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_541460005",
+   "licence": "CC BY 4.0",
+   "author": "Robyn Perkins",
+   "attribution": "(c) Robyn Perkins, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/300508043",
+   "photo_page": "https://www.inaturalist.org/photos/541460005",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/541460005/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/541460005/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_541460005/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.289,
+    "band_px": 4.65,
+    "clear": 0.946,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.267,
+    "stance": 0.0,
+    "spread": 42.7,
+    "lean": 23.9,
+    "belly_gap": 0.3,
+    "leg_zone": 0.152,
+    "leans": [
+     -4.3,
+     26.0,
+     21.8,
+     38.4
+    ],
+    "lifts": [
+     0.0,
+     0.047,
+     0.076,
+     0.0
+    ],
+    "plain": 0.254,
+    "colour": 0.998,
+    "box": [
+     0.252,
+     0.272,
+     0.796,
+     0.835
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_541460032",
+   "licence": "CC BY 4.0",
+   "author": "Robyn Perkins",
+   "attribution": "(c) Robyn Perkins, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/300508043",
+   "photo_page": "https://www.inaturalist.org/photos/541460032",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/541460032/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/541460032/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_541460032/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.775,
+    "band_px": 5.99,
+    "clear": 0.834,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.481,
+    "side": 0.188,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 19.1,
+    "belly_gap": 0.91,
+    "leg_zone": 0.292,
+    "leans": [
+     -19.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.252,
+    "colour": 0.994,
+    "box": [
+     0.324,
+     0.299,
+     0.6,
+     0.773
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_558540050",
+   "licence": "CC BY 4.0",
+   "author": "Mickey Wu",
+   "attribution": "(c) Mickey Wu, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/309523400",
+   "photo_page": "https://www.inaturalist.org/photos/558540050",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/558540050/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/558540050/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_558540050/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.417,
+    "band_px": 3.6,
+    "clear": 1.0,
+    "size": 0.641,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.733,
+    "stance": 0.0,
+    "spread": 35.0,
+    "lean": 35.0,
+    "belly_gap": 0.404,
+    "leg_zone": 0.208,
+    "leans": [
+     9.5,
+     44.5,
+     32.2,
+     44.5,
+     35.0
+    ],
+    "lifts": [
+     0.008,
+     0.024,
+     0.066,
+     0.049,
+     0.108
+    ],
+    "plain": 0.749,
+    "colour": 1.0,
+    "box": [
+     0.15,
+     0.339,
+     0.49,
+     0.7
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_462084371",
+   "licence": "CC0 1.0",
+   "author": "Nonbinary-Naturalist",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/257569881",
+   "photo_page": "https://www.inaturalist.org/photos/462084371",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/462084371/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/462084371/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_462084371/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.423,
+    "aspect": 2.793,
+    "band_px": 19.03,
+    "clear": 0.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 59.0,
+    "belly_gap": 0.886,
+    "leg_zone": 0.428,
+    "leans": [
+     -59.0
+    ],
+    "lifts": [
+     0.005
+    ],
+    "plain": 0.307,
+    "colour": 1.0,
+    "box": [
+     0.024,
+     0.484,
+     0.968,
+     0.822
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_456235813",
+   "licence": "CC BY 4.0",
+   "author": "reagan peschke",
+   "attribution": "(c) reagan peschke, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/254681491",
+   "photo_page": "https://www.inaturalist.org/photos/456235813",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/456235813/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/456235813/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_456235813/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.712,
+    "band_px": 2.3,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 52.6,
+    "lean": 26.7,
+    "belly_gap": 0.866,
+    "leg_zone": 0.405,
+    "leans": [
+     0.2,
+     1.7,
+     51.6,
+     52.8
+    ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.19,
+     0.19
+    ],
+    "plain": 0.167,
+    "colour": 0.999,
+    "box": [
+     0.155,
+     0.536,
+     0.853,
+     0.842
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_738292839",
+   "licence": "CC BY 4.0",
+   "author": "Joeb",
+   "attribution": "(c) Joeb, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/402187737",
+   "photo_page": "https://www.inaturalist.org/photos/738292839",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/738292839/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/738292839/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_738292839/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.216,
+    "band_px": 1.92,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.867,
+    "side": 1.0,
+    "legs": 0.425,
+    "stance": 0.56,
+    "spread": 26.8,
+    "lean": 3.6,
+    "belly_gap": 0.454,
+    "leg_zone": 0.171,
+    "leans": [
+     -15.5,
+     3.6,
+     11.3
+    ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "plain": 0.901,
+    "colour": 1.0,
+    "box": [
+     0.302,
+     0.138,
+     1.0,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_738292844",
+   "licence": "CC BY 4.0",
+   "author": "Joeb",
+   "attribution": "(c) Joeb, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/402187737",
+   "photo_page": "https://www.inaturalist.org/photos/738292844",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/738292844/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/738292844/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_738292844/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 0.942,
+    "band_px": 10.44,
+    "clear": 0.463,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.26,
+    "legs": 0.046,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 24.3,
+    "belly_gap": 0.186,
+    "leg_zone": 0.157,
+    "leans": [
+     24.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.839,
+    "colour": 1.0,
+    "box": [
+     0.176,
+     0.018,
+     0.792,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_415903855",
+   "licence": "CC BY 4.0",
+   "author": "Spencer Hurt",
+   "attribution": "(c) Spencer Hurt, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/233987558",
+   "photo_page": "https://www.inaturalist.org/photos/415903855",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/415903855/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/415903855/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_415903855/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.998,
+    "aspect": 1.372,
+    "band_px": 2.15,
+    "clear": 1.0,
+    "size": 0.887,
+    "solid": 1.0,
+    "head_end": 0.903,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.276,
+    "colour": 0.983,
+    "box": [
+     0.314,
+     0.279,
+     0.72,
+     0.701
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_415904135",
+   "licence": "CC BY 4.0",
+   "author": "Spencer Hurt",
+   "attribution": "(c) Spencer Hurt, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/233987558",
+   "photo_page": "https://www.inaturalist.org/photos/415904135",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/415904135/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/415904135/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_415904135/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.585,
+    "band_px": 2.83,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.636,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 0.865,
+    "spread": 20.7,
+    "lean": 0.0,
+    "belly_gap": 0.445,
+    "leg_zone": 0.342,
+    "leans": [
+     -5.4,
+     0.0,
+     15.3
+    ],
+    "lifts": [
+     0.0,
+     0.018,
+     0.055
+    ],
+    "plain": 0.373,
+    "colour": 0.994,
+    "box": [
+     0.346,
+     0.122,
+     0.664,
+     0.873
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_367800858",
+   "licence": "CC0 1.0",
+   "author": "James Eaton",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/207907674",
+   "photo_page": "https://www.inaturalist.org/photos/367800858",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/367800858/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/367800858/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_367800858/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.829,
+    "band_px": 1.63,
+    "clear": 1.0,
+    "size": 0.736,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 89.4,
+    "lean": 9.2,
+    "belly_gap": 0.752,
+    "leg_zone": 0.269,
+    "leans": [
+     32.7,
+     -56.7,
+     9.2
+    ],
+    "lifts": [
+     0.126,
+     0.05,
+     0.003
+    ],
+    "plain": 0.276,
+    "colour": 0.993,
+    "box": [
+     0.482,
+     0.283,
+     0.866,
+     0.563
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_314021036",
+   "licence": "CC BY-SA 4.0",
+   "author": "Kudaibergen Amirekul",
+   "attribution": "(c) Kudaibergen Amirekul, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/180291592",
+   "photo_page": "https://www.inaturalist.org/photos/314021036",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/314021036/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/314021036/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_314021036/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.598,
+    "band_px": 2.18,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 0.866,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 65.1,
+    "lean": 10.1,
+    "belly_gap": 0.695,
+    "leg_zone": 0.407,
+    "leans": [
+     -22.8,
+     -1.3,
+     -18.9,
+     42.3
+    ],
+    "lifts": [
+     0.028,
+     0.0,
+     0.075,
+     0.165
+    ],
+    "plain": 0.243,
+    "colour": 0.995,
+    "box": [
+     0.164,
+     0.147,
+     0.976,
+     0.91
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_314021032",
+   "licence": "CC BY-SA 4.0",
+   "author": "Kudaibergen Amirekul",
+   "attribution": "(c) Kudaibergen Amirekul, some rights reserved (CC BY-SA)",
+   "page": "https://www.inaturalist.org/observations/180291592",
+   "photo_page": "https://www.inaturalist.org/photos/314021032",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/314021032/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/314021032/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_314021032/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.42,
+    "single": 1.0,
+    "aspect": 1.648,
+    "band_px": 4.73,
+    "clear": 0.939,
+    "size": 1.0,
+    "solid": 0.855,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 52.6,
+    "lean": 1.8,
+    "belly_gap": 0.707,
+    "leg_zone": 0.431,
+    "leans": [
+     1.8,
+     -22.7,
+     29.9
+    ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.12
+    ],
+    "plain": 0.25,
+    "colour": 0.999,
+    "box": [
+     0.12,
+     0.144,
+     1.0,
+     0.946
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_459151266",
+   "licence": "CC BY 4.0",
+   "author": "Rev. Lee A. Payne, Jr.",
+   "attribution": "(c) Rev. Lee A. Payne, Jr., some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/256126734",
+   "photo_page": "https://www.inaturalist.org/photos/459151266",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/459151266/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/459151266/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_459151266/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.756,
+    "single": 0.996,
+    "aspect": 1.088,
+    "band_px": 9.57,
+    "clear": 0.536,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.97,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 22.5,
+    "lean": 11.8,
+    "belly_gap": 0.781,
+    "leg_zone": 0.351,
+    "leans": [
+     -11.5,
+     -11.8,
+     -34.0
+    ],
+    "lifts": [
+     0.076,
+     0.001,
+     0.154
+    ],
+    "plain": 0.227,
+    "colour": 0.972,
+    "box": [
+     0.314,
+     0.0,
+     0.956,
+     0.886
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_613058232",
+   "licence": "CC BY 4.0",
+   "author": "Kevin Lynch",
+   "attribution": "(c) Kevin Lynch, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/337263381",
+   "photo_page": "https://www.inaturalist.org/photos/613058232",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/613058232/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/613058232/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_613058232/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.996,
+    "band_px": 3.67,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.704,
+    "side": 0.052,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 22.3,
+    "belly_gap": 0.114,
+    "leg_zone": 0.545,
+    "leans": [
+     22.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.207,
+    "colour": 1.0,
+    "box": [
+     0.274,
+     0.105,
+     0.822,
+     0.931
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_613058230",
+   "licence": "CC BY 4.0",
+   "author": "Kevin Lynch",
+   "attribution": "(c) Kevin Lynch, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/337263381",
+   "photo_page": "https://www.inaturalist.org/photos/613058230",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/613058230/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/613058230/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_613058230/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.752,
+    "single": 1.0,
+    "aspect": 1.549,
+    "band_px": 8.34,
+    "clear": 0.638,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.093,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 23.0,
+    "belly_gap": 0.677,
+    "leg_zone": 0.194,
+    "leans": [
+     -23.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.42,
+    "colour": 1.0,
+    "box": [
+     0.216,
+     0.072,
+     1.0,
+     0.832
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_614011653",
+   "licence": "CC0 1.0",
+   "author": "Terry Brunholtz",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/337727978",
+   "photo_page": "https://www.inaturalist.org/photos/614011653",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/614011653/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/614011653/large.jpg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_614011653/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.37,
+    "band_px": 6.08,
+    "clear": 0.827,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 39.5,
+    "lean": 18.4,
+    "belly_gap": 0.626,
+    "leg_zone": 0.36,
+    "leans": [
+     44.3,
+     4.8,
+     18.4
+    ],
+    "lifts": [
+     0.04,
+     0.0,
+     0.02
+    ],
+    "plain": 0.231,
+    "colour": 0.999,
+    "box": [
+     0.12,
+     0.185,
+     0.668,
+     0.685
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_304102010",
+   "licence": "CC BY 4.0",
+   "author": "\u0412\u0430\u043b\u0435\u0440\u0438\u044f \u041a\u043e\u0432\u0430\u043b\u0435\u0432\u0430",
+   "attribution": "(c) \u0412\u0430\u043b\u0435\u0440\u0438\u044f \u041a\u043e\u0432\u0430\u043b\u0435\u0432\u0430, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/175005061",
+   "photo_page": "https://www.inaturalist.org/photos/304102010",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/304102010/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/304102010/large.jpeg",
+   "adult": true,
+   "local": false,
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/inat_304102010/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.735,
+    "aspect": 1.919,
+    "band_px": 2.48,
+    "clear": 1.0,
+    "size": 0.152,
+    "solid": 1.0,
+    "head_end": 0.795,
+    "side": 0.905,
+    "legs": 0.208,
+    "stance": 0.0,
+    "spread": 54.0,
+    "lean": 0.0,
+    "belly_gap": 0.281,
+    "leg_zone": 0.145,
+    "leans": [
+     0.0,
+     0.0,
+     0.0,
+     54.0
+    ],
+    "lifts": [
+     0.065,
+     0.048,
+     0.048,
+     0.0
+    ],
+    "plain": 0.204,
+    "colour": 0.999,
+    "box": [
+     0.34,
+     0.517,
+     0.578,
+     0.703
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_151598283",
+   "licence": "CC BY-SA 4.0",
+   "author": "Chuck Homler, Focus On Wildlife",
+   "attribution": "Chuck Homler, Focus On Wildlife, CC BY-SA 4.0, via Wikimedia Commons (File:Red Fox Portrait.png)",
+   "page": "https://commons.wikimedia.org/wiki/File:Red_Fox_Portrait.png",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/Red_Fox_Portrait.png/500px-Red_Fox_Portrait.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/Red_Fox_Portrait.png/1280px-Red_Fox_Portrait.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_151598283/photo.png",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 0.881,
+    "band_px": 3.65,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.93,
+    "colour": 1.0,
+    "box": [
+     0.266,
+     0.072,
+     0.812,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_119247257",
+   "licence": "CC BY-SA 4.0",
+   "author": "El Golli Mohamed",
+   "attribution": "El Golli Mohamed, CC BY-SA 4.0, via Wikimedia Commons (File:Renard roux Ichkeul.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Renard_roux_Ichkeul.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/Renard_roux_Ichkeul.jpg/500px-Renard_roux_Ichkeul.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/Renard_roux_Ichkeul.jpg/1280px-Renard_roux_Ichkeul.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_119247257/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.595,
+    "band_px": 5.63,
+    "clear": 0.865,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.73,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 43.4,
+    "lean": 4.5,
+    "belly_gap": 0.624,
+    "leg_zone": 0.351,
+    "leans": [
+     -41.2,
+     -4.5,
+     2.2
+    ],
+    "lifts": [
+     0.02,
+     0.0,
+     0.0
+    ],
+    "plain": 0.168,
+    "colour": 1.0,
+    "box": [
+     0.134,
+     0.288,
+     0.606,
+     0.733
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_80926738",
+   "licence": "CC BY-SA 4.0",
+   "author": "Uoaei1",
+   "attribution": "Uoaei1, CC BY-SA 4.0, via Wikimedia Commons (File:Vulpes vulpes Mallnitz 01.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Vulpes_vulpes_Mallnitz_01.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Vulpes_vulpes_Mallnitz_01.jpg/500px-Vulpes_vulpes_Mallnitz_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Vulpes_vulpes_Mallnitz_01.jpg/1280px-Vulpes_vulpes_Mallnitz_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_80926738/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.344,
+    "band_px": 2.88,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 48.9,
+    "lean": 13.8,
+    "belly_gap": 0.867,
+    "leg_zone": 0.245,
+    "leans": [
+     -23.3,
+     13.8,
+     25.6
+    ],
+    "lifts": [
+     0.117,
+     0.0,
+     0.121
+    ],
+    "plain": 0.142,
+    "colour": 0.998,
+    "box": [
+     0.154,
+     0.105,
+     0.888,
+     0.925
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_40573988",
+   "licence": "CC BY-SA 2.0",
+   "author": "Gregory \"Slobirdr\" Smith",
+   "attribution": "Gregory \"Slobirdr\" Smith, CC BY-SA 2.0, via Wikimedia Commons (File:Alaska Red Fox (Vulpes vulpes).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Alaska_Red_Fox_(Vulpes_vulpes).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Alaska_Red_Fox_%28Vulpes_vulpes%29.jpg/500px-Alaska_Red_Fox_%28Vulpes_vulpes%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Alaska_Red_Fox_%28Vulpes_vulpes%29.jpg/1280px-Alaska_Red_Fox_%28Vulpes_vulpes%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_40573988/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.093,
+    "band_px": 8.75,
+    "clear": 0.604,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.365,
+    "colour": 1.0,
+    "box": [
+     0.24,
+     0.047,
+     0.994,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_132207232",
+   "licence": "CC BY-SA 4.0",
+   "author": "ClaudiaTen",
+   "attribution": "ClaudiaTen, CC BY-SA 4.0, via Wikimedia Commons (File:Portrait of a red fox in Rautas fj\u00e4llurskog.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Portrait_of_a_red_fox_in_Rautas_fj%C3%A4llurskog.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Portrait_of_a_red_fox_in_Rautas_fj%C3%A4llurskog.jpg/500px-Portrait_of_a_red_fox_in_Rautas_fj%C3%A4llurskog.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Portrait_of_a_red_fox_in_Rautas_fj%C3%A4llurskog.jpg/1280px-Portrait_of_a_red_fox_in_Rautas_fj%C3%A4llurskog.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_132207232/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.71,
+    "band_px": 4.97,
+    "clear": 0.919,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 73.9,
+    "lean": 32.8,
+    "belly_gap": 0.707,
+    "leg_zone": 0.309,
+    "leans": [
+     -32.8,
+     36.2,
+     -37.7
+    ],
+    "lifts": [
+     0.0,
+     0.111,
+     0.0
+    ],
+    "plain": 0.926,
+    "colour": 0.999,
+    "box": [
+     0.178,
+     0.243,
+     0.732,
+     0.73
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_195701737",
+   "licence": "CC BY-SA 4.0",
+   "author": "Divlja Srbija",
+   "attribution": "Divlja Srbija, CC BY-SA 4.0, via Wikimedia Commons (File:Mlade lisice u rupi.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Mlade_lisice_u_rupi.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Mlade_lisice_u_rupi.jpg/500px-Mlade_lisice_u_rupi.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Mlade_lisice_u_rupi.jpg/1280px-Mlade_lisice_u_rupi.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_195701737/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.179,
+    "band_px": 3.71,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.453,
+    "colour": 0.999,
+    "box": [
+     0.1,
+     0.0,
+     0.85,
+     0.955
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_161227799",
+   "licence": "CC BY 2.0",
+   "author": "Andrey Gulivanov",
+   "attribution": "Andrey Gulivanov, CC BY 2.0, via Wikimedia Commons (File:Red fox catches a vole - Tolyatti, Russia.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Red_fox_catches_a_vole_-_Tolyatti,_Russia.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Red_fox_catches_a_vole_-_Tolyatti%2C_Russia.jpg/500px-Red_fox_catches_a_vole_-_Tolyatti%2C_Russia.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Red_fox_catches_a_vole_-_Tolyatti%2C_Russia.jpg/1280px-Red_fox_catches_a_vole_-_Tolyatti%2C_Russia.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_161227799/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.561,
+    "band_px": 3.22,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.149,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.3,
+    "belly_gap": 0.371,
+    "leg_zone": 0.239,
+    "leans": [
+     -0.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.121,
+    "colour": 0.987,
+    "box": [
+     0.28,
+     0.189,
+     0.92,
+     0.805
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_442706",
+   "licence": "CC BY 2.5",
+   "author": "Malene Thyssen",
+   "attribution": "Malene Thyssen, CC BY 2.5, via Wikimedia Commons (File:R\u00f8d r\u00e6v (Vulpes vulpes).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:R%C3%B8d_r%C3%A6v_(Vulpes_vulpes).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/R%C3%B8d_r%C3%A6v_%28Vulpes_vulpes%29.jpg/500px-R%C3%B8d_r%C3%A6v_%28Vulpes_vulpes%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/e/ef/R%C3%B8d_r%C3%A6v_%28Vulpes_vulpes%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_442706/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.893,
+    "band_px": 5.2,
+    "clear": 0.9,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.812,
+    "side": 0.0,
+    "legs": 0.933,
+    "stance": 0.0,
+    "spread": 77.2,
+    "lean": 9.9,
+    "belly_gap": 0.098,
+    "leg_zone": 0.232,
+    "leans": [
+     28.7,
+     -48.5
+    ],
+    "lifts": [
+     0.052,
+     0.0
+    ],
+    "plain": 0.201,
+    "colour": 0.982,
+    "box": [
+     0.35,
+     0.126,
+     0.834,
+     0.9
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_55976790",
+   "licence": "CC BY 2.0",
+   "author": "Anthony Quintano from Honolulu, HI, United States",
+   "attribution": "Anthony Quintano from Honolulu, HI, United States, CC BY 2.0, via Wikimedia Commons (File:Foxes of Island Beach State Park New Jersey (16138030480).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Foxes_of_Island_Beach_State_Park_New_Jersey_(16138030480).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Foxes_of_Island_Beach_State_Park_New_Jersey_%2816138030480%29.jpg/500px-Foxes_of_Island_Beach_State_Park_New_Jersey_%2816138030480%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Foxes_of_Island_Beach_State_Park_New_Jersey_%2816138030480%29.jpg/1280px-Foxes_of_Island_Beach_State_Park_New_Jersey_%2816138030480%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_55976790/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.55,
+    "band_px": 3.55,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.6,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 67.0,
+    "lean": 14.0,
+    "belly_gap": 0.762,
+    "leg_zone": 0.289,
+    "leans": [
+     -50.4,
+     -13.5,
+     -36.0,
+     -14.0,
+     16.6
+    ],
+    "lifts": [
+     0.094,
+     0.138,
+     0.084,
+     0.104,
+     0.0
+    ],
+    "plain": 0.216,
+    "colour": 1.0,
+    "box": [
+     0.05,
+     0.098,
+     0.974,
+     0.933
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_157262842",
+   "licence": "CC BY-SA 4.0",
+   "author": "Charles J. Sharp",
+   "attribution": "Charles J. Sharp, CC BY-SA 4.0, via Wikimedia Commons (File:Red fox (Vulpes vulpes crucigera) Skalnate Pleso 2.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Red_fox_(Vulpes_vulpes_crucigera)_Skalnate_Pleso_2.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Red_fox_%28Vulpes_vulpes_crucigera%29_Skalnate_Pleso_2.jpg/500px-Red_fox_%28Vulpes_vulpes_crucigera%29_Skalnate_Pleso_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Red_fox_%28Vulpes_vulpes_crucigera%29_Skalnate_Pleso_2.jpg/1280px-Red_fox_%28Vulpes_vulpes_crucigera%29_Skalnate_Pleso_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_157262842/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.013,
+    "single": 1.0,
+    "aspect": 0.548,
+    "band_px": 6.24,
+    "clear": 0.813,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.027,
+    "side": 0.0,
+    "legs": 0.275,
+    "stance": 0.003,
+    "spread": 4.7,
+    "lean": 29.9,
+    "belly_gap": 0.068,
+    "leg_zone": 0.153,
+    "leans": [
+     32.3,
+     27.6
+    ],
+    "lifts": [
+     0.043,
+     0.0
+    ],
+    "plain": 0.232,
+    "colour": 0.994,
+    "box": [
+     0.282,
+     0.096,
+     0.612,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_191485848",
+   "licence": "CC BY-SA 4.0",
+   "author": "Rhododendrites",
+   "attribution": "Rhododendrites, CC BY-SA 4.0, via Wikimedia Commons (File:Red fox kits playing Bombay Hook (36455).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Red_fox_kits_playing_Bombay_Hook_(36455).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/Red_fox_kits_playing_Bombay_Hook_%2836455%29.jpg/500px-Red_fox_kits_playing_Bombay_Hook_%2836455%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/Red_fox_kits_playing_Bombay_Hook_%2836455%29.jpg/1280px-Red_fox_kits_playing_Bombay_Hook_%2836455%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_191485848/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.031,
+    "band_px": 2.58,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.832,
+    "side": 0.829,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 46.8,
+    "lean": 3.5,
+    "belly_gap": 0.487,
+    "leg_zone": 0.339,
+    "leans": [
+     -4.8,
+     33.3,
+     -13.5,
+     11.8
+    ],
+    "lifts": [
+     0.049,
+     0.035,
+     0.017,
+     0.0
+    ],
+    "plain": 0.254,
+    "colour": 0.999,
+    "box": [
+     0.104,
+     0.122,
+     0.694,
+     0.878
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_194585142",
+   "licence": "CC BY-SA 4.0",
+   "author": "BirderSajan",
+   "attribution": "BirderSajan, CC BY-SA 4.0, via Wikimedia Commons (File:Arabian Red Fox with Juvenile.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Arabian_Red_Fox_with_Juvenile.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/Arabian_Red_Fox_with_Juvenile.jpg/500px-Arabian_Red_Fox_with_Juvenile.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/Arabian_Red_Fox_with_Juvenile.jpg/1280px-Arabian_Red_Fox_with_Juvenile.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_194585142/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 0.994,
+    "aspect": 1.375,
+    "band_px": 8.32,
+    "clear": 0.64,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.225,
+    "legs": 0.833,
+    "stance": 1.0,
+    "spread": 8.1,
+    "lean": 2.1,
+    "belly_gap": 0.145,
+    "leg_zone": 0.22,
+    "leans": [
+     -2.1,
+     0.8,
+     -7.3
+    ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "plain": 0.771,
+    "colour": 1.0,
+    "box": [
+     0.0,
+     0.081,
+     0.932,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_69702510",
+   "licence": "CC BY-SA 4.0",
+   "author": "Alberto Peracchio",
+   "attribution": "Alberto Peracchio, CC BY-SA 4.0, via Wikimedia Commons (File:Lo sbadiglio.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lo_sbadiglio.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/Lo_sbadiglio.jpg/500px-Lo_sbadiglio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/Lo_sbadiglio.jpg/1280px-Lo_sbadiglio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_69702510/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.222,
+    "band_px": 6.09,
+    "clear": 0.826,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.444,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.004,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.953,
+    "colour": 0.994,
+    "box": [
+     0.06,
+     0.15,
+     0.676,
+     0.907
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_91555511",
+   "licence": "CC BY-SA 4.0",
+   "author": "NadezhdaKhaustova",
+   "attribution": "NadezhdaKhaustova, CC BY-SA 4.0, via Wikimedia Commons (File:\u041b\u0438\u0441\u0430-\u043e\u0433\u043d\u0435\u0432\u043a\u0430 \u043d\u0430 \u0444\u043e\u043d\u0435 \u0412\u0438\u043b\u044e\u0447\u0438\u043d\u0441\u043a\u043e\u0433\u043e \u0432\u0443\u043b\u043a\u0430\u043d\u0430.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:%D0%9B%D0%B8%D1%81%D0%B0-%D0%BE%D0%B3%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0_%D0%BD%D0%B0_%D1%84%D0%BE%D0%BD%D0%B5_%D0%92%D0%B8%D0%BB%D1%8E%D1%87%D0%B8%D0%BD%D1%81%D0%BA%D0%BE%D0%B3%D0%BE_%D0%B2%D1%83%D0%BB%D0%BA%D0%B0%D0%BD%D0%B0.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/%D0%9B%D0%B8%D1%81%D0%B0-%D0%BE%D0%B3%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0_%D0%BD%D0%B0_%D1%84%D0%BE%D0%BD%D0%B5_%D0%92%D0%B8%D0%BB%D1%8E%D1%87%D0%B8%D0%BD%D1%81%D0%BA%D0%BE%D0%B3%D0%BE_%D0%B2%D1%83%D0%BB%D0%BA%D0%B0%D0%BD%D0%B0.jpg/500px-%D0%9B%D0%B8%D1%81%D0%B0-%D0%BE%D0%B3%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0_%D0%BD%D0%B0_%D1%84%D0%BE%D0%BD%D0%B5_%D0%92%D0%B8%D0%BB%D1%8E%D1%87%D0%B8%D0%BD%D1%81%D0%BA%D0%BE%D0%B3%D0%BE_%D0%B2%D1%83%D0%BB%D0%BA%D0%B0%D0%BD%D0%B0.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/%D0%9B%D0%B8%D1%81%D0%B0-%D0%BE%D0%B3%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0_%D0%BD%D0%B0_%D1%84%D0%BE%D0%BD%D0%B5_%D0%92%D0%B8%D0%BB%D1%8E%D1%87%D0%B8%D0%BD%D1%81%D0%BA%D0%BE%D0%B3%D0%BE_%D0%B2%D1%83%D0%BB%D0%BA%D0%B0%D0%BD%D0%B0.jpg/1280px-%D0%9B%D0%B8%D1%81%D0%B0-%D0%BE%D0%B3%D0%BD%D0%B5%D0%B2%D0%BA%D0%B0_%D0%BD%D0%B0_%D1%84%D0%BE%D0%BD%D0%B5_%D0%92%D0%B8%D0%BB%D1%8E%D1%87%D0%B8%D0%BD%D1%81%D0%BA%D0%BE%D0%B3%D0%BE_%D0%B2%D1%83%D0%BB%D0%BA%D0%B0%D0%BD%D0%B0.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_91555511/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.235,
+    "band_px": 5.21,
+    "clear": 0.899,
+    "size": 0.552,
+    "solid": 1.0,
+    "head_end": 0.291,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.143,
+    "colour": 0.999,
+    "box": [
+     0.266,
+     0.432,
+     0.56,
+     0.77
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_39505817",
+   "licence": "CC BY-SA 4.0",
+   "author": "Artemy Voikhansky",
+   "attribution": "Artemy Voikhansky, CC BY-SA 4.0, via Wikimedia Commons (File:Red fox at Gamla.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Red_fox_at_Gamla.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Red_fox_at_Gamla.jpg/500px-Red_fox_at_Gamla.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Red_fox_at_Gamla.jpg/1280px-Red_fox_at_Gamla.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_39505817/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.929,
+    "band_px": 3.77,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.571,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 47.4,
+    "belly_gap": 0.522,
+    "leg_zone": 0.257,
+    "leans": [
+     -47.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.228,
+    "colour": 0.989,
+    "box": [
+     0.288,
+     0.091,
+     0.912,
+     0.987
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_12340251",
+   "licence": "CC BY-SA 3.0",
+   "author": "Ken Billington",
+   "attribution": "Ken Billington, CC BY-SA 3.0, via Wikimedia Commons (File:Red Fox (Vulpes vulpes) (4).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Red_Fox_(Vulpes_vulpes)_(4).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/Red_Fox_%28Vulpes_vulpes%29_%284%29.jpg/500px-Red_Fox_%28Vulpes_vulpes%29_%284%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/Red_Fox_%28Vulpes_vulpes%29_%284%29.jpg/1280px-Red_Fox_%28Vulpes_vulpes%29_%284%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_12340251/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.999,
+    "aspect": 1.489,
+    "band_px": 4.34,
+    "clear": 0.972,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.561,
+    "side": 0.885,
+    "legs": 0.217,
+    "stance": 0.0,
+    "spread": 32.9,
+    "lean": 42.8,
+    "belly_gap": 0.277,
+    "leg_zone": 0.146,
+    "leans": [
+     -59.3,
+     -26.4
+    ],
+    "lifts": [
+     0.0,
+     0.064
+    ],
+    "plain": 0.211,
+    "colour": 0.993,
+    "box": [
+     0.1,
+     0.157,
+     0.794,
+     0.779
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_21536441",
+   "licence": "CC BY 3.0",
+   "author": "Foto: Jonn Leffmann",
+   "attribution": "Foto: Jonn Leffmann, CC BY 3.0, via Wikimedia Commons (File:R\u00e4v vid Revhusen i Ystad - Juli 2012..jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:R%C3%A4v_vid_Revhusen_i_Ystad_-_Juli_2012..jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/R%C3%A4v_vid_Revhusen_i_Ystad_-_Juli_2012..jpg/500px-R%C3%A4v_vid_Revhusen_i_Ystad_-_Juli_2012..jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/R%C3%A4v_vid_Revhusen_i_Ystad_-_Juli_2012..jpg/1280px-R%C3%A4v_vid_Revhusen_i_Ystad_-_Juli_2012..jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_21536441/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.393,
+    "band_px": 3.65,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.667,
+    "colour": 0.998,
+    "box": [
+     0.472,
+     0.131,
+     0.704,
+     0.953
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_139752522",
+   "licence": "CC BY 2.0",
+   "author": "lwolfartist",
+   "attribution": "lwolfartist, CC BY 2.0, via Wikimedia Commons (File:DSC 0916-topaz-denoiseraw.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:DSC_0916-topaz-denoiseraw.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/DSC_0916-topaz-denoiseraw.jpg/500px-DSC_0916-topaz-denoiseraw.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/DSC_0916-topaz-denoiseraw.jpg/1280px-DSC_0916-topaz-denoiseraw.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_139752522/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.907,
+    "aspect": 1.048,
+    "band_px": 7.93,
+    "clear": 0.673,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.992,
+    "side": 0.871,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 11.1,
+    "belly_gap": 0.872,
+    "leg_zone": 0.269,
+    "leans": [
+     -11.1
+    ],
+    "lifts": [
+     0.003
+    ],
+    "plain": 0.123,
+    "colour": 0.962,
+    "box": [
+     0.11,
+     0.072,
+     0.718,
+     0.797
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_71266107",
+   "licence": "CC BY-SA 2.0",
+   "author": "chripell from Blackrock, Emerald Isle",
+   "attribution": "chripell from Blackrock, Emerald Isle, CC BY-SA 2.0, via Wikimedia Commons (File:Home fox (36468606055).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Home_fox_(36468606055).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Home_fox_%2836468606055%29.jpg/500px-Home_fox_%2836468606055%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Home_fox_%2836468606055%29.jpg/1280px-Home_fox_%2836468606055%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_71266107/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.705,
+    "band_px": 2.04,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 78.8,
+    "lean": 4.8,
+    "belly_gap": 0.672,
+    "leg_zone": 0.406,
+    "leans": [
+     -10.1,
+     -21.7,
+     0.4,
+     57.1
+    ],
+    "lifts": [
+     0.0,
+     0.03,
+     0.015,
+     0.155
+    ],
+    "plain": 0.103,
+    "colour": 0.888,
+    "box": [
+     0.064,
+     0.243,
+     0.988,
+     0.965
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_114970317",
+   "licence": "CC BY-SA 2.0",
+   "author": "Bernard Stam",
+   "attribution": "Bernard Stam, CC BY-SA 2.0, via Wikimedia Commons (File:Vos,Fox (Vulpes vulpes) (8252321367).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Vos,Fox_(Vulpes_vulpes)_(8252321367).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Vos%2CFox_%28Vulpes_vulpes%29_%288252321367%29.jpg/500px-Vos%2CFox_%28Vulpes_vulpes%29_%288252321367%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Vos%2CFox_%28Vulpes_vulpes%29_%288252321367%29.jpg/1280px-Vos%2CFox_%28Vulpes_vulpes%29_%288252321367%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_114970317/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.577,
+    "band_px": 3.55,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.146,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 14.9,
+    "belly_gap": 0.545,
+    "leg_zone": 0.237,
+    "leans": [
+     14.9
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.607,
+    "colour": 1.0,
+    "box": [
+     0.512,
+     0.088,
+     0.79,
+     0.775
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_102446972",
+   "licence": "CC BY-SA 2.0",
+   "author": "Susanne Nilsson",
+   "attribution": "Susanne Nilsson, CC BY-SA 2.0, via Wikimedia Commons (File:Fox (28142538460).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Fox_(28142538460).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Fox_%2828142538460%29.jpg/500px-Fox_%2828142538460%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Fox_%2828142538460%29.jpg/1280px-Fox_%2828142538460%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_102446972/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.359,
+    "band_px": 2.75,
+    "clear": 1.0,
+    "size": 0.906,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 48.0,
+    "lean": 4.1,
+    "belly_gap": 0.552,
+    "leg_zone": 0.31,
+    "leans": [
+     -8.2,
+     22.3,
+     -25.7,
+     16.4
+    ],
+    "lifts": [
+     0.0,
+     0.035,
+     0.014,
+     0.141
+    ],
+    "plain": 0.15,
+    "colour": 0.999,
+    "box": [
+     0.398,
+     0.315,
+     0.784,
+     0.742
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_33105858",
+   "licence": "CC BY-SA 3.0",
+   "author": "Gor Minasyan",
+   "attribution": "Gor Minasyan, CC BY-SA 3.0, via Wikimedia Commons (File:\u054e\u0561\u0575\u0580\u056b \u0562\u0576\u0578\u0582\u0569\u0575\u0578\u0582\u0576.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:%D5%8E%D5%A1%D5%B5%D6%80%D5%AB_%D5%A2%D5%B6%D5%B8%D6%82%D5%A9%D5%B5%D5%B8%D6%82%D5%B6.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/%D5%8E%D5%A1%D5%B5%D6%80%D5%AB_%D5%A2%D5%B6%D5%B8%D6%82%D5%A9%D5%B5%D5%B8%D6%82%D5%B6.jpg/500px-%D5%8E%D5%A1%D5%B5%D6%80%D5%AB_%D5%A2%D5%B6%D5%B8%D6%82%D5%A9%D5%B5%D5%B8%D6%82%D5%B6.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/8/87/%D5%8E%D5%A1%D5%B5%D6%80%D5%AB_%D5%A2%D5%B6%D5%B8%D6%82%D5%A9%D5%B5%D5%B8%D6%82%D5%B6.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_33105858/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.455,
+    "band_px": 7.81,
+    "clear": 0.682,
+    "size": 0.256,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.103,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 11.7,
+    "belly_gap": 0.639,
+    "leg_zone": 0.202,
+    "leans": [
+     -11.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.13,
+    "colour": 0.999,
+    "box": [
+     0.436,
+     0.443,
+     0.526,
+     0.707
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_139752932",
+   "licence": "CC BY 2.0",
+   "author": "lwolfartist",
+   "attribution": "lwolfartist, CC BY 2.0, via Wikimedia Commons (File:Red fox bombay hook nwr 9.15.23 DSC 6907-topaz-sharpen.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Red_fox_bombay_hook_nwr_9.15.23_DSC_6907-topaz-sharpen.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Red_fox_bombay_hook_nwr_9.15.23_DSC_6907-topaz-sharpen.jpg/500px-Red_fox_bombay_hook_nwr_9.15.23_DSC_6907-topaz-sharpen.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Red_fox_bombay_hook_nwr_9.15.23_DSC_6907-topaz-sharpen.jpg/1280px-Red_fox_bombay_hook_nwr_9.15.23_DSC_6907-topaz-sharpen.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_139752932/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.865,
+    "band_px": 8.65,
+    "clear": 0.613,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.411,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 27.4,
+    "belly_gap": 0.786,
+    "leg_zone": 0.413,
+    "leans": [
+     27.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.137,
+    "colour": 0.997,
+    "box": [
+     0.372,
+     0.075,
+     0.908,
+     0.85
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_139752948",
+   "licence": "CC BY 2.0",
+   "author": "lwolfartist",
+   "attribution": "lwolfartist, CC BY 2.0, via Wikimedia Commons (File:Red fox bombay hook nwr 9.15.23 DSC 6939-topaz-sharpen.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Red_fox_bombay_hook_nwr_9.15.23_DSC_6939-topaz-sharpen.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Red_fox_bombay_hook_nwr_9.15.23_DSC_6939-topaz-sharpen.jpg/500px-Red_fox_bombay_hook_nwr_9.15.23_DSC_6939-topaz-sharpen.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Red_fox_bombay_hook_nwr_9.15.23_DSC_6939-topaz-sharpen.jpg/1280px-Red_fox_bombay_hook_nwr_9.15.23_DSC_6939-topaz-sharpen.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_139752948/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.464,
+    "band_px": 4.81,
+    "clear": 0.932,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.535,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.219,
+    "colour": 0.997,
+    "box": [
+     0.488,
+     0.066,
+     0.88,
+     0.91
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_157928405",
+   "licence": "CC BY-SA 4.0",
+   "author": "Kersti",
+   "attribution": "Kersti, CC BY-SA 4.0, via Wikimedia Commons (File:391 Weg Niederm\u00fchle im Diemeltal und Fuchs auf der Wiese.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:391_Weg_Niederm%C3%BChle_im_Diemeltal_und_Fuchs_auf_der_Wiese.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/391_Weg_Niederm%C3%BChle_im_Diemeltal_und_Fuchs_auf_der_Wiese.jpg/500px-391_Weg_Niederm%C3%BChle_im_Diemeltal_und_Fuchs_auf_der_Wiese.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/391_Weg_Niederm%C3%BChle_im_Diemeltal_und_Fuchs_auf_der_Wiese.jpg/1280px-391_Weg_Niederm%C3%BChle_im_Diemeltal_und_Fuchs_auf_der_Wiese.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_157928405/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.229,
+    "band_px": 5.13,
+    "clear": 0.906,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 11.5,
+    "belly_gap": 0.429,
+    "leg_zone": 0.486,
+    "leans": [
+     -11.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.08,
+    "colour": 0.717,
+    "box": [
+     0.716,
+     0.589,
+     0.732,
+     0.683
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_122802666",
+   "licence": "CC BY 2.0",
+   "author": "Silver Leapers from remote NE Coastline, Newfoundland, Canada",
+   "attribution": "Silver Leapers from remote NE Coastline, Newfoundland, Canada, CC BY 2.0, via Wikimedia Commons (File:Red fox mom struggling to feed pups using cached food IMG 0788 (27432914964).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Red_fox_mom_struggling_to_feed_pups_using_cached_food_IMG_0788_(27432914964).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Red_fox_mom_struggling_to_feed_pups_using_cached_food_IMG_0788_%2827432914964%29.jpg/500px-Red_fox_mom_struggling_to_feed_pups_using_cached_food_IMG_0788_%2827432914964%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Red_fox_mom_struggling_to_feed_pups_using_cached_food_IMG_0788_%2827432914964%29.jpg/1280px-Red_fox_mom_struggling_to_feed_pups_using_cached_food_IMG_0788_%2827432914964%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_122802666/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.976,
+    "aspect": 0.747,
+    "band_px": 7.24,
+    "clear": 0.73,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.483,
+    "colour": 0.993,
+    "box": [
+     0.446,
+     0.201,
+     0.794,
+     0.901
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_124311645",
+   "licence": "CC0",
+   "author": "Alan Levine from Archydal, Canada",
+   "attribution": "Alan Levine from Archydal, Canada, CC0, via Wikimedia Commons (File:Bruno Has Babies! (51173593307).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bruno_Has_Babies!_(51173593307).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Bruno_Has_Babies%21_%2851173593307%29.jpg/500px-Bruno_Has_Babies%21_%2851173593307%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Bruno_Has_Babies%21_%2851173593307%29.jpg/1280px-Bruno_Has_Babies%21_%2851173593307%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/vulpes_vulpes/commons_124311645/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.446,
+    "band_px": 3.85,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.105,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.21,
+    "colour": 1.0,
+    "box": [
+     0.234,
+     0.096,
+     0.382,
+     0.63
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ]
+   }
+  }
+ ]
+}
