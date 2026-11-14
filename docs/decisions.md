@@ -9837,3 +9837,20 @@ before and nothing in the client changed.
 - **Also**: on Aaron's request to free disk, two merged, clean worktrees were removed (rings-planes,
   unruffled-davinci-5a31ae; branches kept; 925 MB by df). Measured by shared disk blocks, 16.9 GB of the 23 GB of
   tiles in the sweet-feistel worktree are clones of the main checkout's and free nothing if removed.
+
+## 2026-11-13: The whole project reviewed: a remarkable world, not yet a game (docs/review-2026-11-13.md; nothing built)
+
+Aaron asked for a step back: the game, the code, the scale it could hold, what is weak or missing, what is possible.
+A read-only review; the full text, the tables and what was not checked are in `docs/review-2026-11-13.md`.
+
+- **Verdict**: the premise and the tile pipeline are the project's strength (18 tiles from one command, honest
+  scorecards); there is no designed first twenty minutes, no arc for a player, and no one outside has played.
+- **Scale as built** (read from the code, never load tested; three pages is the most ever run in one world): two to
+  six friends in a world; the shared animals' stream is at its cap with two players 600 m apart; 30 to 50 players on
+  the one server, at most 100 pages by Fly's connection limit at four sockets a page.
+- **Still open from the 2026-11-03 review, checked today**: three.js from unpkg, sign-in limits keyed on the proxy's
+  address, no guard on the frame, trees with culling off, no GPU timer, no client test or check gate.
+- **Found**: nothing hands the animal host over when its tab is hidden (read, not reproduced); Time Machine has no
+  destination and the git-ignored tiles, caches and paid Meshy sources are on one disk with 7.3 GB free.
+- **Not decided here**: the review recommends freezing breadth for two weeks (one tile, three bodies, a first twenty
+  minutes in front of neighbours, and the engineering floor). The order is Aaron's call.
