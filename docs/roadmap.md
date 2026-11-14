@@ -288,7 +288,8 @@ photograph dissolved into the rewilded world, three bodies, a known place from t
 own oak, the squirrel's side with one hawk, a card for tomorrow and outdoors. In order:
 
 1. Play it with five adults and two children of the home tile (the note's test); change what they stall on.
-2. Tree squirrels killable, so the hawk's catch is a death that is drawn.
+2. ~~Tree squirrels killable, so the hawk's catch is a death that is drawn.~~ Done 2026-11-14 (seen on the home tile;
+   not seen from a mirror page, nor a player hawk's dive at a squirrel).
 3. A sharp present-day patch round the point of arrival (pipeline), so roofs read in the opening.
 4. The photograph drawn before the vegetation, so loading is the opening shot.
 5. The deer's path, the centre start and a mirror page played through; then the guide on by default for a new visitor.

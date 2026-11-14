@@ -3,7 +3,7 @@
 Drafted 2026-11-13 after the whole-project review ([review-2026-11-13.md](review-2026-11-13.md)); Aaron: "Yes, build
 it", with the four recommended answers at the end. A first build is in the client behind `?first=1`
 (`client/src/firstSession.js`); "The first build" below says what it does, what differs from the draft and what has
-not been seen. It is for the home tile (`utm10n_680_4280`), this season, and for a person who lives on it and has
+not been seen. On 2026-11-14 (Aaron: "Yes, do it") the hawk's catch became a death that is drawn. It is for the home tile (`utm10n_680_4280`), this season, and for a person who lives on it and has
 never seen the game.
 
 ## The first build (2026-11-13)
@@ -13,7 +13,8 @@ opening, then "Fly home. There is no map." with the mini-map and the lights for 
 parameter nothing changes for anyone, except that a player who has hidden acorns through the guide keeps a gold light
 over that oak.
 
-**What it does, in order** (each seen in the viewer on the home tile on 2026-11-13, in that day's rain):
+**What it does, in order** (each seen in the viewer on the home tile on 2026-11-13, in that day's rain; the catch in
+step 6 on 2026-11-14):
 
 1. **Where do you live?** On that link the home screen's search box asks it, and a visitor may choose a place and
    Start without an account (the rule of 2026-11-06, browse but not start, still holds on every other link). A place
@@ -31,10 +32,17 @@ over that oak.
 5. **Acorns.** "It is November. Acorns are down." Then, carrying, the hole with the lit rim. The spot where the first
    acorn goes in becomes the player's tree: a gold light, kept in the browser (`wild-earth:first:tree:<tile>/<season>`),
    never sent.
-6. **The other side.** Enter becomes a squirrel at the foot of that tree. After a burial, or 80 s, jays call and a
-   red-tail is tipped into a stoop at the squirrel (`animals.stoopOn`), following it until the last quarter of its
-   fall. Up a tree, off the ground, or more than 4 m from where it comes down: "It pulls away." Otherwise the screen
-   goes dark for a moment and the player is the wisp again.
+6. **The other side.** Enter becomes a squirrel at the foot of that tree (where the player stands, when the tree kept
+   from an earlier day is more than 120 m off). After a burial, or 80 s, jays call and a red-tail is tipped into a
+   stoop at the squirrel (`animals.stoopOn`). The point it falls at follows the squirrel wholly until the last
+   quarter of the fall, then at no more than 2.5 m/s. Up a tree, off the ground, or more than 1.6 m from that point
+   at the end: "It pulls away." Otherwise **the squirrel dies, and it is drawn** (2026-11-14): the player is out of
+   the body, which goes back to the world and is taken by the hawk as any prey is (`animals.stoopTake`): the hawk
+   flares onto it, it falls onto its side, the hawk stands over it with its wings drooped round it for 18 to 35 s,
+   the soul rises, and the carcass stays for the scavengers. The screen blinks; the eye stays where it was, in the
+   world's own colours, while the wisp rises out of the body and 3 to 4 m away past it; the view goes to the wisp's
+   own only when the player presses a key or drags, or after 12 s. Keys still held from the run are ignored until
+   then, and the wisp cannot touch the hawk while it rises.
 7. **The deer** is the quiet path: one line, then nothing.
 8. **Today at home.** Offered as "Enter · Today at home" after the hawk, after seven quiet minutes, or at seventeen
    minutes: the place, the date and weather, the cache and the tree, the place found from the air, the season's
@@ -44,9 +52,13 @@ While the guide runs the species bar and the acorn game's panel are hidden; the 
 
 **Differs from the draft**
 
-- **The death is not drawn.** Tree squirrels are not killable in the animals' code, so the hawk's catch is a dark
-  moment and the wisp, and the squirrel's body goes back to the world alive. The line says the hawk had you; no
-  carcass lies there. Making tree squirrels killable (the fall, the carcass, the hawk mantling) is the honest fix.
+- **The death was not drawn in the first build; it is now** (2026-11-14). Tree squirrels can die in the animals'
+  code (`KILLABLE`), so a player hawk's dive or strike can take one too, where the tile's relations give that hunter
+  the squirrel; no AI hunter picks one. One killed up a tree drops to the ground under it. After the eye lets go, the
+  wisp's own view under trees is often among leaves: that is the spirit's camera in woodland everywhere, not this
+  beat's alone.
+- **The dead squirrel stays dead.** The carcass is the shared world's, so on a reload the same squirrel lies there
+  and the guide takes the nearest living one, which may be up a tree (then the hawk pulls away).
 - **The photograph is soft.** From 120 m it shows roads, fields and creeks, not roofs: the tile's present-day texture
   is one image for 10 km. A sharper patch round the point of arrival is a pipeline step.
 - **The photograph is not the loading screen.** The world still builds and compiles first (about 30 s on this Mac
@@ -62,8 +74,12 @@ While the guide runs the species bar and the acorn game's panel are hidden; the 
   playing all answered), not watched. Of `?first=centre` only the setup was seen (the start at the tile's centre,
   the mini-map hidden): the page stopped drawing frames before "Fly home" was reached.
 - A second page on the same tile (a mirror of the shared animals): the guide's summons and its hawk need the host.
-  If they fail the guide stops and says nothing more; not tried.
-- The hawk's "It pulls away" branch (the squirrel up a tree).
+  If they fail the guide stops and says nothing more; not tried. Nor was a squirrel's death seen from a mirror.
+- The catch (2026-11-14) was seen eight times on the home tile and "It pulls away" twice (the squirrel up a
+  tree). The squirrel was put on the ground and the beat started by script; the last runs were captured from the
+  canvas with the Browser pane hidden. Not seen: the blink itself (it is not in the canvas), the catch from a
+  first-person view (no hold then), the grab when the stoop is already over (a long frame), a player hawk's dive or
+  strike at a squirrel, and a squirrel outrunning the hawk on the ground.
 - Any real person. Timings and wording are first guesses.
 - No automated test: the client has none. Each changed module passes the ES-module syntax check.
 

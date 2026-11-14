@@ -520,11 +520,12 @@ class SpiritLook {
 // draws from a blend of the two instead: the position along the straight line between them but kept CLEAR m over the
 // ground, the orientation slerped, fov and near plane eased, over BLEND_T s (smoothstep), up to BLEND_FAR s more when
 // the two are far apart (a raven high in flight to a squirrel on the ground). restore() puts the control's pose back
-// after the render, so its next frame starts from its own camera. Input goes to the controls throughout.
+// after the render, so its next frame starts from its own camera. Input goes to the controls throughout. `hold` (s, set
+// after a capture; firstSession.js at a death) keeps the captured pose that long before the blend starts.
 const BLEND_T = 0.8, BLEND_FAR = 0.6, CLEAR = 0.3;
 class CameraBlend {
   constructor(camera, flight) {
-    this.camera = camera; this.flight = flight; this.on = false; this.applied = false; this.t = 0; this.dur = 0;
+    this.camera = camera; this.flight = flight; this.on = false; this.applied = false; this.t = 0; this.dur = 0; this.hold = 0;
     this.p0 = new THREE.Vector3(); this.q0 = new THREE.Quaternion(); this.fov0 = 70; this.near0 = 0.5;
     this.p1 = new THREE.Vector3(); this.q1 = new THREE.Quaternion(); this.fov1 = 70; this.near1 = 0.5;
     this.ps = new THREE.Vector3(); this.qs = new THREE.Quaternion(); this.fovs = 70; this.nears = 0.5;   // last drawn
@@ -533,7 +534,7 @@ class CameraBlend {
     const c = this.camera, mid = this.on && this.applied;   // mid-blend: from the pose being drawn
     this.p0.copy(mid ? this.ps : c.position); this.q0.copy(mid ? this.qs : c.quaternion);
     this.fov0 = mid ? this.fovs : c.fov; this.near0 = mid ? this.nears : c.near;
-    this.on = true; this.t = 0; this.dur = 0;
+    this.on = true; this.t = 0; this.dur = 0; this.hold = 0;
   }
   apply(dt) {
     this.applied = false;
@@ -541,7 +542,7 @@ class CameraBlend {
     const c = this.camera, f = this.flight;
     this.p1.copy(c.position); this.q1.copy(c.quaternion); this.fov1 = c.fov; this.near1 = c.near;
     if (this.t < 0.15) this.dur = Math.max(this.dur, BLEND_T + Math.min(BLEND_FAR, this.p0.distanceTo(this.p1) / 60));   // the new pose settles in a frame or two
-    this.t += dt;
+    if (this.hold > 0) this.hold -= dt; else this.t += dt;
     const u = smooth(Math.min(1, this.t / this.dur));
     if (u >= 1) { this.on = false; this.dur = 0; return; }
     c.position.lerpVectors(this.p0, this.p1, u);

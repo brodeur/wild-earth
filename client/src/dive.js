@@ -8,8 +8,8 @@ import { bodyOf } from './strikes.js';
 //
 // Offered (can(): the action bar's dive slot shows, Q or the slot starts it) while the player is a flier whose species
 // hunts (flierControl.js FLIERS, animals.js preySlots), in the air, with a prey animal selected (quarry.js) that it has
-// a line of sight to (sight.js losOf), that the catch can take (animals.js killable: not yet a ground squirrel, a tree
-// squirrel or a quail, which Tab still selects), and is below it (ABOVE_MIN m or more) within DIVE_R m: from far away too
+// a line of sight to (sight.js losOf), that the catch can take (animals.js killable: not yet a ground squirrel or a quail,
+// which Tab still selects), and is below it (ABOVE_MIN m or more) within DIVE_R m: from far away too
 // (2026-11-06: "For birds, they can initiate a dive from far away"; it first asked to be over the prey). Then each frame, before the flight moves (flierControl.update calls steer), the bird is turned straight at
 // the prey's body (TURN rad/s, the flight's pitch let down to PITCH_MIN for a stoop near the vertical), its wings tucked
 // (flierControl.draw: the soarers' stoop pose, a jay's folded wings) and no wingbeat, and it gains speed as a falling

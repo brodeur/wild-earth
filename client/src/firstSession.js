@@ -21,7 +21,17 @@ const OPEN_M = 140, OPEN_PITCH = -0.95, SINK_TO_M = 18, OFFER_FAR_M = 170, OFFER
 const DISSOLVE_MS = 2600, FLICKER_MS = 600, FLICKER_S = 2.4;
 const PLACE_R = [500, 3500], ARRIVE_M = 220;            // a known place's light: how far off it may stand; reached within this (horizontal)
 const PLACES_MAX_S = 240, OTHER_MAX_S = 90, BURY_MAX_S = 80, QUIET_S = 420, CARD_AT_S = 17 * 60;
-const HAWK_WARN_S = 6, SAFE_UP_M = 1.6, CAUGHT_M = 4;
+const HAWK_WARN_S = 6, SAFE_UP_M = 1.6;
+// The catch: the stoop's point follows the squirrel wholly until the last quarter of the fall, then at no more than
+// TRACK_MS (a squirrel flat out outruns it; one that stands, digs or walks does not); caught within CAUGHT_M of that
+// point on the ground. The stoop ends OVER_M over a squirrel on the ground (the talons' height) and over one up a tree.
+const TRACK_MS = 2.5, CAUGHT_M = 1.6, OVER_M = [0.35, 2.5], BLINK_MS = 220;
+// The death seen: the eye stays where it was (the squirrel's own view of itself: spirit.js CameraBlend hold), in the
+// world's true colours with no spirit's glow, until the player takes the controls or HOLD_MAX_S pass; only then does
+// the view go to the wisp's own (under trees that is often among leaves). Meanwhile, over RISE_S, the wisp rises out of
+// the body and away from the eye, RISE_UP_M up and RISE_FAR m past the body: clear of the hawk's touch (spirit.js
+// TOUCH_R), which is held off while it rises, and the body between the eye and the wisp.
+const HOLD_MAX_S = 12, RISE_S = 3, RISE_FAR = [3.2, 4.2], CHASE_M = 5.5, RISE_UP_M = 1.4;
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 // One thing to look for outdoors, by the tile's season (oak country: the home tile and its neighbours).
 const OUTSIDE = {
@@ -118,6 +128,7 @@ export class FirstSession {
     this.lineEl = mk('firstLine'); this.overEl = mk('firstOver'); this.flashEl = mk('firstFlash');
     this.onKey = e => {
       if (!this.active || e.repeat || e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (this.held && !this.rise) this.fresh = true;   // a key pressed anew after the death (not one still held from the flight from the hawk)
       if (e.key === 'Enter') { if (this.cardOpen) return; if (this.chip) { e.preventDefault(); this.openCard(); } else if (this.beat === 'other') { e.preventDefault(); this.beSquirrel(); } }
       else if (this.beat === 'bodies' && ['1', '2', '3'].includes(e.key)) { const o = this.offer[+e.key - 1]; if (o && this.animals.alive(o.a)) { e.preventDefault(); this.spirit.enter(o.a.id); } }
       else if (e.key === 'Escape' && this.cardOpen) this.closeCard();
@@ -180,7 +191,7 @@ export class FirstSession {
 
   update(dt) {
     if (this.failed) return;
-    try { this.step(dt); } catch (e) { this.failed = true; console.error('first session: the guide stopped', e); this.say(''); this.over(''); }
+    try { this.step(dt); } catch (e) { this.failed = true; console.error('first session: the guide stopped', e); this.say(''); this.over(''); if (this.spirit) this.spirit.plain = false; }
   }
   step(dt) {
     for (const b of this.beams) b.update(dt, this.camera);
@@ -202,9 +213,11 @@ export class FirstSession {
   }
 
   onForm(form, was) {
+    if (this.held && form !== 'spirit') { this.held = false; this.rise = null; this.spirit.plain = false; }   // a body entered while the eye was on the death
     if (was === undefined && form === 'spirit') return;
     if (form === 'spirit') { if (['fly', 'places', 'acorns', 'hide', 'squirrel', 'herd', 'free'].includes(this.beat)) { this.clearLights(); this.say('You are the spirit again. Touch anything alive to go on.', 9); this.go('loose'); } return; }
     this.clearOffer();
+    if (this.beat === 'today' || this.beat === 'wild') this.endOpening();   // a body entered before the opening was over
     if (form === RAVEN) { if (!this.done.has('fly')) this.go('fly'); else if (!this.tree) this.go('acorns'); else this.go('free'); }
     else if (form === SQUIRREL) this.go(this.done.has('squirrel') ? 'free' : 'squirrel');
     else if (form === DEER) this.go(this.done.has('herd') ? 'free' : 'herd');
@@ -224,6 +237,12 @@ export class FirstSession {
   toWild() {
     this.peek.fadeMs = DISSOLVE_MS; this.setPeek(false); this.go('wild'); this.roadsT = null;
     this.say('The same place, the same day, without us.');
+  }
+  // the opening cut short: the photograph, its caption and the roads' lines off, the spirit's own look back
+  endOpening() {
+    this.peek.fadeMs = 0; if (this.peek.want || this.peek.shown) this.setPeek(false);
+    if (this.roadsT != null && !this.roadsOff) { this.roadsOff = true; this.roads.group.visible = false; }
+    this.over(''); this.spirit.plain = false; this.sink = null; this.lookDown = false;
   }
   b_wild() {
     if (this.peek.shown) return;                              // the photograph is still up (applied after the next frame)
@@ -250,7 +269,7 @@ export class FirstSession {
     for (const [code, ahead, side] of spots) {
       const at = { x: f.pos.x + fx * ahead + rx * side, z: f.pos.z + fz * ahead + rz * side };
       let a = null, bd = Infinity;
-      for (const c of A.summon(code, 0, at) || []) { if (A.codeOf(c) !== code) continue; const d = (c.x - at.x) ** 2 + (c.z - at.z) ** 2; if (d < bd) { bd = d; a = c; } }
+      for (const c of A.summon(code, 0, at) || []) { if (A.codeOf(c) !== code || c.dead) continue; const d = (c.x - at.x) ** 2 + (c.z - at.z) ** 2; if (d < bd) { bd = d; a = c; } }
       if (!a) for (const c of A.list) { if (A.codeOf(c) !== code || !A.alive(c) || !A.playable(c)) continue; const d = (c.x - at.x) ** 2 + (c.z - at.z) ** 2; if (d < bd) { bd = d; a = c; } }
       if (!a) continue;
       const beam = new Beam(this.scene, 0xffc46a, 60, 0.7); beam.want = 1.5; this.beams.push(beam);
@@ -355,13 +374,13 @@ export class FirstSession {
     if (this.t > OTHER_MAX_S) { this.say(''); this.go('free'); }
   }
   beSquirrel() {
-    const A = this.animals, t = this.tree || { x: this.flight.pos.x, z: this.flight.pos.z };
+    const A = this.animals, P = this.flight.pos, t = this.tree && Math.hypot(this.tree.x - P.x, this.tree.z - P.z) < 120 ? this.tree : { x: P.x, z: P.z };   // (a tree kept from an earlier day may be across the tile)
     if (this.spirit.body) this.spirit.leave();
     this.say('');
     setTimeout(() => {
       const at = { x: t.x + 3, z: t.z + 2 }; let a = null, bd = Infinity;
-      for (const c of A.summon(SQUIRREL, 0, at) || []) { if (A.codeOf(c) !== SQUIRREL) continue; const d = (c.x - at.x) ** 2 + (c.z - at.z) ** 2; if (d < bd) { bd = d; a = c; } }
-      if (!a) for (const c of A.list) { if (A.codeOf(c) !== SQUIRREL || !A.alive(c)) continue; const d = (c.x - at.x) ** 2 + (c.z - at.z) ** 2; if (d < bd) { bd = d; a = c; } }
+      for (const c of A.summon(SQUIRREL, 0, at) || []) { if (A.codeOf(c) !== SQUIRREL || c.dead) continue; const d = (c.x - at.x) ** 2 + (c.z - at.z) ** 2; if (d < bd) { bd = d; a = c; } }
+      if (!a) for (const c of A.list) { if (A.codeOf(c) !== SQUIRREL || c.dead || !A.alive(c)) continue; const d = (c.x - at.x) ** 2 + (c.z - at.z) ** 2; if (d < bd) { bd = d; a = c; } }
       if (!a || !this.spirit.enter(a.id)) this.say('No squirrel is near. Touch anything alive to go on.', 9);
     }, 700);
   }
@@ -373,7 +392,7 @@ export class FirstSession {
     if (me) { if (me.carrying < this.sqCarry) this.buried = true; this.sqCarry = me.carrying; }
     if ((this.buried && this.t > 12) || this.t > BURY_MAX_S) this.go('hawk');
   }
-  b_hawk() {
+  b_hawk(dt = 0) {
     const f = this.flight, A = this.animals, sq = this.squirrel;
     if (!this.warned) {
       this.warned = true; this.say('Jays are calling. Something is hunting. Get up a tree.');
@@ -384,21 +403,57 @@ export class FirstSession {
       if (!this.hawk) { this.say('It passes over. Not this time.', 8); this.after(9, () => this.offerCard()); this.go('free'); return; }
     }
     const h = this.hawk; if (!h) return;
-    if (h.u < 0.75) A.stoopAim?.(h, f.pos.x, f.pos.z);         // it follows the squirrel until the last of its fall
+    const up = f.pos.y - this.tile.heights.atXZ(f.pos.x, f.pos.z);
+    const low = !!sq?.on && up <= SAFE_UP_M && (sq.mode === 'ground' || sq.mode === 'stun' || (sq.mode === 'work' && !sq.work?.back));   // on the ground, where a hawk can take it
+    const aim = this.aim ||= { x: f.pos.x, z: f.pos.z, over: OVER_M[1] };
+    const ax = f.pos.x - aim.x, az = f.pos.z - aim.z, ad = Math.hypot(ax, az), k = h.u < 0.75 ? 1 : Math.min(1, TRACK_MS * dt / (ad || 1));
+    aim.x += ax * k; aim.z += az * k;
+    aim.over += Math.max(-4 * dt, Math.min(4 * dt, OVER_M[low ? 0 : 1] - aim.over));
+    A.stoopAim?.(h, aim.x, aim.z, aim.over);
     if (h.u >= 0.97 || !A.alive(h)) {
-      const up = f.pos.y - this.tile.heights.atXZ(f.pos.x, f.pos.z), d = Math.hypot(h.x - f.pos.x, h.z - f.pos.z);
-      const safe = !sq?.on || up > SAFE_UP_M || (sq.mode !== 'ground' && sq.mode !== 'work' && sq.mode !== 'stun') || d > CAUGHT_M;
-      this.hawk = null;
+      const safe = !low || !A.alive(h) || Math.hypot(aim.x - f.pos.x, aim.z - f.pos.z) > CAUGHT_M;
+      this.hawk = null; this.aim = null;
       if (safe) { this.say('It pulls away. Not this time.', 9); this.after(10, () => this.offerCard()); this.go('free'); }
-      else {
-        this.flashEl.classList.add('on');
-        setTimeout(() => { if (this.spirit.body) this.spirit.leave(); this.flashEl.classList.remove('on'); }, 450);
-        this.say('The hawk had you. Out here that is the end of a squirrel, and a meal for a hawk. Choose again.', 12);
-        this.after(13, () => this.offerCard()); this.go('caught');
-      }
+      else this.caught(h);
     }
   }
-  b_caught() { }
+  // The hawk takes the squirrel: the player is out of the body, which goes back to the world where it stood and dies
+  // there as any animal does (animals.js stoopTake: the grab, the fall onto its side, the carcass, the hawk mantling
+  // over it, the soul rising, spirit.js); the screen blinks, the eye stays, and the wisp rises away past the body.
+  caught(h) {
+    const f = this.flight, A = this.animals, id = this.spirit.body?.id, c = this.camera.position;
+    let ex = c.x - f.pos.x, ez = c.z - f.pos.z; const el = Math.hypot(ex, ez), eye = Math.hypot(ex, c.y - f.pos.y, ez);   // toward the eye: the ground the player was looking over is clear
+    if (el > 0.5) { ex /= el; ez /= el; } else { ex = Math.sin(f.yaw); ez = Math.cos(f.yaw); }
+    this.spirit.plain = true; if (this.spirit.view) this.spirit.view.amt = 0;
+    this.flashEl.classList.add('on'); setTimeout(() => this.flashEl.classList.remove('on'), BLINK_MS);
+    if (this.spirit.body) this.spirit.leave();
+    const body = id != null ? A.byId?.get(id) : null;
+    this.took = !!(body && A.stoopTake?.(h, body));
+    if (this.took) {
+      const far = Math.min(RISE_FAR[1], Math.max(RISE_FAR[0], CHASE_M - el)), x = f.pos.x - ex * far, z = f.pos.z - ez * far, H = this.tile.heights;
+      this.rise = { t: 0, x0: f.pos.x, y0: f.pos.y, z0: f.pos.z, x, z, y: Math.max(H.atXZ(f.pos.x, f.pos.z), H.atXZ(x, z)) + RISE_UP_M };
+      f.yaw = f.camYaw = Math.atan2(ex, ez);   // facing away from the eye (the flight's yaw: 0 faces -z)
+      this.held = eye > 1.2 && !!this.spirit.blend; this.fresh = false;   // (not from inside the body: a first-person view)
+      if (this.held) this.spirit.blend.hold = HOLD_MAX_S;
+    }
+    if (!this.held) this.spirit.plain = false;
+    this.say('The hawk had you. Out here that is the end of a squirrel, and a meal for a hawk. Choose again.', 12);
+    this.after(13, () => this.offerCard()); this.go('caught');
+  }
+  b_caught(dt = 0) {
+    const r = this.rise, f = this.flight, B = this.spirit.blend;
+    if (this.held) {   // the eye on the death, until the player's own hand (a key pressed anew or a drag, once the wisp is clear) or the time is up
+      if (!(B.hold > 0) || this.form() !== 'spirit') { this.held = false; this.spirit.plain = false; }
+      else if (!r && (this.fresh || f.drag)) B.hold = 0;
+      else { f.keys?.clear(); f.speed = 0; }   // keys still down from the squirrel's run do not carry the wisp off
+    }
+    if (!r) return;
+    if (this.form() !== 'spirit') { this.rise = null; return; }
+    r.t += dt; const u = Math.min(1, r.t / RISE_S), e = u * u * (3 - 2 * u);
+    this.spirit.coolT = Math.max(this.spirit.coolT || 0, 0.4);   // no touch while it rises: the hawk stands on the body it leaves
+    f.pos.set(r.x0 + (r.x - r.x0) * e, r.y0 + (r.y - r.y0) * e, r.z0 + (r.z - r.z0) * e); f.pitch = -0.2 * e;
+    if (u >= 1) this.rise = null;
+  }
 
   // ---- the deer: the quiet path ----
   b_herd() {

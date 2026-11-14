@@ -9893,3 +9893,31 @@ once; a first body may die; a name after playing, not before).
 - **Not seen**: the centre start past its setup, the hawk pulling away, a mirror page; the deer's path was driven by
   script with the pane hidden, not watched; no person has played it.
 - **Not on by default**: a new visitor without the parameter gets the game as before.
+
+## 2026-11-14: The hawk's catch in the first twenty minutes is a death that is drawn; tree squirrels can die (client/src/animals.js, firstSession.js, spirit.js, dive.js; docs/first-twenty-minutes.md)
+
+Aaron: "Yes, do it" (to "Shall I make the hawk's catch a real, drawn death next?").
+
+- **Tree squirrels are in `KILLABLE`.** No AI hunter picks one (their hunts' kinds do not list squirrels), so the
+  world's balance is as it was; a player's dive or strike can now take one where the tile's relations give that hunter
+  the squirrel (the red-tail and the gray squirrel on the home tile). A kill lets go of the squirrel's acorn task; one
+  killed on a bole or a limb drops to the ground under it (`dropH`, 9.8 m/s2), and its record is at the ground.
+- **The hawk's grab is one function** (`hkGrab`: the kill, then the mantle), used by the stoop's own end and by
+  `stoopTake`, which the guide calls: the body the player has just left becomes the stoop's prey and the grab does not
+  miss (`sure`). `take()` refuses a dead animal.
+- **The guide's rule for the catch**: the stoop's point follows the squirrel wholly until the last quarter of the fall,
+  then at 2.5 m/s at most; caught within 1.6 m of it on the ground (it was 4 m from where the hawk came down). The
+  numbers are mine, not tuned with a player; only a squirrel standing still (caught) and one up a tree (not) were tried.
+- **How it is shown**: the eye stays where it was (`CameraBlend.hold`, new) in the world's own colours until the player
+  presses a key anew or drags, 12 s at most; the wisp rises out of the body and 3.2 to 4.2 m away past it over 3 s,
+  held off the hawk's touch, with keys still down from the run ignored. First tried: the wisp's own view from 6 m
+  back, then to one side. Both ended among leaves or behind the wisp's glow, so the eye is held instead.
+- **Also fixed in the guide**: a body entered before the opening is over closes the opening (the photograph and its
+  caption stayed up); the squirrel is put where the player is when the kept tree is more than 120 m off; a dead animal
+  is not offered or entered.
+- **Seen** on the home tile: the catch eight times (the hawk on the squirrel within 0.2 s of the decision, the roll
+  onto its side over 0.4 s, the mantle, one soul, the carcass at the ground, `lastKill` by the red-tail), "It pulls
+  away" twice, and a squirrel killed 2.8 m up a bole reaching the ground in under a second. The machine's load
+  average was 45 to 60 throughout, so nothing here is a frame rate.
+- **Not seen**: a mirror page; a player hawk's dive or strike at a squirrel; the grab after the stoop has ended; the
+  catch from a first-person view; a squirrel outrunning the hawk; any person.

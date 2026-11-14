@@ -808,9 +808,12 @@ const DEER_TURN = { w: 2.2, fast: 6, go: 0.5, stop: 1.4, slow: 1.2, face: 0.7, g
 // falls over `fall` s (lieStill): the roll onto its side and the drop of the legs under gravity (slow to start, hard
 // at the ground), the gait's amplitude slackening to nothing and the pose going to the species' rest (REST_POSE: the
 // deer's bed clip blended in at a third of its usual time, a lizard flat), instead of snapping onto its side.
+// The tree squirrels die too (2026-11-14): no AI hunter picks one (the hunts' kinds below), so the deaths are a player's
+// catch where the tile's relations give that hunter the squirrel, and the first session's one hawk (stoopTake). One
+// killed up a tree drops to the ground under it (kill: dropH; lieStill).
 const CARRION = { t: 600, small: 150, reach: { [ML]: 2.4, [CY]: 1.6, [FX]: 1.3, [HK]: 1.4, [RV]: 0.9, [SJ]: 0.6, [BC]: 1.4, [BA]: 1.6, [CR]: 0.7 }, lionCatch: 0.35, canidCatch: 0.4, scavR: 300, ravenStay: [20, 45], feed: 45, fall: 0.4 };
 const VENOM_EMIT = 0.5;   // s between the venom's 'hp' events (venomTick)
-const KILLABLE = new Set([DR, BK, JR, RB, VO, LZ, SH, DM, TC, EL, EB, YC, SR, RS, EN, WT, CF]);   // (+ 2026-11-06, the snakes' prey: the yellow-pine chipmunk, the shrew, the salamanders, the toad and the frog; pipeline/games.py snake_predation)   // (+ the elk, 2026-11-06: on the deer's machine, it dies as the deer does; the Serengeti's zebra, wildebeest and buffalo stand in on it)   // (+ the Hoh batch's hare, deer mouse and chipmunk: the bobcat's and the hawk's prey)
+const KILLABLE = new Set([DR, BK, JR, RB, VO, LZ, SH, DM, TC, EL, EB, YC, SR, RS, EN, WT, CF, SQ]);   // (+ 2026-11-06, the snakes' prey: the yellow-pine chipmunk, the shrew, the salamanders, the toad and the frog; pipeline/games.py snake_predation)   // (+ the elk, 2026-11-06: on the deer's machine, it dies as the deer does; the Serengeti's zebra, wildebeest and buffalo stand in on it)   // (+ the Hoh batch's hare, deer mouse and chipmunk: the bobcat's and the hawk's prey)
 const REST_POSE = { [LZ]: -0.95 };   // the pose a dead body settles to (1 for the rest: the deer's bed, the small bodies' rest); the lizard flat
 const HUNT = { r: 300, every: 0.3, lionR: 200, near: 60, stalk: 0.5, rush: 25, rushFar: 50, rushT: [4, 5], lose: 260, stalkMax: 180,
   lionCool: [60, 120], canidR: 60, trotMax: 25, pounceD: 2.4, chaseT: [2, 3.5], canidCool: [20, 45], look: [8, 16], hawk: 0.5, quail: 30,
@@ -1668,7 +1671,7 @@ export class Animals {
       if (this.time >= V.until) { a.venom = null; this.venomed.delete(a); }
     }
   }
-  // Whether the catch can take this animal at all (KILLABLE: the ground squirrels, tree squirrels and quail are not yet; dive.js offers no dive at them)
+  // Whether the catch can take this animal at all (KILLABLE: the ground squirrels and quail are not yet; dive.js offers no dive at them)
   killable(a) { return !!a && !a.remote && KILLABLE.has(a.sp); }
   // A prey animal that saw a dive coming (startle) and has got to cover (a vole hidden in the grass, a ground squirrel
   // down its burrow, a lizard in its crevice: the hiding states fled() and huntable() know) is not there to take; one
@@ -1763,15 +1766,18 @@ export class Animals {
     if (!prey || prey.dead || prey.remote || prey.sp === undefined || !KILLABLE.has(prey.sp)) return false;
     if (prey.group?.agg && prey.rank >= 0) (prey.group.agg.dead ||= new Set()).add(prey.rank);   // a planned herd's member: not spawned again this season
     if (!this.mirror) this.fields?.scare(prey.x, -prey.z, FEAR_R_KILL, 255);   // a kill marks the ground with fear (herdField.js)
-    const pk = KIN[prey.sp], small = pk === VO || pk === RB || pk === LZ;   // (the Hoh batch's hare, chipmunk and deer mouse by their kin)
+    const pk = KIN[prey.sp], small = pk === VO || pk === RB || pk === LZ || pk === SQ;   // (the Hoh batch's hare, chipmunk and deer mouse by their kin)
+    if (pk === SQ) { this.dropTask(prey); prey.task = 0; prey.carry = 0; prey.path = null; prey.guard = null; }   // its claimed acorn is free again (acorns.js)
     prey.dead = true; prey.diedAt = this.time; prey.carrionUntil = this.time + (small ? CARRION.small : CARRION.t);
     prey.hunt = null; prey.air = 0; prey.speed = 0; prey.flickV = 0; prey.lift = 0; prey.fleeT = 0; prey.spd = 0;
-    prey.state = pk === VO ? VL_SIT : pk === RB ? B_FORM : pk === JR ? JK_FORM : pk === LZ ? L_BASK : D_BED;
+    prey.state = pk === VO ? VL_SIT : pk === RB ? B_FORM : pk === JR ? JK_FORM : pk === LZ ? L_BASK : pk === SQ ? S_PAUSE : D_BED;
     // the fall (lieStill): from the gait and pose it died in to the rest pose on its side over CARRION.fall s
     const skin = !!this.drawn[prey.sp]?.model?.skin;
     prey.fall = 0; prey.amp0 = prey.amp; prey.pose0 = skin ? 1 : prey.pose; prey.pitch0 = prey.pitch; prey.flick0 = prey.flick;
     prey.under = !!(prey.tun || prey.dig); if (prey.under) this.dig?.aiDead?.(prey);   // killed in a tunnel or a pit (dig.js): it lies there
     prey.yDead = prey.under ? prey.y : Math.max(prey.y, this.heights.atXZ(prey.x, prey.z));   // where it died (a lizard on its rock stays on the rock)
+    prey.dropH = 0; prey.dropV = 0;
+    if (pk === SQ && !prey.under) { const g = this.heights.atXZ(prey.x, prey.z); prey.dropH = Math.max(0, prey.yDead - g); prey.yDead = g; }   // a squirrel killed on a bole or a limb: it lies on the ground under it (the record's height), and falls there (lieStill)
     if (skin) (prey.cs ||= makeClipState()).quick = 0.35;   // the deer: the bed clip from the first frame, blended in at a third of its time
     prey.lieRoll = (prey.rng ? prey.rng() : Math.random()) < 0.5 ? -1 : 1;
     if (prey.group) {   // a herd member: the herd goes on without it
@@ -1788,7 +1794,8 @@ export class Animals {
   }
   lieStill(a, dt = 0) {   // the fall over CARRION.fall s, then on its side on the ground, a little up so the body is not under it
     const u = a.fall = Math.min(1, (a.fall ?? 1) + dt / CARRION.fall), e = u * u, rest = REST_POSE[a.sp] ?? 1;
-    a.y = (a.under ? a.yDead : Math.max(this.heights.atXZ(a.x, a.z), a.yDead ?? -Infinity)) + (a.under ? 0.01 : 0.04) * e;
+    if (a.dropH > 0) { a.dropV += 9.8 * dt; a.dropH = Math.max(0, a.dropH - a.dropV * dt); }   // out of the tree it died in
+    a.y = (a.under ? a.yDead : Math.max(this.heights.atXZ(a.x, a.z), a.yDead ?? -Infinity)) + (a.under ? 0.01 : 0.04) * e + (a.dropH || 0);
     a.roll = a.lieRoll * 1.45 * e; a.pitch = (a.pitch0 || 0) * (1 - e); a.speed = 0;
     a.amp = (a.amp0 || 0) * (1 - u); a.pose = (a.pose0 || 0) + (rest - (a.pose0 || 0)) * e; a.flick = (a.flick0 || 0) * (1 - u);
   }
@@ -4378,11 +4385,9 @@ export class Animals {
       if (u > 0.9 && a.group) { this.flushCovey(a.group, a.x, a.z, 'hawk'); a.group = null; }
       if (u >= 1) {   // the grab: the kill within reach (the talons), then the mantle on the ground; else pull up out of it
         const d = prey ? Math.hypot(prey.x - a.x, prey.z - a.z) : Infinity;
-        if (prey && d < (this.reach?.[HK] ?? CARRION.reach[HK]) && KILLABLE.has(prey.sp) && r() < HUNT.hawkCatch) {
-          this.kill(prey, a); a.state = H_MANTLE; a.t = HUNT.mantleT[0] + r() * (HUNT.mantleT[1] - HUNT.mantleT[0]);
-          a.x = prey.x; a.z = prey.z; a.y = H.atXZ(a.x, a.z) + 0.25; a.air = 0; a.speed = 0; a.prey = null;
-          this.lastHawkKill = { id: a.id, prey: SPECIES[prey.sp].code, t: this.time };
-        } else { a.state = H_PULL; a.t = 2.5; a.speed = 18; a.brake = 0; a.prey = null; }
+        if (!(prey && d < (this.reach?.[HK] ?? CARRION.reach[HK]) && KILLABLE.has(prey.sp) && (a.sure || r() < HUNT.hawkCatch) && this.hkGrab(a, prey))) {
+          a.state = H_PULL; a.t = 2.5; a.speed = 18; a.brake = 0; a.prey = null; a.sure = false;
+        }
       }
     } else if (a.state === H_MANTLE) {   // on the ground over its kill: wings half spread and drooped round it, the tail fanned, the head down and tearing at it
       a.air = 0; a.brake = 2; a.y = H.atXZ(a.x, a.z) + 0.25;
@@ -4400,6 +4405,15 @@ export class Animals {
       }
     }
   }
+  // The talons close on prey: the kill, then the hawk on the ground over it (H_MANTLE). False when the prey cannot die.
+  hkGrab(a, prey) {
+    if (!this.kill(prey, a)) return false;
+    const r = a.rng;
+    a.state = H_MANTLE; a.t = HUNT.mantleT[0] + r() * (HUNT.mantleT[1] - HUNT.mantleT[0]);
+    a.x = prey.x; a.z = prey.z; a.y = this.heights.atXZ(a.x, a.z) + 0.25; a.air = 0; a.speed = 0; a.prey = null; a.sure = false;
+    this.lastHawkKill = { id: a.id, prey: SPECIES[prey.sp].code, t: this.time };
+    return true;
+  }
   // A hawk tips into a stoop at (tx, tz): at a covey (cov), at prey (a vole, rabbit, jackrabbit or lizard: the catch,
   // HUNT.hawkBrake and on), or at open ground. The stoop ends hawkOver m over prey, 2.5 m over anything else.
   hkStoop(a, tx, tz, cov = null, prey = null) {
@@ -4410,8 +4424,10 @@ export class Animals {
     this.emit('stoop', { animal: a, x: a.x, y: a.y, z: a.z, target: cov || prey });
   }
   // One hunt started on purpose (the first session, firstSession.js): a red-tail put `off` m from (x, z) and `up` m over the
-  // ground there and tipped into a stoop at that point, with no prey (it pulls up 2.5 m over it); stoopAim moves the
-  // point while it falls. Null on a mirror page, or where no hawk lives.
+  // ground there and tipped into a stoop at that point, with no prey (it pulls up `over` m over it); stoopAim moves the
+  // point while it falls. Null on a mirror page, or where no hawk lives. stoopTake ends it as a catch: `prey` (an animal
+  // of this world: the body the player has just left) is the stoop's prey from there, the last of the fall tracks it
+  // and the grab at its end does not miss; a stoop already over (a long frame) grabs it from within 12 m.
   stoopOn(x, z, off = 75, up = 48) {
     if (this.mirror) return null;
     const h = this.list.find(a => ID[a.sp] === HK && !a.dead && !a.remote && this.alive(a)); if (!h) return null;
@@ -4419,7 +4435,12 @@ export class Animals {
     h.x = x + Math.cos(ang) * off; h.z = z + Math.sin(ang) * off; h.y = H.atXZ(h.x, h.z) + up; h.state = H_SOAR; h.t = 1e9; h.air = 1;
     this.hkStoop(h, x, z); return h;
   }
-  stoopAim(h, x, z) { if (h?.state !== H_STOOP) return; h.tx = x; h.tz = z; h.ty = this.heights.atXZ(x, z) + 2.5; }
+  stoopAim(h, x, z, over = 2.5) { if (h?.state !== H_STOOP) return; h.tx = x; h.tz = z; h.ty = this.heights.atXZ(x, z) + over; }
+  stoopTake(h, prey) {
+    if (!h || this.mirror || !prey || prey.dead || prey.remote || !KILLABLE.has(prey.sp) || this.byId.get(prey.id) !== prey) return false;
+    if (h.state === H_STOOP) { h.prey = prey; h.sure = true; return true; }
+    return h.state === H_PULL && Math.hypot(h.x - prey.x, h.z - prey.z) < 12 && this.hkGrab(h, prey);
+  }
   tvUpdate(a, dt) {
     const r = a.rng, H = this.heights; a.t -= dt; a.air = 1;
     // teetering: an uneven rock on the dihedral, the vulture's signature at any distance
@@ -6161,7 +6182,7 @@ export class Animals {
   playable(a) { return !!a && !a.remote && !a.dead && this.byId.get(a.id) === a && PLAYABLE.includes(a.sp); }
   // Lift a playable animal out of the population (the player is in it now); returns its info, or null.
   take(id) {
-    const a = this.byId.get(id); if (!a || a.remote || !PLAYABLE.includes(a.sp)) return null;
+    const a = this.byId.get(id); if (!a || a.remote || a.dead || !PLAYABLE.includes(a.sp)) return null;   // (not the dead: no body to take)
     const o = this.info(a);
     this.dropTask(a);
     if (a.state === W_MOB) a.mob = null;
@@ -6379,7 +6400,7 @@ export class Animals {
     if (this.gmOf?.[a.sp] && KIN[a.sp] === RV && a.slot >= 0) this.gmOf[a.sp][a.slot] = a.gm;
     a.phz = m1[F.phz]; a.e3 = m1[F.e3]; a.speed = m1[F.speed];
     if (fl & FL_DEAD && !a.dead) {   // carrion already lying when this page joined: as it lies, no fall and no soul
-      a.dead = true; a.fall = 1; a.carrionUntil = Infinity; a.lieRoll = m1[F.roll] < 0 ? -1 : 1; a.yDead = m1[F.y] - 0.04;
+      a.dead = true; a.fall = 1; a.carrionUntil = Infinity; a.lieRoll = m1[F.roll] < 0 ? -1 : 1; a.yDead = KIN[a.sp] === SQ ? this.heights.atXZ(m1[F.x], m1[F.z]) : m1[F.y] - 0.04;   /* (a squirrel lies on the ground, whatever the sample caught of its drop) */
       a.pose0 = a.pose = m1[F.pose]; a.amp0 = 0; a.flick0 = 0; a.pitch0 = 0; a.group = null; this.carrion.push(a);
     }
     a.phase += wrapAngle(m1[F.phase] - (a.phase % TAU));
