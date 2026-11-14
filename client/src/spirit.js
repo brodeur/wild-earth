@@ -315,7 +315,7 @@ export class SpiritControl {
   // main.js: the other players' wisps (players.js), drawn with the souls' layer-2 pass in every form while any is live.
   setOthers(p) { this.others = p; this.view.extra = p; }
   // main.js, right after the Atmosphere's frame update: the spirit's view, fading in while a spirit, out otherwise.
-  look(dt) { this.view.update(dt, this.on); }
+  look(dt) { this.view.update(dt, this.on && !this.plain); }   // plain: the world in its own colours for a spirit (the first session's opening, firstSession.js)
   // main.js, in place of renderer.render: the frame with the spirit's view's passes (SpiritLook.render)
   render(renderer, scene, camera) { this.view.render(renderer, scene, camera); }
   // main.js, around the render: the camera blend over a switch (CameraBlend), and the control's own pose back after.

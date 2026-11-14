@@ -279,7 +279,8 @@ export class TitleScreen {
   // the last tile played, else the first; pending: a { lat, lon } to arrive over (its tile faces, if built); hub:
   // 'stub' for hubStub.js, an object with config/me/watch/on/close for a real one (hub.js), else the server is asked
   // over HTTP; onSelect(tileId) and onBegin(choice) as the card screen's.
-  constructor({ root, renderer, index, tileId = null, pending = null, hub = null, onSelect = null, onDeselect = null, onBegin }) {
+  constructor({ root, renderer, index, tileId = null, pending = null, hub = null, onSelect = null, onDeselect = null, onBegin, first = false }) {
+    this.first = !!first;        // the first session's link (?first=1, firstSession.js): a visitor starts without a name, which is offered afterwards
     this.root = root; this.renderer = renderer; this.index = index; this.onSelect = onSelect; this.onDeselect = onDeselect; this.onBegin = onBegin;
     this.ids = index.tiles.map(t => t.tile_id);
     this.readyIds = new Set(); this.status = {}; this.progress = {}; this.points = {}; this.counts = {};
@@ -444,6 +445,7 @@ export class TitleScreen {
   // pause (geocode.js). Enter asks at once and takes the first; Escape clears.
   wireSearch() {
     const input = this.$('.tt-search input'), clear = this.$('.tt-sclear');
+    if (this.first) { input.placeholder = 'Where do you live?'; input.setAttribute('aria-label', 'where do you live: search any place on earth'); }
     const update = now => {
       const q = this.query = input.value.trim();
       clear.hidden = !input.value;
@@ -656,9 +658,10 @@ export class TitleScreen {
     await Promise.race([Promise.all([hubP, tex, names]), wait(LOAD_MAX_MS)]);
     await wait(Math.max(0, TITLE_MIN_MS - (performance.now() - t0)));
     if (this.closed) return;
-    this.reserveRight = !!this.config || this.hubParam === 'stub';   // a hub: the sign-in, then the social column, stand on the right
+    this.reserveRight = (!!this.config || this.hubParam === 'stub') && !(this.first && !this.user);   // a hub: the sign-in, then the social column, stand on the right (not for the first session's visitor)
     this.setPhase('crescent');
     if (this.user) this.onSignedIn(this.user, true);   // the stub, or a session the hub already knows: lit while it lands
+    else if (this.first) this.onSignedIn(null, true);    // the first session: played alone at once, as with no hub (Aaron, 2026-11-13: a name after, not before)
     else if (this.config && this.onGate) this.browse();  // signed out with a hub: the places can be browsed, not started
     await this.land();   // the title and the earth to their places together
     if (this.closed) return;
@@ -1156,7 +1159,7 @@ export class TitleScreen {
     start.disabled = !g && (!ready || this.begun);   // greyed, not disabled, for a visitor: it keeps hover and focus for the tooltip
     start.toggleAttribute('aria-disabled', g); if (g) start.setAttribute('aria-disabled', 'true');
     this.$('.tt-tip').hidden = !g;
-    inv.hidden = g;
+    inv.hidden = g || (this.first && !this.user);   // (the first session's visitor has no one to invite yet)
     inv.disabled = !id || this.begun || !this.onInvite;
     inv.title = this.onInvite ? 'invite a group or friends to this place' : 'sign in to invite friends';
     this.$('.tt-bstatus').textContent = !id || g ? '' : this.autoStart && !this.begun ? `Going with ${this.autoStart}${ready ? '' : `: ${this.status[id] || 'loading…'}`}` : ready ? `${this.byId[id].name} is ready` : (this.status[id] || 'loading…');

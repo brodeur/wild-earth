@@ -37,6 +37,7 @@ import { SEASON_LOOK, seasonOfDate, sunDirection, dateForSeason, parseDate, setS
 import { AcornGame } from './acorns.js';
 import { Identify, habitatLabel } from './identify.js';
 import { PlaceNames } from './placenames.js';
+import { FirstSession, firstWanted } from './firstSession.js';
 import { Soundscape } from './sound.js';
 import { Shadows, forgetQueuedCasters } from './shadows.js';
 import { Animals } from './animals.js';
@@ -213,6 +214,7 @@ async function disposeWorld(w, renderer) {
   if (m.weather) m.weather.onThunder = null;
   m.abilities?.dispose?.();   // the body's row: its slots go, the row hides (abilities.js)
   if (fieldGuide.game === m.acorns) { fieldGuide.game = null; fieldGuide.log = []; fieldGuide.anchor = null; }   // the page's field guide (identify.js attached the game)
+  m.first?.dispose?.();   // the first session's guide: its lines, lights and card (firstSession.js)
   m.players?.dispose?.();  // the other players' wisps, names and marks (players.js; before the spirit: they share its wisp's textures)
   m.spirit?.dispose?.();   // the souls' columns and the leaving wisps (spirit.js, 2026-11-01)
   m.carrion?.dispose?.();   // Scavenge: the carcasses' records, bones and halos (carrion.js; before the dig, whose socket it rides)
@@ -402,7 +404,7 @@ async function main() {
     const ids = index.tiles.map(t => t.tile_id);
     if (!ids.includes(tileId)) tileId = ids.includes(lastTile()) ? lastTile() : ids[0];
     if (!tileId) throw new Error('no tiles built');
-    if (pending) history.replaceState(null, '', `?tile=${tileId}`);   // never keep the point in the URL
+    if (pending) history.replaceState(null, '', `?tile=${tileId}${firstWanted(params) ? `&first=${firstWanted(params)}` : ''}`);   // never keep the point in the URL
     // a choice abandons the world before it (building, or ready behind the screen)
     let choice = null;
     const select = reselect = async id => {
@@ -435,7 +437,7 @@ async function main() {
     // made again by Exit to main screen (exitToTitle): the same screen, facing the tile last played, signed in still
     openTitle = (first = false) => {
       choice = null;
-      screen = new Screen({ root: $('opening'), renderer, index, tileId: first ? tileId : lastTile(), pending: first ? pending : null, hub: mp ? mp.titleHub : params.get('hub'),
+      screen = new Screen({ root: $('opening'), renderer, index, tileId: first ? tileId : lastTile(), pending: first ? pending : null, hub: mp ? mp.titleHub : params.get('hub'), first: !!firstWanted(params),
         onSelect: id => { select(id); },
         onDeselect: () => { choice = null; dropWorld(); },
         onBegin: c => { choice = c; if (world?.ready && world.tileId === c.tileId) world.enter(c, true); } });
@@ -473,7 +475,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const arrivePoint = arrive?.xy ?? (arrive?.point ? localXY(tile, arrive.point.lat, arrive.point.lon) : null);   // a switch's arrival; null: the centre
   if (arrive && !arrive.lead && !arrive.quiet) mp?.chose(tile.id, arrivePoint);   // a switch to another tile asks the group along (multiplayer.js)
   const flags = ['game', 'skip'].filter(k => params.get(k) === '1').map(k => `&${k}=1`).join('')
-    + (params.has('fov') ? `&fov=${params.get('fov')}` : '');
+    + (params.has('fov') ? `&fov=${params.get('fov')}` : '') + (firstWanted(params) ? `&first=${firstWanted(params)}` : '');
   if (pending && direct) history.replaceState(null, '', `?tile=${tile.id}${flags}`);   // never keep the point in the URL
   $('tileName').textContent = tile.id;
   const credits = setupCredits({ tile, link: $('creditsLink'), panel: $('credits') });   // HUD Data link: sources, licences, asset credits
@@ -768,12 +770,12 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     $('peekBanner').textContent = `present day · ${peek.present?.year || 2022} imagery`;
     $('peekBanner').classList.toggle('hidden', !on);
   }
-  function crossFade() {
+  function crossFade(ms = 300) {
     const c = renderer.domElement;
     if (fade.width !== c.width || fade.height !== c.height) { fade.width = c.width; fade.height = c.height; }
     fade.getContext('2d').drawImage(c, 0, 0);   // same task as the render, so the drawing buffer is intact
     fade.getAnimations().forEach(a => a.cancel());
-    fade.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: 'ease-in-out' });
+    fade.animate([{ opacity: 1 }, { opacity: 0 }], { duration: ms, easing: 'ease-in-out' });
   }
   const typing = e => e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement;
   addEventListener('keydown', e => { if (e.code === 'KeyP' && !e.repeat && !typing(e)) setPeek(true); });
@@ -804,6 +806,10 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
   animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
   w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, life, identify, places, peek, setPeek, sound, animals, anet, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, players, credits, sight, quarry, dive, speedBlur, combat, pilot, nearBar, sniffWave, cues, forage, fruit, needs, dig, carrion };   // debugging handle
+  // The first twenty minutes (firstSession.js, docs/first-twenty-minutes.md): the guide on ?first=1 or ?first=centre; the
+  // light over the player's own oak for anyone who has hidden acorns in one
+  const first = w.m.first = new FirstSession({ mode: firstWanted(params), tile, scene, camera, flight, animals, spirit, acorns, squirrel, ground, places, weather, roads, peek, setPeek, dateNow, seasonNow, entering: () => !!w.entering, form: () => w.handle?.playerSpecies || 'spirit' });
+  window.__we.first = first;
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screenOpen) makeSound();
@@ -854,8 +860,9 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
       arrival.plan(c.point, null, !!c.lead); arrival.place(); spirit.settle();   // a joiner's behind and above the picker's planned point, until the picker's position comes (frame: w.entering)
       const ent = w.entering = { t0: performance.now(), frames: 0, lead: c.lead || null, body: wantBody };
       if (wantBody && !ent.lead) { takeBody(wantBody, null); ent.body = null; }
+      else if (!wantBody && !ent.lead) first.begin();   // the first session opens on today's photograph (firstSession.js)
       html.classList.add('arriving');   // the black (index.html #enterFade) and the HUD hidden until the frames are drawn
-      setTimeout(() => liftEntry(ent), ENTER_MAX_MS + 1000);   // a hidden page draws no frames: lifted all the same
+      setTimeout(() => liftEntry(ent), ENTER_MAX_MS + (first.active ? 8000 : 1000));   // a hidden page draws no frames: lifted all the same
     }
     html.classList.remove('opening'); html.classList.remove('switching');
     closeScreen();
@@ -877,6 +884,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
         ent.lead = null; ent.body = null; ent.frames = 0;
       }
     } else if (drew) ent.frames++;
+    if (first.holdBlack()) return;   // the first session's photograph is still loading: the black stays (ten seconds at most)
     if ((!ent.lead && ent.frames >= ENTER_FRAMES && now - ent.t0 > ENTER_MIN_MS) || now - ent.t0 > ENTER_MAX_MS) liftEntry(ent);
   };
   // Into a body the home screen chose (Aaron, 2026-11-07, the rings: "Any other group member can click on that same animal
@@ -1103,7 +1111,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     const p = pending ? localXY(tile, pending.lat, pending.lon) : null;
     playAs(as, { animals, spirit, x: p?.x ?? tile.size / 2, z: -(p?.north ?? tile.size / 2) });
   }
-  else if (direct) { const p = pending ? localXY(tile, pending.lat, pending.lon) : null; if (p) flight.reset(p.x, -p.north, 150); }   // a spirit, flying, at ?lat=&lon= or the centre
+  else if (direct) { const p = pending ? localXY(tile, pending.lat, pending.lon) : null; if (p) flight.reset(p.x, -p.north, 150); first.begin(); }   // a spirit, flying, at ?lat=&lon= or the centre
   else if (arrive) enterWorld({ season: arrive.season, date: arrive.date, point: arrivePoint, lead: arrive.lead || null, follow: !!arrive.follow, pick: !!arrive.pick }, !!arrive.follow);   // a follow's Join was a press: its sound may start
 
   let last = performance.now(), hudT = 0, heldAt = 0;
@@ -1183,6 +1191,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     life.update(camera.position);
     acorns.update(dt, camera, s);
     animals.update(dt, s, state.hour);
+    first.update(dt);   // the first session's guide and its lights (firstSession.js)
     if (!peek.shown) terrain.setLook(look);
     // behind the screen, under an entry's black, and for the first 2 s of a direct start (no screen: a few dark frames
     // instead of a long one)
@@ -1194,7 +1203,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     if (draw && !(screenOpen && screen.ownsCanvas)) dig.xray(renderer);   // the underground view's pass over it, while the body is underground (dig.js)
     spirit.unblendCamera();   // the control's own camera back for its next frame
     sound?.update(dt, { season: s, hour: state.hour, sunElevation: sun.elevation, weather: wx });
-    if (peek.pending !== null) { if (peek.pending !== peek.shown) { crossFade(); applyPeek(peek.pending); } peek.pending = null; }
+    if (peek.pending !== null) { if (peek.pending !== peek.shown) { crossFade(peek.fadeMs || 300); applyPeek(peek.pending); } peek.pending = null; }
     minimap.update(flight.pos, f.heading);
     abilities.update(!screenOpen);   // the abilities' slots lit by the keys held and the body's state (abilities.js)
     hudT += dt;

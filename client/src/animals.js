@@ -4409,6 +4409,17 @@ export class Animals {
     if (prey) this.lastStoop = { id: a.id, prey: SPECIES[prey.sp].code, t: this.time };
     this.emit('stoop', { animal: a, x: a.x, y: a.y, z: a.z, target: cov || prey });
   }
+  // One hunt started on purpose (the first session, firstSession.js): a red-tail put `off` m from (x, z) and `up` m over the
+  // ground there and tipped into a stoop at that point, with no prey (it pulls up 2.5 m over it); stoopAim moves the
+  // point while it falls. Null on a mirror page, or where no hawk lives.
+  stoopOn(x, z, off = 75, up = 48) {
+    if (this.mirror) return null;
+    const h = this.list.find(a => ID[a.sp] === HK && !a.dead && !a.remote && this.alive(a)); if (!h) return null;
+    const ang = Math.random() * TAU, H = this.heights;
+    h.x = x + Math.cos(ang) * off; h.z = z + Math.sin(ang) * off; h.y = H.atXZ(h.x, h.z) + up; h.state = H_SOAR; h.t = 1e9; h.air = 1;
+    this.hkStoop(h, x, z); return h;
+  }
+  stoopAim(h, x, z) { if (h?.state !== H_STOOP) return; h.tx = x; h.tz = z; h.ty = this.heights.atXZ(x, z) + 2.5; }
   tvUpdate(a, dt) {
     const r = a.rng, H = this.heights; a.t -= dt; a.air = 1;
     // teetering: an uneven rock on the dihedral, the vulture's signature at any distance
