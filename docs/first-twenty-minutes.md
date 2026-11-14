@@ -1,8 +1,70 @@
-# The first twenty minutes, home tile: a draft
+# The first twenty minutes, home tile
 
-Draft of 2026-11-13, after the whole-project review ([review-2026-11-13.md](review-2026-11-13.md)) and Aaron's "Yes,
-draft it". Nothing here is built. It is for the home tile (`utm10n_680_4280`), this season, and for a person who
-lives on it and has never seen the game. Four questions for Aaron are at the end.
+Drafted 2026-11-13 after the whole-project review ([review-2026-11-13.md](review-2026-11-13.md)); Aaron: "Yes, build
+it", with the four recommended answers at the end. A first build is in the client behind `?first=1`
+(`client/src/firstSession.js`); "The first build" below says what it does, what differs from the draft and what has
+not been seen. It is for the home tile (`utm10n_680_4280`), this season, and for a person who lives on it and has
+never seen the game.
+
+## The first build (2026-11-13)
+
+**The link.** `…/client/?first=1` is the link a tester is sent. `?first=centre` is the brief's own measure: the same
+opening, then "Fly home. There is no map." with the mini-map and the lights for known places off. Without the
+parameter nothing changes for anyone, except that a player who has hidden acorns through the guide keeps a gold light
+over that oak.
+
+**What it does, in order** (each seen in the viewer on the home tile on 2026-11-13, in that day's rain):
+
+1. **Where do you live?** On that link the home screen's search box asks it, and a visitor may choose a place and
+   Start without an account (the rule of 2026-11-06, browse but not start, still holds on every other link). A place
+   found inside a built tile is the point of arrival, as before; it is never stored and leaves the URL.
+2. **Today, then without us.** The entry's black lifts on today's photograph from at most 140 m over the point, looking
+   down, with the nearest name, the date and the day's weather over it ("North Street · 13 November · light rain ·
+   14 °C"). After 5.5 s the photograph dissolves over 2.6 s into the rewilded world in its own colours (the spirit's
+   blue look waits), the roads' lines linger 5.5 s, and the wisp is let down to 18 m over the ground among the trees.
+   Any key ends the descent.
+3. **The wisp and three bodies.** One line names the keys. A raven, a gray squirrel and a deer are put 50 to 60 m
+   ahead under gold lights; touching one, or 1, 2 or 3, enters it. Flown past, they are put ahead again (three times).
+4. **Home from the air** (raven). Three named places 0.5 to 3.5 km off stand as pale lights with their names and
+   distances: towns first, then named water, then creeks, spread round the compass. Within 220 m of one, today's
+   photograph shows for 2.4 s under "DEER PARK · as it is today".
+5. **Acorns.** "It is November. Acorns are down." Then, carrying, the hole with the lit rim. The spot where the first
+   acorn goes in becomes the player's tree: a gold light, kept in the browser (`wild-earth:first:tree:<tile>/<season>`),
+   never sent.
+6. **The other side.** Enter becomes a squirrel at the foot of that tree. After a burial, or 80 s, jays call and a
+   red-tail is tipped into a stoop at the squirrel (`animals.stoopOn`), following it until the last quarter of its
+   fall. Up a tree, off the ground, or more than 4 m from where it comes down: "It pulls away." Otherwise the screen
+   goes dark for a moment and the player is the wisp again.
+7. **The deer** is the quiet path: one line, then nothing.
+8. **Today at home.** Offered as "Enter · Today at home" after the hawk, after seven quiet minutes, or at seventeen
+   minutes: the place, the date and weather, the cache and the tree, the place found from the air, the season's
+   board, three lines of the season, one thing to look for outdoors, Keep playing, and a link to copy for a neighbour.
+
+While the guide runs the species bar and the acorn game's panel are hidden; the card's Keep playing gives them back.
+
+**Differs from the draft**
+
+- **The death is not drawn.** Tree squirrels are not killable in the animals' code, so the hawk's catch is a dark
+  moment and the wisp, and the squirrel's body goes back to the world alive. The line says the hawk had you; no
+  carcass lies there. Making tree squirrels killable (the fall, the carcass, the hawk mantling) is the honest fix.
+- **The photograph is soft.** From 120 m it shows roads, fields and creeks, not roofs: the tile's present-day texture
+  is one image for 10 km. A sharper patch round the point of arrival is a pipeline step.
+- **The photograph is not the loading screen.** The world still builds and compiles first (about 30 s on this Mac
+  when quiet); the black then waits up to 10 s more for the photograph.
+- **The acorn game's panel is hidden** in place of "the season's board appears": it covered the middle of the screen.
+  The board is on the card.
+- **Tomorrow's weather** is a sentence on the card, not a forecast.
+- **The guide is not on by default** for a new visitor. One line would make it so; it waits for the test.
+
+**Not seen, or not checked**
+
+- The deer's path and `?first=centre` were not played through: the Browser pane was hidden before I reached them.
+- A second page on the same tile (a mirror of the shared animals): the guide's summons and its hawk need the host.
+  If they fail the guide stops and says nothing more; not tried.
+- The hawk's "It pulls away" branch (the squirrel up a tree).
+- Any real person. Timings and wording are first guesses.
+- No automated test: the client has none. Each changed module passes the ES-module syntax check.
+
 
 ## What a person should have by minute twenty
 

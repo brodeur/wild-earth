@@ -9870,3 +9870,25 @@ of it with one hawk, and a card with their cache, the season and one thing to lo
   address, half at the centre with the mini-map off (the brief's measure).
 - **Not decided here** (four questions in the note): the start over the address or the centre; the hawk started on
   purpose; whether a first body can die; the name before or after.
+
+## 2026-11-13: The first twenty minutes, first build behind ?first=1 (client/src/firstSession.js; main.js, title.js, spirit.js, animals.js; docs/first-twenty-minutes.md)
+
+Aaron: "Yes, build it", with the four recommended answers (the start over the address; the hawk started on purpose,
+once; a first body may die; a name after playing, not before).
+
+- **What is built**: on `?first=1` the entry opens on today's photograph over the point of arrival with its name, the
+  date and the weather, dissolves into the rewilded world in its own colours and lets the wisp down among the trees;
+  three bodies under lights (raven, squirrel, deer; touch, or 1 2 3); for the raven three known places as lights and
+  today shown for a moment on arrival; acorns taken and hidden, the oak marked as the player's (the browser only); the
+  squirrel's side with one red-tail's stoop started on purpose (`animals.stoopOn`, `stoopAim`); the deer as the quiet
+  path; a "Today at home" card. `?first=centre` is the brief's measure (no map, no lights, "Fly home").
+- **A rule bent for that link only**: a visitor on `?first=1` chooses a place and starts with no account (title.js
+  `first`), where the rule of 2026-11-06 lets a visitor browse and not start. Every other link is as it was.
+- **Seen** in the viewer on the home tile, by the direct path and once through the home screen as a visitor: every
+  beat from the photograph to the card, the tree kept in localStorage, the hawk's catch, 60 frames a second while the
+  machine was quiet. The body summoned for the raven stands on the ground, so its first line says Space takes off.
+- **Weak**: the squirrel's death is not drawn (tree squirrels are not killable: a dark moment, then the wisp); the
+  photograph is soft from 120 m (roads and fields, not roofs) and grey in rain; the world still loads before the
+  photograph; the lights for places fade past about 2.5 km in rain.
+- **Not seen**: the deer's path, the centre start, the hawk pulling away, a mirror page; no person has played it.
+- **Not on by default**: a new visitor without the parameter gets the game as before.

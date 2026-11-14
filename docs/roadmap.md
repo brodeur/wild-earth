@@ -281,6 +281,18 @@ The earlier gestalt order, now phase 2:
    cavities, cone caches).
 5. The first new place: Lamar Valley, Yellowstone (`utm12n_558_4964`), then Saguaro West, then the Smokies.
 
+## Next: the first twenty minutes (first build 2026-11-13; `docs/first-twenty-minutes.md`, `docs/review-2026-11-13.md`)
+
+A guide for a first-time player who lives on the tile, behind `?first=1` (`client/src/firstSession.js`): today's
+photograph dissolved into the rewilded world, three bodies, a known place from the air, acorns hidden in the player's
+own oak, the squirrel's side with one hawk, a card for tomorrow and outdoors. In order:
+
+1. Play it with five adults and two children of the home tile (the note's test); change what they stall on.
+2. Tree squirrels killable, so the hawk's catch is a death that is drawn.
+3. A sharp present-day patch round the point of arrival (pipeline), so roofs read in the opening.
+4. The photograph drawn before the vegetation, so loading is the opening shot.
+5. The deer's path, the centre start and a mirror page played through; then the guide on by default for a new visitor.
+
 ## Next: the behaviour rig (designed 2026-11-11; `docs/behaviour-rig.md`; nothing built)
 
 Aaron, 2026-11-11: animals that build a nest, feed their young and carry prey, generated per species reliably, and
