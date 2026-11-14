@@ -9890,5 +9890,6 @@ once; a first body may die; a name after playing, not before).
 - **Weak**: the squirrel's death is not drawn (tree squirrels are not killable: a dark moment, then the wisp); the
   photograph is soft from 120 m (roads and fields, not roofs) and grey in rain; the world still loads before the
   photograph; the lights for places fade past about 2.5 km in rain.
-- **Not seen**: the deer's path, the centre start, the hawk pulling away, a mirror page; no person has played it.
+- **Not seen**: the centre start past its setup, the hawk pulling away, a mirror page; the deer's path was driven by
+  script with the pane hidden, not watched; no person has played it.
 - **Not on by default**: a new visitor without the parameter gets the game as before.

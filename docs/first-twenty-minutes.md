@@ -58,7 +58,9 @@ While the guide runs the species bar and the acorn game's panel are hidden; the 
 
 **Not seen, or not checked**
 
-- The deer's path and `?first=centre` were not played through: the Browser pane was hidden before I reached them.
+- The deer's path was driven by script with the Browser pane hidden (the body entered, its line, the card and Keep
+  playing all answered), not watched. Of `?first=centre` only the setup was seen (the start at the tile's centre,
+  the mini-map hidden): the page stopped drawing frames before "Fly home" was reached.
 - A second page on the same tile (a mirror of the shared animals): the guide's summons and its hawk need the host.
   If they fail the guide stops and says nothing more; not tried.
 - The hawk's "It pulls away" branch (the squirrel up a tree).
@@ -144,7 +146,7 @@ an acorn. Anything they stall on for more than a minute is the next thing to fix
 Other players, hunting as the hunter, digging, scavenging, the field guide, the menu, the other tiles. All of them
 stay reachable after the card.
 
-## Questions for Aaron
+## Questions for Aaron (answered 2026-11-13: build it with the recommended answers)
 
 1. **Start over their own address, or at the tile's centre?** I recommend their address: recognition in the first
    minute. The centre start stays as half of the test.
