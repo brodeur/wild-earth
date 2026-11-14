@@ -9854,3 +9854,19 @@ A read-only review; the full text, the tables and what was not checked are in `d
   destination and the git-ignored tiles, caches and paid Meshy sources are on one disk with 7.3 GB free.
 - **Not decided here**: the review recommends freezing breadth for two weeks (one tile, three bodies, a first twenty
   minutes in front of neighbours, and the engineering floor). The order is Aaron's call.
+
+## 2026-11-13: The first twenty minutes on the home tile, a draft (docs/first-twenty-minutes.md; nothing built)
+
+Aaron, after the review: "Yes, draft it". A design note for a person who lives on the home tile and has never seen
+the game: where they live, today's photograph dissolving into the rewilded world, the wisp and three bodies (raven,
+squirrel, deer), a known place found from the air, acorns hidden in a tree that becomes theirs, the squirrel's side
+of it with one hawk, and a card with their cache, the season and one thing to look for outdoors.
+
+- **Mostly an order and a voice for what exists**: the acorn game needs nothing; to build are a guide (one line at a
+  time), the arrival over an address, the dissolve from the present-day view, the columns for known places, the
+  player's own tree, one hunt started on purpose, and the card. About two weeks of one lane, by estimate.
+- **Uncertain**: drawing today's photograph before the vegetation is built, so that loading is the opening shot.
+- **The test**: five adults and two children of the tile, twenty-five minutes, no help; half start over their
+  address, half at the centre with the mini-map off (the brief's measure).
+- **Not decided here** (four questions in the note): the start over the address or the centre; the hawk started on
+  purpose; whether a first body can die; the name before or after.
